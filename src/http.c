@@ -243,8 +243,8 @@ int
 internet_login (config_data_t *config, int verbose)
 {
 
-  int result, tries;
-  char login_string[100];	/* XXX - Don't use fixed. */
+  int result, tries, length;
+  char *login_string, *temp;
 
   /* Open a connection to the login server */
   config->sockfd = open_server (config->login_server, config->server_port, verbose);
@@ -254,17 +254,50 @@ internet_login (config_data_t *config, int verbose)
 	    strerror (errno));
       return -1;
     }
-
+#if 0
   result = sprintf (login_string, LOGIN_STRING,
 		    config->username, config->password);
+#endif
+  length = strlen (config->login_string_header) 
+    + strlen (config->username_key) + strlen (config->username)
+    + strlen (config->password_key) + strlen (config->password) 
+    + strlen (config->login_string_footer) + strlen ("Plus approximately 10%");
+
+  temp = (char *) malloc (length);
+  if (!temp)
+    {
+      ERROR ("Failed to allocate memory: %s\n",
+	     strerror (errno));
+      return -1;
+    }
+  result = sprintf (temp, 
+		    "%s&%s=%s&%s=%s&%s",
+		    config->login_string_header,
+		    config->username_key,
+		    config->username,
+		    config->password_key,
+		    config->password,
+		    config->login_string_footer);
+  login_string = (char *) malloc (length);
+  if (!temp)
+    {
+      free (temp);
+      ERROR ("Failed to allocate memory: %s\n",
+	     strerror (errno));
+      return -1;
+    }
+  length = url_encode (login_string, temp, strlen (temp));
 
   sprintf (config->send_msg, LOGIN_MSG,
 	   config->login_page,
 	   config->login_server,
 	   config->login_server,
 	   config->init_page,
-	   result, /* XXX - Is length correct? */
+	   length,
 	   login_string);
+
+  free (login_string);
+  free (temp);
 
 #ifdef DEBUG
   if (verbose)
@@ -314,19 +347,7 @@ internet_login (config_data_t *config, int verbose)
     }
 #endif
 
-  /* XXX - What do different ISPs send as reply?
-   * I.e., what should we search for with strstr()
-   * to conclude a successful login?
-   *
-   * ISP     Substring(s) in "Session Connect Window"
-   * ================================================
-   * Telia   Aktiv
-   * COMHEM  newPane()
-   *
-   * Tiscali Aktiv, newPane()
-   *
-   */
-  if (strstr (config->get_msg, "newPane()") == NULL)
+  if (strstr (config->get_msg, config->logged_in_string) == NULL)
     {
       ERROR("%s: LOGIN FAILED\n", PACKAGE_NAME);
       result = -1;
@@ -356,7 +377,7 @@ internet_logout (config_data_t *config, int verbose)
     return result;
 
   /* Are we logged in? */
-  if (strstr (config->get_msg, "newPane()") != NULL)
+  if (strstr (config->get_msg, config->logged_in_string) != NULL)
     {
       /* Open a connection to the login server */
       config->sockfd = open_server (config->login_server, config->server_port, verbose);
@@ -421,11 +442,7 @@ internet_logout (config_data_t *config, int verbose)
 	}
 #endif
 
-      /* XXX - Again, what do we look for when OK logout?
-       * Telia/COMHEM: "avslutat"
-       * Tiscali: "Logout window"
-       */
-      if (strstr (config->get_msg, "Logout window") == NULL)
+      if (strstr (config->get_msg, config->logged_out_string) == NULL)
 	{
 	  ERROR("%s: LOGOUT FAILED\n", PACKAGE_NAME);
 	  return -1;
@@ -483,204 +500,3 @@ log_login (config_data_t *config, int verbose)
   return config->logged_in;
 }
 
-
-int new_login (config_data_t *config, int verbose)
-{
-  int result, tries;
-
-  result = pre_login (config, verbose);
-  if (-1 == result)
-    return result;
-
-  /* Are we already logged in? */
-  if (strstr (config->get_msg, "newPane()") == NULL)
-    {
-      /* Nope, send login string */
-      char login_string[100];	/* XXX - Don't use fixed. */
-
-      /* Open a connection to the login server */
-      config->sockfd = open_server (config->login_server, config->server_port, verbose);
-      if (config->sockfd < 0)
-	{
-	  perror ("Failed to connect to login server");
-	  return -1;
-	}
-
-      result = sprintf (login_string, LOGIN_STRING,
-			config->username, config->password);
-
-      sprintf (config->send_msg, LOGIN_MSG,
-	       config->login_page,
-	       config->login_server,
-	       config->login_server,
-	       config->init_page,
-	       result, /* XXX - Is length correct? */
-	       login_string);
-
-
-      if (verbose)
-	{
-	  printf ("Sent:\n%s\n", config->send_msg);
-	}
-
-      tries = 0;
-      do
-	{
-	  sleep (2 * tries);
-	  result = send (config->sockfd, config->send_msg,
-			 strlen (config->send_msg), 0);
-	}
-      while (-1 == result && tries++ < MAX_RETRIES);
-
-      if (-1 == result)
-	{
-	  ERROR("Send login request: %s\n", strerror(errno));
-	  return -1;
-	}
-
-      tries = 0;
-      do 
-	{
-	  sleep (2 * tries);
-	  result = read (config->sockfd, config->get_msg, sizeof (config->get_msg));
-	}
-      while (-1 == result && tries++ < MAX_RETRIES);
-
-      if (-1 == result)
-	{
-	  ERROR("Read login reply: %s\n", strerror (errno));
-	  return -1;
-	}
-
-      if (verbose)
-	{
-	  printf ("Received:\n%s", config->get_msg);
-	}
-
-      if (strstr (config->get_msg, "newPane()") == NULL)
-	{
-	  ERROR("%s: LOGIN FAILED\n", PACKAGE_NAME);
-	  return -1;
-	}
-    }
-
-  LOG("%s: LOGIN SUCCESSFUL\n", PACKAGE_NAME);
-  result = 0;
-  config->logged_in = 1;
-
-  /* Are we setup to act as a daemon? */
-  if (config->daemon_start)
-    {
-      result = lock_remove (config->pid_file);
-      if (result)
-        {
-	  ERROR("%s: Failed to delete old PID file, %s - %s\n", 
-		PACKAGE_NAME, config->pid_file, strerror (errno));
-        }
-      else
-        {
-          /* Fork off the daemon */
-          if (daemonize () == 0)
-            {
-              daemon_thread (config);
-            }
-
-	  result = 0;
-        }
-    }
-
-  return result;
-}
-
-
-int new_logout (config_data_t *config, int verbose)
-{
-  int result, tries;
-  fd_set check_sockfd;
-  struct timeval c_tv;
-  
-  result = pre_login (config, verbose);
-  if (-1 == result)
-    return result;
-
-  /* Are we logged in? */
-  if (strstr (config->get_msg, "newPane()") != NULL)
-    {
-      /* Open a connection to the login server */
-      config->sockfd = open_server (config->login_server, config->server_port, verbose);
-      if (config->sockfd < 0)
-	{
-	  perror ("Failed to connect to login server");
-	  return -1;
-	}
-
-      /* Send logout request */
-      sprintf (config->send_msg, 
-	       LOGOUT_MSG, 
-	       config->logout_page,
-	       config->login_server,
-	       config->init_page,
-	       config->login_server);
-
-      if (verbose)
-	{
-	  printf ("Sent:\n%s\n", config->send_msg);
-	}
-
-      result = send (config->sockfd, config->send_msg,
-		     strlen (config->send_msg), 0);
-
-      if (-1 == result)
-	{
-	  ERROR("Send logout request: %s\n", strerror(errno));
-	  close (config->sockfd);
-	  return -1;
-	}
-
-
-      FD_ZERO (&check_sockfd);
-      FD_SET (config->sockfd, &check_sockfd);
-
-      c_tv.tv_sec  = 5;
-      c_tv.tv_usec = 0;
-
-      LOG("Trying to logout, %d second timeout ...\n", c_tv.tv_sec);
-
-      result = select (1, &check_sockfd, NULL, NULL, &c_tv);
-      if (-1 == result)
-	{
-	  ERROR("%s does not respond, cannot log out!\n", config->logout_page);
-	  close (config->sockfd);
-	  return -1;
-	}
-
-      result = read (config->sockfd, config->get_msg, sizeof (config->get_msg));
-      if (-1 == result)
-	{
-	  ERROR("Read logout reply: %s\n", strerror (errno));
-	  close (config->sockfd);
-	  return -1;
-	}
-
-      if (verbose)
-	{
-	  printf ("Received:\n%s", config->get_msg);
-	}
-
-      /* XXX - Again, what do we look for when OK logout? 
-       * Telia/COMHEM: "avslutat"
-       * Tiscali: "Logout window"
-       */
-      if (strstr (config->get_msg, "Logout window") == NULL)
-	{
-	  ERROR("%s: LOGOUT FAILED\n", PACKAGE_NAME);
-	  close (config->sockfd);
-	  return -1;
-	}
-
-      LOG("%s: SUCCESSFUL LOGOUT\n", PACKAGE_NAME);
-    }
-
-  close (config->sockfd);
-  return 0;
-}
