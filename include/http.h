@@ -2,6 +2,7 @@
 #define __HTTP_H__
 
 #include "config.h"
+#include "log.h"
 
 #define PRELOGIN_MSG                                        \
   "GET %s HTTP/0.9\n"                                       \
@@ -18,14 +19,14 @@
   "Referer: http://%s%s\n"                                  \
   "Content-type: application/x-www-form-urlencoded\n"       \
   "Content-length: %d\n\n"                                  \
-  "%s"
+  "%s\n\n"
 
 #define LOGOUT_MSG                                          \
   "GET %s HTTP/0.9\n"                                       \
   "Referer: http://%s%s\n"                                  \
   "Host: %s\n"                                              \
   "Accept: */*\n\n"                                         \
-  
+
 /* XXX - Should perhaps be configurable from configure... */
 #define MAX_RETRIES 3
 
@@ -35,7 +36,7 @@ int http_internet_logout (config_data_t *config, int verbose);
 int http_do_login        (config_data_t *config, int verbose);
 
 
-static inline int 
+static inline int
 http_test_if_logged_out (config_data_t *config)
 {
   int result = -1;
@@ -54,18 +55,20 @@ http_test_if_logged_out (config_data_t *config)
   return result;
 }
 
-static inline int 
-http_test_if_logged_in (config_data_t *config)
+static inline int
+http_test_if_logged_in (config_data_t *config, int verbose)
 {
   int result = -1;
 
   if (strstr (config->get_msg, config->logged_in_string) != NULL)
     {
+      //LOG ("Found %s in reply from server. OK, we're logged in.", config->logged_in_string);
       config->logged_in = 1;
       result = 0;
     }
   else
     {
+      //LOG ("Failed to locate %s in reply from server. Logged out.", config->logged_in_string);
       config->logged_in = 0;
       result = -1;
     }
@@ -73,5 +76,5 @@ http_test_if_logged_in (config_data_t *config)
   return result;
 }
 
-           
+
 #endif /* __HTTP_H__ */
