@@ -1,6 +1,6 @@
 # qadsl.spec
 #
-# Copyright (c) 2003 Joachim Nilsson joachim@gnufans.org
+# Copyright (c) 2003 Joachim Nilsson <joachim()member!fsf!org>
 #
 %define name qadsl
 %define version @VERSION@
@@ -19,7 +19,7 @@ Group: Application/Misc
 #Distribution:
 #Icon:
 #URL:
-#Packager: Joachim Nilsson joachim@gnufans.org
+#Packager: Joachim Nilsson <joachim()member!fsf!org>
 
 # source + patches
 Source: %{name}-%{version}.tar.gz
@@ -27,7 +27,8 @@ Source: %{name}-%{version}.tar.gz
 #Patch:
 #Patch1:
 
-# RPM info
+# RPM info 
+# XXX: needs to be worked out by someone with an RPM based system.
 #Provides:
 #Requires:
 #Conflicts:
@@ -39,11 +40,16 @@ BuildRoot: /var/tmp/%{name}-%{version}
 Summary: Auto-login & keep-alive for Internet connections.
 
 %description
-Auto-login & keep-alive for Internet connections.
-@configure_input@
-Please edit qadsl.spec.in to add several more lines of description
-here if appropriate, and to delete these instructions.
+Frustrated about having to "log in" to your paid Internet connection?
 
+qadsl is a small utility to login on the Telia AB ADSL service. It also
+works fine with COMHEM Cable internet and Tiscali Internet services. It
+features a keep-alive daemon with login/logout functions. The daemon
+periodically connects to the ISP to ensure you are not logged out all
+of a sudden. 
+
+This build was configured as follows:
+@configure_input@
 %prep
 %setup -q
 #%patch0 -p1
@@ -85,9 +91,11 @@ rm -f %{manifest}
 rm -rf $RPM_BUILD_ROOT
 
 %files -f %{manifest}
-%defattr(-,root,root)
-#%doc README
+%defattr(-, root, root)
+#%doc AUTHORS COPYING NEWS README ChangeLog INSTALL COPYING
 #%docdir
 #%config
 
 %changelog
+* Sat Jan 31 2004 Joachim Nilsson <joachim.nilsson@member.fsf.org>
+- Initial release of spec file for qadsl-1.3.1 - NOT TESTED!
