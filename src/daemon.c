@@ -131,9 +131,10 @@ daemon_thread (config_data_t *config)
 
   while (1)
     {
+      close (config->sockfd);
+
       sleep (60 * config->daemon_delay);
 
-      close (config->sockfd);
       config->sockfd = open_server (config->login_server, config->server_port, 0);
       if (-1 == config->sockfd)
 	{
