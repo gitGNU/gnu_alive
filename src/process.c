@@ -27,9 +27,17 @@ process (config_data_t *config, op_t operation, int verbose)
     case LOGIN:
       if (running)
         {
-	  /* Force the daemon to wake up earlier and relogin. */
-	  kill (running, SIGHUP);
-          return EXIT_SUCCESS;
+	 /* Force the daemon to wake up earlier and relogin. */
+	 result = kill (running, SIGHUP);
+	 if (result)
+	   {
+	     perror (PACKAGE_NAME ": Kicked but missed the login daemon.\n" PACKAGE_NAME ": Maybe a stale lockfile is present and the damon is not running?\n" PACKAGE_NAME ": Or maybe the process is running as root, but you are not?\n" PACKAGE_NAME);
+	     return EXIT_FAILURE;
+	   }
+	 else
+	   {
+	     return EXIT_SUCCESS;
+	   }
         }
 
       result = http_pre_login (config, verbose);
@@ -62,7 +70,7 @@ process (config_data_t *config, op_t operation, int verbose)
           /* Always try to fork off the daemon. */
           if (daemonize () == 0)
             {
-              daemon_thread (config);
+              daemon_thread (config, verbose ? LOG_FILE : LOG_NONE);
             }
         }
       break;
