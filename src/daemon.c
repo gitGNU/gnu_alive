@@ -181,7 +181,7 @@ daemon_thread (config_data_t *config, int verbose)
        * the call to http_pre_login() did *not* bring up
        * the "redirect page".
        */
-      if (config->daemon_type && !http_logged_in_already (config))
+      if (config->daemon_type && http_test_if_logged_in (config))
         {
           http_do_login (config, verbose);
         }

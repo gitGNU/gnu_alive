@@ -32,7 +32,7 @@
 int http_pre_login       (config_data_t *config, int verbose);
 int http_internet_login  (config_data_t *config, int verbose);
 int http_internet_logout (config_data_t *config, int verbose);
-int http_log_login       (config_data_t *config, int verbose);
+int http_do_login        (config_data_t *config, int verbose);
 
 
 inline int 
