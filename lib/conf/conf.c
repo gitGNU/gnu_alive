@@ -86,6 +86,15 @@ conf_find_key (char *key)
 }
 
 
+static char *copy_string (char *src, size_t len)
+{
+  char *str;
+
+  str = malloc (len + 1); /* XXX - check for return value */
+  strncpy (str, src, len);
+  str[len] = '\0';
+}
+
 /* XXX - what if the key doesn't exist?
  * XXX - signal for bogus config file?
  */
@@ -122,11 +131,11 @@ conf_set_value (char *key, char *value)
       if (value [0] == '"' && value [len - 1] == '"')
 	{
 	  len -= 2;
-	  str = strndup (++value, len);
+	  str = copy_string (++value, len);
 	}
       else
 	{
-	  str = strndup (value, len);
+	  str = copy_string (value, len);
 	}
 
       free (value);
