@@ -123,20 +123,52 @@ conf_find_key (param_t *parameter_list, char *key)
 
 /* Our very own strndup(), this should go into a compatibility lib. */
 static char *
-copy_string (char *src, size_t len)
+strlndup (char *src, size_t len)
 {
   char *dst;
 
-  dst = malloc (len + 1);
+  dst = malloc (len);
   if (!dst)
     return NULL;
 
   strncpy (dst, src, len);
 
-  dst[len] = '\0';
+  dst[len - 1] = '\0';
 
   return dst;
 }
+
+
+/**
+ * strlncpy - Rip-off from OpenBSD's strlcpy()
+ * @dst: Destination string.
+ * @src: Source string.
+ * @len: maximum number of char's to copy.
+ *
+ * XXX - Relies on dst being valid 
+ * Makes sure to NUL terminate dst when done.
+ */
+
+static size_t
+strlncpy (char *dst, char *src, size_t len)
+{
+  size_t src_len = strlen (src);
+
+  if (src_len > len)
+    src_len = len;
+
+  strncpy (dst, src, src_len);
+
+  dst[src_len] = '\0';
+
+  return src_len;
+}
+
+
+/* TODO: Implement strlncat() or setup proper aliases for 
+ * OpenBSD's strlcpy() strlcat() if configure does not find
+ * support for them or libsafe <--- Lucent contribution.
+ */
 
 
 /* XXX - what if the key doesn't exist?
@@ -178,7 +210,7 @@ conf_set_value (param_t *parameter_list, char *key, char *value)
 	  value++;
 	}
 
-      str = copy_string (value, len);
+      str = strlndup (value, len);
 
       free (value);
 
