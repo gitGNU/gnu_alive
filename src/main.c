@@ -7,7 +7,7 @@
  * Swedish company Åkerströms nowire AB - see <http://www.nowire.se>
  *
  * Copyright (c) 2001 Jakob "kuba" Stasilowicz <kuba()unix!se>
- * Copyright (c) 2003 Joachim Nilsson <joachim()vmlinux!org>
+ * Copyright (c) 2003,2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  *
  * qADSL is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
