@@ -1,5 +1,7 @@
 2004-02-17  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
+	* include/config.h: Beginnings of support for HP-UX.
+
 	* lib/conf/conf.c (conf_read_file): Try using older method of
 	redirectng stdin to make qadsl build properly on, at least,
 	NetBSD. Idea from redirect.c on snippets.org.
