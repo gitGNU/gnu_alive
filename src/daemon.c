@@ -162,15 +162,8 @@ daemon_thread (config_data_t *config)
       /* Now, sleep before we reconnect and check status. */
       sleep (timeout);
 
-      config->sockfd = open_server (config->login_server, config->server_port, 0);
-      if (-1 == config->sockfd)
-        {
-          write_log ("Failed to contact server.");
-          continue;
-        }
-      
       /* The "ping" daemon only reads /sd/init */
-      result = pre_login (config, 0);
+      result = http_pre_login (config, 0);
       if (result)
         {
           write_log ("%s: Failed to bring up login page.\n", PACKAGE_NAME);
@@ -185,7 +178,7 @@ daemon_thread (config_data_t *config)
       /* The login daemon also tries to login. */
       if (config->daemon_type && !(config->logged_in))
         {
-          log_login (config, 0);
+          http_log_login (config, 0);
         }
     }
 }

@@ -21,7 +21,7 @@
 
 
 /**
- * open_server - 
+ * http_open_server - 
  * @name: 
  * @port:
  * @verbose: 
@@ -32,7 +32,7 @@
  */
 
 int 
-open_server (char *name, short port, int verbose)
+http_open_server (char *name, short port, int verbose)
 {
   int result, sockfd;
   struct hostent *he;
@@ -90,7 +90,7 @@ open_server (char *name, short port, int verbose)
 
 
 /**
- * pre_login - Bring up Orbyte login screen
+ * http_pre_login - Bring up Orbyte login screen
  * @config: Pointer to config data area.
  * @sockfd: Socket we are connected to.
  *
@@ -104,12 +104,12 @@ open_server (char *name, short port, int verbose)
  */
 
 int
-pre_login (config_data_t *config, int verbose)
+http_pre_login (config_data_t *config, int verbose)
 {
   int result, tries;
 
   /* Open a connection to the login server */
-  config->sockfd = open_server (config->login_server, config->server_port, verbose);
+  config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
   if (config->sockfd < 0)
     {
       ERROR ("Failed to connect to login server: %s\n",
@@ -186,14 +186,14 @@ pre_login (config_data_t *config, int verbose)
  */
 
 int
-internet_login (config_data_t *config, int verbose)
+http_internet_login (config_data_t *config, int verbose)
 {
 
   int result, tries, length;
   char *login_string, *temp;
 
   /* Open a connection to the login server */
-  config->sockfd = open_server (config->login_server, config->server_port, verbose);
+  config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
   if (config->sockfd < 0)
     {
       ERROR("Failed to connect to login server: %s\n",
@@ -328,13 +328,13 @@ internet_login (config_data_t *config, int verbose)
 
 
 int
-internet_logout (config_data_t *config, int verbose)
+http_internet_logout (config_data_t *config, int verbose)
 {
   fd_set check_sockfd;
   struct timeval c_tv;
   int result;
 
-  result = pre_login (config, verbose);
+  result = http_pre_login (config, verbose);
   if (-1 == result)
     return result;
 
@@ -342,7 +342,7 @@ internet_logout (config_data_t *config, int verbose)
   if (strstr (config->get_msg, config->logged_in_string) != NULL)
     {
       /* Open a connection to the login server */
-      config->sockfd = open_server (config->login_server, config->server_port, verbose);
+      config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
       if (config->sockfd < 0)
         {
           perror ("Failed to connect to login server");
@@ -419,8 +419,12 @@ internet_logout (config_data_t *config, int verbose)
 }
 
 
+/* Used by the daemon
+ * XXX - should perhaps be renamed to http_do_login() and simplified somewhat. 
+ */
+
 int
-log_login (config_data_t *config, int verbose)
+http_log_login (config_data_t *config, int verbose)
 {
   int i;
   struct tm *timep;
@@ -429,7 +433,7 @@ log_login (config_data_t *config, int verbose)
   (void) time (&the_time);
   timep = localtime (&the_time);
 
-  if (internet_login (config, verbose))
+  if (http_internet_login (config, verbose))
     {
       /* If login fails, try three times with increasingly
        * longer delays between each.
@@ -440,7 +444,7 @@ log_login (config_data_t *config, int verbose)
           sleep (5 * i);
 
           /* If we cannot get the login or csw pages we sleep some more */
-          if (-1 == pre_login (config, verbose))
+          if (-1 == http_pre_login (config, verbose))
             {
               ERROR("%s: Failed to bring up login page.\n", PACKAGE_NAME);
               continue;
@@ -453,7 +457,7 @@ log_login (config_data_t *config, int verbose)
               break;
             }
           
-          if (!internet_login (config, verbose))
+          if (!http_internet_login (config, verbose))
             {
               config->logged_in = 1;
               break;

@@ -2,6 +2,7 @@
  */
 
 #include <errno.h>
+#include <signal.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -31,14 +32,14 @@ process (config_data_t *config, op_t operation, int verbose)
           return EXIT_SUCCESS;
         }
 
-      result = pre_login (config, verbose);
+      result = http_pre_login (config, verbose);
       if (!result)
         {
           /* Test if we're logged in already. */
           if (!strstr (config->get_msg, config->logged_in_string))
             {
               /* Nope, login first. */
-              result = internet_login (config, verbose);
+              result = http_internet_login (config, verbose);
             }
           
           if (!result)
@@ -78,7 +79,7 @@ process (config_data_t *config, op_t operation, int verbose)
 	  kill (running, SIGTERM);
           lock_remove (config->pid_file);
         }
-      result = internet_logout (config, verbose);
+      result = http_internet_logout (config, verbose);
       break;
 
     case NOP:

@@ -120,12 +120,11 @@
 /* Should perhaps be configurable from configure... */
 #define MAX_RETRIES 3
 
-int open_server     (char *name, short port, int verbose);
-int pre_login       (config_data_t *config, int verbose);
-int internet_login  (config_data_t *config, int verbose);
-int internet_logout (config_data_t *config, int verbose);
-int log_login       (config_data_t *config, int verbose);
-int new_login (config_data_t *config, int verbose);
+int http_open_server     (char *name, short port, int verbose);
+int http_pre_login       (config_data_t *config, int verbose);
+int http_internet_login  (config_data_t *config, int verbose);
+int http_internet_logout (config_data_t *config, int verbose);
+int http_log_login       (config_data_t *config, int verbose);
 
            
 #endif /* __HTTP_H__ */
