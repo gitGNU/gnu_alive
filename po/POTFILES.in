@@ -1,0 +1,18 @@
+# List of source files containing translatable strings.
+# Copyright (C) 1995 Free Software Foundation, Inc.
+
+# Common library files
+#lib/error.c
+lib/getopt.c
+lib/xmalloc.c
+
+# Package source files
+#src/gettext.c
+#src/msgfmt.c
+#src/xgettext.c
+src/config.c
+src/daemon.c
+src/http.c
+src/log.c
+src/main.c
+src/process.c

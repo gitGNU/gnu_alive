@@ -1,0 +1,501 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Joachim Nilsson
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: bug-alive@gnu.org\n"
+"POT-Creation-Date: 2004-08-26 14:22+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: lib/getopt.c:681
+#, c-format
+msgid "%s: option `%s' is ambiguous\n"
+msgstr ""
+
+#: lib/getopt.c:706
+#, c-format
+msgid "%s: option `--%s' doesn't allow an argument\n"
+msgstr ""
+
+#: lib/getopt.c:711
+#, c-format
+msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgstr ""
+
+#: lib/getopt.c:729 lib/getopt.c:902
+#, c-format
+msgid "%s: option `%s' requires an argument\n"
+msgstr ""
+
+#: lib/getopt.c:758
+#, c-format
+msgid "%s: unrecognized option `--%s'\n"
+msgstr ""
+
+#: lib/getopt.c:762
+#, c-format
+msgid "%s: unrecognized option `%c%s'\n"
+msgstr ""
+
+#: lib/getopt.c:788
+#, c-format
+msgid "%s: illegal option -- %c\n"
+msgstr ""
+
+#: lib/getopt.c:791
+#, c-format
+msgid "%s: invalid option -- %c\n"
+msgstr ""
+
+#: lib/getopt.c:821 lib/getopt.c:951
+#, c-format
+msgid "%s: option requires an argument -- %c\n"
+msgstr ""
+
+#: lib/getopt.c:868
+#, c-format
+msgid "%s: option `-W %s' is ambiguous\n"
+msgstr ""
+
+#: lib/getopt.c:886
+#, c-format
+msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgstr ""
+
+#: lib/xmalloc.c:83
+msgid "Memory exhausted"
+msgstr ""
+
+#: src/config.c:254
+#, c-format
+msgid "Cannot find configuration file %s: %s\n"
+msgstr ""
+
+#: src/config.c:263
+msgid "Read configuration:"
+msgstr ""
+
+#: src/config.c:325
+#, c-format
+msgid "Failed to read username from configuration file %s.\n"
+msgstr ""
+
+#: src/config.c:329
+#, c-format
+msgid "Failed to read password from configuration file %s.\n"
+msgstr ""
+
+#: src/config.c:332
+msgid "You must supply at least a username and password.\n"
+msgstr ""
+
+#: src/daemon.c:116
+#, c-format
+msgid "Got signal(%d), quitting."
+msgstr ""
+
+#: src/daemon.c:122
+#, c-format
+msgid "Got signal(%d), forcing relogin."
+msgstr ""
+
+#: src/daemon.c:157
+#, c-format
+msgid "Cannot write PID(%d) to file, %s: %s"
+msgstr ""
+
+#: src/daemon.c:159
+msgid "Aborting daemon - cannot communicate PID to outside world."
+msgstr ""
+
+#: src/daemon.c:166
+#, c-format
+msgid "Keep-alive daemon started, pid: %d"
+msgstr ""
+
+#: src/daemon.c:173
+#, c-format
+msgid "Login %s"
+msgstr ""
+
+#: src/daemon.c:173
+msgid "successful."
+msgstr ""
+
+#: src/daemon.c:173
+msgid "FAILED!"
+msgstr ""
+
+#: src/daemon.c:189
+msgid "Daemon logging in again."
+msgstr ""
+
+#: src/daemon.c:198
+msgid "Forced relogin successful."
+msgstr ""
+
+#: src/daemon.c:202
+msgid "Forced relogin FAILED!"
+msgstr ""
+
+#: src/daemon.c:207
+#, c-format
+msgid "Periodic relogin %s."
+msgstr ""
+
+#: src/daemon.c:207
+msgid "OK"
+msgstr ""
+
+#: src/daemon.c:207
+msgid "FAILED"
+msgstr ""
+
+#: src/http.c:71
+#, c-format
+msgid "DNS lookup of login server %s failed to resolve to an IP#"
+msgstr ""
+
+#: src/http.c:72
+msgid "Try the commands nslookup, host or dig for more details."
+msgstr ""
+
+#: src/http.c:73
+#, c-format
+msgid "gethostbyname() returns: %s"
+msgstr ""
+
+#: src/http.c:82
+#, c-format
+msgid "Failed to create a socket: %s"
+msgstr ""
+
+#: src/http.c:98 src/http.c:166 src/http.c:269 src/http.c:437
+#, c-format
+msgid "Failed to connect to login server (%s): %s"
+msgstr ""
+
+#: src/http.c:162 src/http.c:265 src/http.c:433
+#, c-format
+msgid "Connecting to login server, %s:%d."
+msgstr ""
+
+#: src/http.c:182
+#, c-format
+msgid "Failed sending request for %s."
+msgstr ""
+
+#: src/http.c:183
+msgid "Closing connection to login server."
+msgstr ""
+
+#: src/http.c:190 src/http.c:357
+msgid "Waiting for reply from server..."
+msgstr ""
+
+#: src/http.c:194 src/http.c:361
+msgid "No reply from login server."
+msgstr ""
+
+#: src/http.c:203
+#, c-format
+msgid "Failed to \"ping\" login server: %s"
+msgstr ""
+
+#: src/http.c:228
+#, c-format
+msgid "%s(): Login server \"pinged\": not logged in..."
+msgstr ""
+
+#: src/http.c:231 src/http.c:402 src/http.c:515
+#, c-format
+msgid ""
+"%s(): Here is the reply:\n"
+"%s"
+msgstr ""
+
+#: src/http.c:235 src/http.c:406 src/http.c:519
+#, c-format
+msgid "%s(): Start %s with --verbose --debug to see whole reply."
+msgstr ""
+
+#: src/http.c:275
+msgid "Composing non-url-encoded login string."
+msgstr ""
+
+#: src/http.c:285 src/http.c:306
+#, c-format
+msgid "Failed to allocate memory (%d bytes): %s"
+msgstr ""
+
+#: src/http.c:300
+#, c-format
+msgid "Login string: %s"
+msgstr ""
+
+#: src/http.c:338
+#, c-format
+msgid "Cannot send login request to server (%s): %s"
+msgstr ""
+
+#: src/http.c:349
+#, c-format
+msgid "Failed to send login request to server (%s): %s"
+msgstr ""
+
+#: src/http.c:369
+#, c-format
+msgid "%s(): Error reading login reply: %s"
+msgstr ""
+
+#: src/http.c:399
+#, c-format
+msgid "%s(): login failed."
+msgstr ""
+
+#: src/http.c:455
+#, c-format
+msgid "Logout request failed: %s"
+msgstr ""
+
+#: src/http.c:461
+msgid "Waiting for logout reply, 5 second timeout ..."
+msgstr ""
+
+#: src/http.c:466
+#, c-format
+msgid "%s does not respond, cannot log out!"
+msgstr ""
+
+#: src/http.c:472
+msgid "Poll says a reply has arrived, reading reply..."
+msgstr ""
+
+#: src/http.c:477
+#, c-format
+msgid "Read logout reply: %s"
+msgstr ""
+
+#: src/http.c:483
+#, c-format
+msgid ""
+"Received:\n"
+"%s"
+msgstr ""
+
+#: src/http.c:489
+msgid "LOGOUT FAILED"
+msgstr ""
+
+#: src/http.c:495
+msgid "SUCCESSFUL LOGOUT"
+msgstr ""
+
+#: src/http.c:512
+#, c-format
+msgid "%s(): logout failed."
+msgstr ""
+
+#: src/http.c:556
+#, c-format
+msgid "%s(): failed first login attempt."
+msgstr ""
+
+#: src/http.c:567
+#, c-format
+msgid "%s(): waiting a while before retrying..."
+msgstr ""
+
+#: src/http.c:574
+#, c-format
+msgid "%s(): failed to bring up login page."
+msgstr ""
+
+#: src/http.c:594
+#, c-format
+msgid "%s(): failed to send login (attempt #%d)."
+msgstr ""
+
+#: src/http.c:599 src/http.c:617
+#, c-format
+msgid "%s(): Success."
+msgstr ""
+
+#: src/http.c:612
+#, c-format
+msgid "%s(): failed %d retries - backing off for a while."
+msgstr ""
+
+#: src/log.c:60
+#, c-format
+msgid "%s DBG %s[%d]: "
+msgstr ""
+
+#: src/log.c:66
+#, c-format
+msgid "%s INF %s[%d]: "
+msgstr ""
+
+#: src/log.c:73
+#, c-format
+msgid "%s ERR %s[%d]: "
+msgstr ""
+
+#: src/main.c:35
+#, c-format
+msgid "Usage: %s [-h] [-c conffile] [-p pidfile] [-loPsdvV]\n"
+msgstr ""
+
+#: src/main.c:132
+#, c-format
+msgid "%s version %s\n"
+msgstr ""
+
+#: src/main.c:158
+#, c-format
+msgid "Unrecognised option, %s"
+msgstr ""
+
+#: src/main.c:187
+#, c-format
+msgid ""
+"%s - Auto-login & keep-alive for Internet connections.\n"
+"\n"
+msgstr ""
+
+#: src/main.c:191
+#, c-format
+msgid ""
+"Options:\n"
+"-l, --login               Send login request\n"
+"-o, --logout              Send logout request\n"
+"-c, --conf-file=FILE      Use settings from FILE instead of "
+msgstr ""
+
+#: src/main.c:195
+#, c-format
+msgid ""
+"\n"
+"-p, --pid-file=FILE       Use FILE to store PID, default is "
+msgstr ""
+
+#: src/main.c:196
+#, c-format
+msgid ""
+"\n"
+"-P, --port=PORT           Connect to PORT on server, default is "
+msgstr ""
+
+#: src/main.c:197
+#, c-format
+msgid ""
+"\n"
+"-s, --status              Display status of login daemon\n"
+"-v, --verbose             Display more information, on screen and in "
+"logfile\n"
+"-d, --debug               Display even more information, huge amounts!\n"
+"-V, --version             Display version information and exit\n"
+"-h, --help                Display this help and exit\n"
+"    --usage               Give a short usage message\n"
+"\n"
+"Report bugs to <"
+msgstr ""
+
+#: src/main.c:205
+#, c-format
+msgid ">\n"
+msgstr ""
+
+#: src/process.c:51
+#, c-format
+msgid "Already running on pid %d, forcing relogin."
+msgstr ""
+
+#: src/process.c:55
+#, c-format
+msgid "kill(%d, SIGHUP) failed: %s\n"
+msgstr ""
+
+#: src/process.c:56
+#, c-format
+msgid "Maybe a stale lockfile (%s)?"
+msgstr ""
+
+#: src/process.c:58
+#, c-format
+msgid "Trying to remove possibly stale lockfile (%s)..."
+msgstr ""
+
+#: src/process.c:62
+#, c-format
+msgid "Couldn't remove possible stale lockfile (%s).\n"
+msgstr ""
+
+#: src/process.c:64
+#, c-format
+msgid "Maybe the process (%d) is running as root, but you are not?"
+msgstr ""
+
+#: src/process.c:81
+msgid "First check, not logged in yet."
+msgstr ""
+
+#: src/process.c:85
+msgid "To diagnose, try the options --debug --verbose"
+msgstr ""
+
+#: src/process.c:91
+msgid "SUCCESSFUL LOGIN"
+msgstr ""
+
+#: src/process.c:95
+msgid "LOGIN FAILED - To diagnose, try the options --debug --verbose"
+msgstr ""
+
+#: src/process.c:101
+msgid "Already logged in."
+msgstr ""
+
+#: src/process.c:113
+#, c-format
+msgid "Failed to delete old PID file, %s - %s"
+msgstr ""
+
+#: src/process.c:130
+msgid "No active session found, will logout anyway."
+msgstr ""
+
+#: src/process.c:142
+msgid "Neither login or logout selected. Reverting to query status."
+msgstr ""
+
+#: src/process.c:146
+#, c-format
+msgid "Current status: %s"
+msgstr ""
+
+#: src/process.c:146
+msgid "CONNECTED"
+msgstr ""
+
+#: src/process.c:146
+msgid "DISCONNECTED"
+msgstr ""
+
+#: src/process.c:150
+#, c-format
+msgid "Login daemon running with PID = %d"
+msgstr ""
+
+#: src/process.c:155
+msgid "Login daemon not running."
+msgstr ""
