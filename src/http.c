@@ -310,8 +310,23 @@ internet_login (config_data_t *config, int verbose)
       return -1;
     }
 
+#if 0
   length = url_encode (login_string, temp, strlen (temp));
-  
+#else
+  {
+    int i;
+
+    length = strlen (temp);
+    for (i = 0; i < length; i++)
+      {
+	if (' ' == temp [i])
+	  login_string [i] = '+';
+	else
+	  login_string [i] = temp [i];
+      }
+  }
+#endif
+
   sprintf (config->send_msg, LOGIN_MSG,
            config->login_page,
            config->login_server,
