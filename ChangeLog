@@ -1,5 +1,18 @@
 2004-03-04  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
+	* TODO: Remove obsolete entries that have become NEWS.
+
+	* NEWS: Update for upcoming release.
+
+	* AUTHORS (Debianization): Include yours truly for current releases.
+
+	* configure.in: Add -D_GNU_SOURCE to CFLAGS so that we activate
+	the full API on GLibC platforms. Otherwise we get missing protos
+	for strdup() and friends. See <features.h> for more details.
+
+	* lib/Makefile.am (CLEANFILES): Make sure that "make clean" also
+	cleans out these generated files.
+
 	* src/daemon.c (daemon_sighandler): Cleanup logs.
 	(daemon_thread): Cleanup logs and add important stage change log.
 
