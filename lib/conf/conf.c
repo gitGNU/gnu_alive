@@ -56,7 +56,6 @@ int
 conf_read_file (param_t *parameter_list, char *file)
 {
   int    fd, stdin_fd;
-  FILE   *fp;                   /* Might be used later when NetBSD works... */
   param_t *p;
   int result;
 
@@ -73,16 +72,20 @@ conf_read_file (param_t *parameter_list, char *file)
     return -1;               /* failed to duplicate input descriptor */
 
 #if 0 /* Does not work on NetBSD 1.6 */
-  /* use the duplicated descriptor to redirect input... */
-  fp = fdopen (fd, "r");
+  {
+    FILE   *fp;              /* Might be used later when NetBSD works... */
 
-  if (!fp)
-    return -2;               /* failed to open duplicated descriptor */
+    /* use the duplicated descriptor to redirect input... */
+    fp = fdopen (fd, "r");
 
-  stdin = freopen (file, "r", fp);
+    if (!fp)
+      return -2;               /* failed to open duplicated descriptor */
 
-  if (!stdin)
-    return -3;               /* failed to redirect stream input */
+    stdin = freopen (file, "r", fp);
+
+    if (!stdin)
+      return -3;               /* failed to redirect stream input */
+  }
 #else /* Revert to older method */
   {
     int temp_fd;
