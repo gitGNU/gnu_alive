@@ -1,18 +1,20 @@
-qADSL - An auto-login & keep-alive program for Internet connections
+GNU Alive - An auto-login & keep-alive program for Internet connections
 ========================================================================
 
 * Introduction
 
-qADSL is an auto-login & keep-alive daemon for Internet connections.
-It was created to automate the annoying login process of several 
-Swedish ISP's, e.g., Telia ADSL, COMHEM and Tiscali. All of which use
-the Orbyte Wireless System from Swedish company ServiceFactory AB --
-see <http://www.servicefactory.se> for more info.
+GNU Alive is an auto-login & keep-alive daemon for Internet connections.
+Previously known as qadsl it was created to automate the annoying login
+process of several Swedish ISP's, e.g., Telia ADSL, COMHEM and Tiscali.
+All of which use the Orbyte Wireless System, a login/DHCP server from
+Swedish company ServiceFactory AB -- see <http://www.servicefactory.se>
+for more info.
 
-If our dear ISP's could keep better tabs on their ports vs. their
-subscribers then this program would be obsolete. Would we all not be
-a lot happier to simply pay for our Internet connection and be online
-as long as our NIC and the ISP's switch have a linkup?
+If our dear Internet Service Providers, ISPs, could keep better tabs on
+their ports vs. their subscribers then this program would be obsolete.
+Would we all not be a lot happier to simply pay for our Internet
+connection and be online as long as our NIC and the ISP's switch have a
+linkup?
 
 Comments are welcome.
 
@@ -24,12 +26,12 @@ Comments are welcome.
 Copyright (c) 2001 Jakob "kuba" Stasilowicz <kuba()unix!se>
 Copyright (c) 2003 Joachim Nilsson <joachim()member!fsf!org>
 
-qADSL is free software; you can redistribute it and/or modify it
+GNU Alive is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-qADSL is distributed in the hope that it will be useful, but
+GNU Alive is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -37,11 +39,3 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
-
-* Abbreviations
-
-Below is a listing of the popular abbreviations used in the documentation
-for this project. 
-
-ISP	Internet Service Provider
