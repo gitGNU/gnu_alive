@@ -1,10 +1,6 @@
 /* conf.c -  
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,13 +87,13 @@ static char *copy_string (char *src, size_t len)
 {
   char *dst;
 
-  str = malloc (len + 1);
+  dst = malloc (len + 1);
   if (!dst)
     return NULL;
 
   strncpy (dst, src, len);
 
-  str[len] = '\0';
+  dst[len] = '\0';
 
   return dst;
 }
