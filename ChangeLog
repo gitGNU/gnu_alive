@@ -1,3 +1,58 @@
+2004-01-20  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* src/daemon.c (daemon_thread): Major cleanups.
+
+	Make sure we exit the daemon if we cannot create any lockfile - this
+	to prevent multiple daemons starting up.
+
+	Check if we're already logged in after pre_login() stage, then we do
+	not need to call log_login().
+
+	* src/main.c (main): Fix bogus comment.
+
+	* src/config.c: LOGIN_STRING_HEADER default to NULL instead of "".
+
+	fallback_pid_files[] temporarily stored here. Need a better
+	place, not in lock.c though - it is supposed to be agnostic of
+	the file name.
+
+	* src/http.c (internet_login): login_string_header might be NULL,
+	do not call strlen() with NULL.
+
+	Do not compose a login string of empty parts it might generate
+	very bisarre strings, e.g., "?one=1&&three=3&four=4".
+
+	Bogus if() statement checked the wrong pointer, temp instead of
+	login_string. 
+
+	Skip url_encode() for now.
+
+	Zero-terminate the read message from the server, needed for
+	parsing later to determine if login was successful or not.
+
+	Just return, leave avalutation of result to caller.
+
+	(log_login): Skip internet_login() if pre_login() reveals that
+	we're already logged in.
+	
+	* src/http.c (url_encode): strchr(unsave, s[i]) should suffice as
+	the filter to find characters that must be encoded. Otherwise too
+	much is encoded and the resulting string is too long and might
+	not be possible to parse for the server.
+
+	* src/process.c (process): Cleanup. Everything now done in the
+	same switch-case, it might be better. However, fns like
+	process_login() and process_logout() might be even better.
+
+	lock_read() and lock_remove() should use whatever main() found
+	out and stored in config->pid_file instead of PID_FILE!
+
+	* src/lock.c (lock_create): Added fallback_pid_files[] and minor
+	cleanups. The function will alter the @file argument if a
+	fallback is used instead of the given one.
+
+	(lock_read): dito. A return value >0 is an OK pid.
+
 2004-01-14  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* debian: Added Debian package directory.
