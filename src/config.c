@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 #include "conf.h"
 #include "config.h"
@@ -46,8 +47,7 @@ param_t parms [] = {
   /* Default: re-login every DAEMON_DELAY minutes. */
   {{"DEAMON_T", "DAEMON_TYPE", NULL},                  NULL, "login"},
   /* Default: relogin every 20 minutes to keep the connection alive. */
-  {{"DEAMON_D", "DAEMON_DELAY", "INTERVAL", NULL},     NULL, "20"},
-  {{NULL}}
+  {{"DEAMON_D", "DAEMON_DELAY", "INTERVAL", NULL},     NULL, "20"}
 };
 
 /* This is for global data. */
@@ -143,11 +143,15 @@ config_load (char *file)
     }
 
 #ifdef DEBUG
-  printf ("Read configuration:\n");  
-  for (i = 0; i < (sizeof (parms) / sizeof (parms[0])); i++)
-    {
-      print_parm (&parms[i]);
-    }
+  {
+    int i;
+
+    printf ("Read configuration:\n");  
+    for (i = 0; i < (sizeof (parms) / sizeof (parms[0])); i++)
+      {
+	print_parm (&parms[i]);
+      }
+  }
 #endif	/* DEBUG */
 
   /* Setup the rest of the default settings */

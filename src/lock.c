@@ -51,7 +51,7 @@ extern char *fallback_pid_files[];
 int
 lock_create (char **file, pid_t pid)
 {
-  int fd, fallback, result;
+  int fd, fallback;
   FILE *fp;
 
 #if defined(LOCK_FCNTL)

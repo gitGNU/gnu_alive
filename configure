@@ -3370,7 +3370,7 @@ fi
 if test "${enable_debug+set}" = set; then
   enableval="$enable_debug"
 
-CFLAGS="-Wall -pedantic -ansi -g -DDEBUG -DYYERROR_VERBOSE"
+CFLAGS="-Wall -pedantic -g -DDEBUG -DYYERROR_VERBOSE"
 else
 
 CFLAGS="-O2"

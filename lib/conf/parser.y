@@ -2,6 +2,7 @@
 %{
 #include <stdio.h>
 
+#include "conf.h"
 #include "config.h"
 
 extern int yylineno;

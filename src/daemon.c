@@ -18,14 +18,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <errno.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
+#include <string.h>
 
-#include "config.h"
 #include "conf.h"
+#include "lock.h"
+#include "log.h"
+#include "http.h"
 
 
 /**

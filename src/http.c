@@ -1,4 +1,10 @@
-/* http.c -  */
+/* http.c -  
+ */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -7,8 +13,9 @@
 #include <sys/time.h>
 #include <time.h>
 #include <errno.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#include "config.h"
 #include "http.h"
 #include "log.h"
 
@@ -31,13 +38,16 @@ static unsigned int
 url_encode (char *dest, const char *src, unsigned int len) 
 {
   const char unsafe[]=" %<>\"#{}|\\^~[]`;/?:@=&";
-  register const unsigned char* s = src;
-  unsigned long written=0,i;
+  register const char* s = src;
+  unsigned long written = 0, i;
 
-  inline tohex (const unsigned char c)
-    {
-      return c > 9 ? c - 10 + 'A' : c + '0';
-    }
+  /* Nested because its a cool GNU feature and because noone else
+   * really needs this function ... now, why can't it be inline?
+   */
+  inline char tohex (const unsigned char c)
+  {
+    return c > 9 ? c - 10 + 'A' : c + '0';
+  }
 
   if (!dest)
     {
@@ -48,27 +58,25 @@ url_encode (char *dest, const char *src, unsigned int len)
   for (i = 0; i < len; i++) 
     {
       /* Upper half of ASCII table or one of the unsafe chars? */
-      //if (s[i] & 0x7F || strchr (unsafe, s[i]))
+      /* if (s[i] & 0x7F || strchr (unsafe, s[i])) */
       /* Simple, just trap unsafe characters */
       if (strchr (unsafe, s[i]))
         {
           if (' ' == s[i])
             {
               /* Spaces to plus */
-              dest[written] = '+';
+              dest[written++] = '+';
             }
           else
             {
-              dest[written]   = '%';
-              dest[written+1] = tohex (s [i] >> 4);
-              dest[written+2] = tohex (s [i] & 15);
-              written += 3;
+              dest [written++] = '%';
+              dest [written++] = tohex (s [i] >> 4);
+              dest [written++] = tohex (s [i] & 15);
             }
         } 
       else 
         {
-          dest [written] = s [i];
-          written ++;
+          dest [written++] = s [i];
         }
     }
 
@@ -107,7 +115,7 @@ open_server (char *name, short port, int verbose)
   else
     {
       /* Setup a socket */
-      LOG("0x%X\n", he->h_addr);
+      LOG("0x%X\n", (int)he->h_addr);
 
       sockfd = socket (PF_INET, SOCK_STREAM, 0);
       if (-1 == sockfd)
@@ -126,7 +134,7 @@ open_server (char *name, short port, int verbose)
           /* Connect to login server */
           if (verbose)
             {
-              LOG("Connecting to %s(0x%X)\n", name, he->h_addr);
+              LOG("Connecting to %s(0x%X)\n", name, (int)he->h_addr);
             }
           result = connect (sockfd, (struct sockaddr *) &address, sizeof (address));
           if (-1 == result && verbose)
@@ -301,23 +309,8 @@ internet_login (config_data_t *config, int verbose)
              strerror (errno));
       return -1;
     }
-#if 0 /* Maybe wrong */
-  length = url_encode (login_string, temp, strlen (temp));
-#else
-  {
-    int i;
-    char c;
-    
-    length = strlen (temp);
-    for (i = 0; i <= length; i++)
-      {
-        c = temp [i];
-        if (c == ' ') c = '+';
-        login_string [i] = c;
-      }
 
-  }
-#endif
+  length = url_encode (login_string, temp, strlen (temp));
   
   sprintf (config->send_msg, LOGIN_MSG,
            config->login_page,
@@ -439,7 +432,7 @@ internet_logout (config_data_t *config, int verbose)
       c_tv.tv_sec  = 5;
       c_tv.tv_usec = 0;
 
-      LOG("Trying to logout, %d second timeout ...\n", c_tv.tv_sec);
+      LOG("Trying to logout, %d second timeout ...\n", (int)c_tv.tv_sec);
 
       result = select (1, &check_sockfd, NULL, NULL, &c_tv);
       if (-1 == result)
@@ -482,7 +475,7 @@ internet_logout (config_data_t *config, int verbose)
 int
 log_login (config_data_t *config, int verbose)
 {
-  int i, tries;
+  int i;
   struct tm *timep;
   time_t the_time;
 

@@ -28,7 +28,7 @@ AC_PROG_RANLIB
 
 AC_ARG_ENABLE(debug, 
 [  --enable-debug	  Enable debugging with GDB [default=no]],[
-CFLAGS="-Wall -pedantic -ansi -g -DDEBUG -DYYERROR_VERBOSE"],[
+CFLAGS="-Wall -pedantic -g -DDEBUG -DYYERROR_VERBOSE"],[
 CFLAGS="-O2"
 LDFLAGS="-s"])
 

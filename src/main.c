@@ -27,6 +27,7 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "config.h"
 #include "process.h"
@@ -49,9 +50,8 @@ main (int argc, char *argv[])
   char *pid_file  = NULL;
   char *progname  = argv[0];
   char *conf_file = NULL;
-  int con_sw = 0, verbose = 0;
+  int verbose = 0;
   op_t operation = NOP;
-  int sockfd, i, result;
   char c;
 
   /*   printf ("%s %s - http://savannah.gnu.org/projects/qadsl/\n", */

@@ -1,6 +1,15 @@
+/* conf.c -  
+ */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <strings.h>
 
 #include "conf.h"
 
@@ -42,13 +51,14 @@ conf_read_file (char *file, param_t *parameters)
 	}
       p++;
     }
+
+  return 0;
 }
 
 
 static param_t *
 conf_find_key (char *key)
 {
-  int i;
   param_t *parm = parms;
   char **keys;
 
