@@ -6,7 +6,7 @@ Standards-Version: 3.0.1
 
 Package: alive
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: debconf (>= 0.5), ${shlibs:Depends}
 Replaces: qadsl
 Conflicts: qadsl
 Provides: qadsl
