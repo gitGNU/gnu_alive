@@ -114,6 +114,11 @@ Example:
        RELEASE-1_3_1 is actually qadsl-1.3.1 where dots are replaced with
        underscores. It's just that simple! :-)
 
+Also, the files configure.in and debian/changelog are updated to reflect the
+new release number. To update debian/changelog use the following command:
+cd debian
+debchange -v 1.3.1-1
+
 Fourth, when tagged a new tree is checked out from CVS using the following:
 cvs co -r RELEASE-MAJOR_MINOR_FIX -d qadsl-major.minor.fix-cvs qadsl
 
