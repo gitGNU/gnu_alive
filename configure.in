@@ -109,7 +109,7 @@ AC_REPLACE_FUNCS(strcasecmp)
 dnl Checks for typedefs, structures, and compiler characteristics.
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS()
+dnl AC_CHECK_FUNCS()
 
 dnl Check for various --with-??? directives
 
