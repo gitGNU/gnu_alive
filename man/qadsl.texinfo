@@ -13,8 +13,8 @@
 This file documents the @command{qadsl} utility. An auto-login &
 keep-alive daemon for Internet connections.
 
-Copyright (C) 2001 Jakob ``kuba'' Stasilowicz @email{kuba@@unix.se}
-Copyright (C) 2003 Joachim Nilsson @email{joachim.nilsson@@member.fsf.org}
+Copyright (C) 2001 Jakob ``kuba'' Stasilowicz @email{kuba()unix!se}
+Copyright (C) 2003 Joachim Nilsson @email{joachim.nilsson()member!fsf!org}
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -142,7 +142,7 @@ Auto-login & keep-alive for Internet connections.
   -p, --pid-file=file        Use file instead of /var/run/qadsl.pid
   -c, --conf-file=file       Use file instead of /etc/qadsl.conf
 
-Report bugs to <joachim@@gnufans.org>.
+Report bugs to @email{joachim.nilsson()member!fsf!org}
 @end example
 
 @node Invoking qadsl, Problems, Sample, Top
