@@ -2,6 +2,8 @@
 
 * TODO List - Items listed in falling priority order - first most important
 
+* Proper ICMP ping when DAEMON_TYPE set to PING.
+
 * lib/conf/parser.y: Add YYERROR when conf_set() fails!
 Must not continue to read conf file on error.
 
