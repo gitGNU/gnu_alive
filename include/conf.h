@@ -23,7 +23,7 @@ struct parameter
    * Primary name is first in the list, 
    * followed by any and all aliases.
    */
-  char *names[5];               /* XXX - Hard limits are never good... */
+  char *names[10];    /* XXX - Hard limits are never good... */
 
   /* Parameter value */
   char *value;
