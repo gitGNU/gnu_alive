@@ -21,71 +21,6 @@
 
 
 /**
- * url_encode - Hexifies a character string for URL use.
- * @dest: A destination buffer.
- * @src:  The string to be encoded.
- * @len:  Length of @src.
- *
- * This function scans @src for unsafe characters and converts
- * them into %XX entries. This means that @dest must be large
- * enough to hold this expanded string from @src.
- *
- * Returns: Number of bytes written to @dest, should be >= @len
- *          any number less than or zero indicates an error.
- */
-
-
-/* Static because no one else really needs this function.
- */
-static inline char tohex (const unsigned char c)
-{
-  return c > 9 ? c - 10 + 'A' : c + '0';
-}
-
-
-static unsigned int
-url_encode (char *dest, const char *src, unsigned int len) 
-{
-  const char unsafe[]=" %<>\"#{}|\\^~[]`;/?:@=&";
-  register const char* s = src;
-  unsigned long written = 0, i;
-
-  if (!dest)
-    {
-      /* Eh, no destination? */
-      return 0;
-    }
-
-  for (i = 0; i < len; i++) 
-    {
-      /* Upper half of ASCII table or one of the unsafe chars? */
-      /* if (s[i] & 0x7F || strchr (unsafe, s[i])) */
-      /* Simple, just trap unsafe characters */
-      if (strchr (unsafe, s[i]))
-        {
-          if (' ' == s[i])
-            {
-              /* Spaces to plus */
-              dest[written++] = '+';
-            }
-          else
-            {
-              dest [written++] = '%';
-              dest [written++] = tohex (s [i] >> 4);
-              dest [written++] = tohex (s [i] & 15);
-            }
-        } 
-      else 
-        {
-          dest [written++] = s [i];
-        }
-    }
-
-  return written;
-}
-
-
-/**
  * open_server - 
  * @name: 
  * @port:
@@ -311,9 +246,6 @@ internet_login (config_data_t *config, int verbose)
       return -1;
     }
 
-#if 0
-  length = url_encode (login_string, temp, strlen (temp));
-#else
   {
     int i;
 
@@ -326,7 +258,6 @@ internet_login (config_data_t *config, int verbose)
 	  login_string [i] = temp [i];
       }
   }
-#endif
 
   sprintf (config->send_msg, LOGIN_MSG,
            config->login_page,
