@@ -304,7 +304,9 @@ http_internet_login (config_data_t *config, int verbose)
       result = read (config->sockfd, config->get_msg, sizeof (config->get_msg));
       /* Zero terminate the read string */
       if (result >= 0)
-        config->get_msg [result] = 0;
+	{
+	  config->get_msg [result] = 0;
+	}
     }
   while (-1 == result && tries++ < MAX_RETRIES);
 
@@ -411,6 +413,7 @@ http_internet_logout (config_data_t *config, int verbose)
         }
 
       LOG("%s: SUCCESSFUL LOGOUT\n", PACKAGE_NAME);
+      config->logged_in = 0;
     }
 
   close (config->sockfd);
@@ -462,6 +465,10 @@ http_log_login (config_data_t *config, int verbose)
               config->logged_in = 1;
               break;
             }
+	  else
+	    {
+              config->logged_in = 0;
+	    }
         }
     }
 
