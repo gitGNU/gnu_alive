@@ -67,9 +67,14 @@ main (int argc, char *argv[])
       {NULL, 0, NULL, 0}
     };
 
+#ifdef HAVE_RINDEX
   program_name = rindex (argv[0], '/');
-  if (program_name) program_name ++;
-  else              program_name = argv[0];
+  if (program_name) 
+    program_name ++;
+  else
+#else
+    program_name = argv[0];
+#endif
 
   while ((c = getopt_long (argc, argv,
 			   "l" 	/* login */
