@@ -66,9 +66,12 @@ This is btw the preferred way to indicate stuff like this to others...
 At least support Swedish with gettext, most of the time it is only
 Swedes who use qadsl anyway.
 
-* Add support for getopt_long() and strndup()
+* Add support for getopt_long(), strndup(), strcasecmp() et. al.
 If they don't exist on the platform. Put these things in lib/ and
-make them be checked for by configure. (Autoproject adds such stuff I think).
+make them be checked for by configure. (Autoproject adds such stuff I
+think). 
+
+See fetchmail package for cut-n-paste.
 
 * Configure checks for sysconf and friends. Look at Zsh.
 http://www.zsh.org/mla/workers/2000/msg03388.html
