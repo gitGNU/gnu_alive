@@ -122,6 +122,8 @@ AM_YFLAGS = -d
 
 noinst_LIBRARIES = libconf.a
 
+BUILT_SOURCES = parser.h parser.c tokens.c
+
 libconf_a_SOURCES = conf/conf.c conf/parser.y conf/tokens.l
 subdir = lib
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -149,7 +151,8 @@ DIST_SOURCES = $(libconf_a_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in parser.c parser.h tokens.c
 SOURCES = $(libconf_a_SOURCES)
 
-all: all-am
+all: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .l .o .obj .y
@@ -367,7 +370,8 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: check-am
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LIBRARIES)
 
 installdirs:
@@ -397,6 +401,7 @@ maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
 	-rm -f parser.h
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 	-rm -f parser.c
 	-rm -f tokens.c
 clean: clean-am
