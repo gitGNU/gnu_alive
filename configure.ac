@@ -168,6 +168,7 @@ AC_DEFINE_UNQUOTED(PORT, "$port", [Define this to the HTTP port number.])
 
 
 dnl internationalization macros
+AM_NLS
 AM_GNU_GETTEXT
 AM_GNU_GETTEXT_VERSION
 
