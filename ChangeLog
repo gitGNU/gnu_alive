@@ -1,3 +1,73 @@
+2004-03-03  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* include/config.h: Add features.h it defines a lot of stuff we
+	really need to eliminate stupid missing declarations from standard
+	include files.
+
+	* configure.in: Bump version again, 1.3.3
+	Add features.h to list of headers to look for, we need it.
+
+	* debian/changelog: Prepare for next release, 1.3.3.
+	
+	* debian/control (Description): Synchronized with .rpm package.
+
+	* qadsl.spec.in (%decription): Synchronized with .deb package.
+
+	* src/lock.c: Update copyright and cleanup function comment.
+
+	* src/config.c: Add copyrights and licensing.
+
+	* src/process.c: Add copyrights and licensing. And cleanup the
+	"logged in" semantics according to new scheme.
+
+	* src/main.c: Update copyright and email.
+
+	(main): Stupid misplaced else ...
+
+	(main): Implement HAVE_RINDEX
+
+	* lib/conf/conf.c: Add copyrights and licensing.
+
+	* lib/conf/parser.y: Add copyrights and licensing.
+
+	* lib/conf/tokens.l: Add copyrights and licensing.
+
+	* src/log.c (write_log): Need to increase size of static log
+	buffer. Also, add copyrights and licensing.
+
+	* include/http.h (http_open_server): No longer global function,
+	thus removed from this file.
+
+	(PRELOGIN_MSG): Cleanup and use HTTP 0.9
+	(LOGIN_MSG): Cleanup and use HTTP 0.9
+	(LOGOUT_MSG): Cleanup and use HTTP 0.9
+
+	(http_test_if_logged_out): New static inline function.
+	(http_test_if_logged_in): New static inline function.
+
+	* src/daemon.c: Update copyright and email addresses. 
+
+	(daemon_thread): All connections should be closed by the handlers
+	in http.c. No need to close() in daemon since it is supposed to be
+	stupid. Also, cleanup of "already logged in?" semantics.
+
+	* src/http.c: Add copyright and licensing. Also, overhauled the
+	file in search for missing close() calls. A heads up from the
+	Mandrake RPM maintainer, Oden Eriksson <oden!eriksson()kvikkjokk!net>.
+
+	(http_open_server): Close socket if connection fails. 
+	Document the (now local) function as well.
+
+	(http_pre_login): Cleanup verbosity.
+	
+	(http_internet_login): Cleanup and close() the socket on error.
+
+	(http_internet_logout): Cleanup and close() the socket on error.
+
+	(http_do_login): Renamed from http_log_login().  Check if we're
+	really logged in when http_internet_login() returns OK.  Also, a
+	lot of clean up of the semantics plus useful documentation. :-)
+
 2004-02-22  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* lib/getopt.c: New functionality that adds GNU getopt() and 
@@ -16,7 +86,7 @@
 	* lib/conf/tokens.l: Cleanup.
 
 	* lib/conf/conf.c (conf_read_file): We only need read permission
-	to evaluate the .conf file. Also, make sure to check if we succeed
+	to evaluate the .conf file.  Also, make sure to check if we succeed
 	in opening it, otherwise the parser will not have anything to read
 	from and hang forever waiting for input from a truncated stdin.
 
@@ -32,8 +102,8 @@
 
 	* src/main.c (main): Add long option support and update usage()
 	function. Exit on NOP operations with a usage() printout.
-	Swap meanings of -v and -V to verbose and version,
-	respectively. To be more like the majority of the other GNU tools.
+	Swap meanings of -v and -V to verbose and version, respectively.
+	To be more like the majority of the other GNU tools.
 
 	* src/process.c (process): Let verbosity propagate to dameon and
 	report result from SIGHUP sent to an already running daemon.
