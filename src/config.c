@@ -196,8 +196,19 @@ config_load (char *file)
     {
       __config_area.daemon_type  = strcasecmp (temp, "login") ? 1 : 0;
     }
-  __config_area.daemon_delay = atoi (conf_get_value (parms, "DEAMON_D"));
 
+  temp = conf_get_value (parms, "DEAMON_D");
+  if (!temp)
+    {
+      __config_area.daemon_delay = 20; /* XXX - hardcoded to fix buggy conf_get_value() that returns NULL when no
+					conf file is found.
+				       */
+    }
+  else
+    {
+      __config_area.daemon_delay = atoi (temp);
+    }
+  
   __config_area.username     = conf_get_value (parms, "USER");
   __config_area.password     = conf_get_value (parms, "PASS");
 
