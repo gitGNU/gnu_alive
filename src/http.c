@@ -1,4 +1,26 @@
-/* http.c -  
+/* http.c - Handles the communication with the login server.
+ *
+ * Copyright (c) 2003,2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
+
+ * http_open_server()     - Open and connect to a server on a specified port.
+ * http_pre_login()       - Bring up Orbyte login screen.
+ * http_internet_login()  - Handles the login phase.
+ * http_internet_logout() - Handles the graceful logout for the client.
+ * http_do_login()        - Handles periodic logins for the daemon only.
+ *
+ * qADSL is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ *
+ * qADSL is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -21,17 +43,20 @@
 
 
 /**
- * http_open_server - 
- * @name: 
- * @port:
- * @verbose: 
+ * http_open_server - Open and connect to a server on a specified port.
+ * @name:    Connect to this named server.
+ * @port:    Connect to this port.
+ * @verbose: Diagnostic output.
+ *
+ * This is a local helper function for the rest of the handlers in this
+ * class. It opens a connection to a specified server, @name, which can
+ * be a proper Internet name or IP address, on a specified @port.
  *
  * Returns: -1 and errno on error, otherwise
  *          socket descriptior.
- *
  */
 
-int 
+static int 
 http_open_server (char *name, short port, int verbose)
 {
   int result, sockfd;
@@ -74,8 +99,9 @@ http_open_server (char *name, short port, int verbose)
               LOG("Connecting to login server: %s(0x%X)\n", name, (int)he->h_addr);
             }
           result = connect (sockfd, (struct sockaddr *) &address, sizeof (address));
-          if (-1 == result && verbose)
+          if (-1 == result)
             {
+              close (sockfd);
               ERROR("Failed to connect to login server (%s): %s\n",
                     name, strerror (errno));
             }
@@ -91,9 +117,10 @@ http_open_server (char *name, short port, int verbose)
 
 
 /**
- * http_pre_login - Bring up Orbyte login screen
- * @config: Pointer to config data area.
+ * http_pre_login - Bring up Orbyte login screen.
+ * @config:  Pointer to configuration data.
  * @sockfd: Socket we are connected to.
+ * @verbose: Diagnostic output.
  *
  * This function serves as a sort of "ping" to ensure that
  * the login server is alive and accepting connections.
@@ -118,7 +145,6 @@ http_pre_login (config_data_t *config, int verbose)
       return -1;
     }
 
-
   /* Register and get login page */
   sprintf (config->send_msg, PRELOGIN_MSG,
            config->init_page,
@@ -126,16 +152,10 @@ http_pre_login (config_data_t *config, int verbose)
            config->login_server);
 
 #ifdef DEBUG
-  if (verbose)
-    {
-      LOG ("Sent:\n%s\n", config->send_msg);
-    }
+  LOG ("Sent:\n%s\n", config->send_msg);
 #endif
 
-  result = send (config->sockfd,
-                 config->send_msg,
-                 strlen (config->send_msg), 0);
-
+  result = send (config->sockfd, config->send_msg, strlen (config->send_msg), 0);
 
   /* Read reply */
   /* In a not so distant future this function will be extended to
@@ -160,10 +180,7 @@ http_pre_login (config_data_t *config, int verbose)
   else
     {
 #ifdef DEBUG
-      if (verbose)
-        {
-          LOG ("Received:\n%s", config->get_msg);
-        }
+      LOG ("Received:\n%s", config->get_msg);
 #endif
       result = 0;
     }
@@ -175,10 +192,10 @@ http_pre_login (config_data_t *config, int verbose)
 
 
 /**
- * internet_login - Handles the login phase.
- * @config:  Pointer to config data area.
+ * http_internet_login - Handles the login phase.
+ * @config:  Pointer to configuration data.
  * @sockfd:  Socket we are connected to.
- * @verbose: Log as much as possible.
+ * @verbose: Diagnostic output.
  * 
  * This is the function that handles the logging in to the
  * Internet gateway of the ISP.
@@ -189,7 +206,6 @@ http_pre_login (config_data_t *config, int verbose)
 int
 http_internet_login (config_data_t *config, int verbose)
 {
-
   int result, tries, length;
   char *login_string, *temp;
 
@@ -199,12 +215,11 @@ http_internet_login (config_data_t *config, int verbose)
     {
       ERROR("Failed to connect to login server (%s): %s\n",
             config->login_server, strerror (errno));
+
       return -1;
     }
-#if 0
-  result = sprintf (login_string, LOGIN_STRING,
-                    config->username, config->password);
-#endif
+
+  /* Compose the login string. */
   length = (config->login_string_header ? strlen (config->login_string_header) : 0)
     + strlen (config->username_key) + strlen (config->username)
     + strlen (config->password_key) + strlen (config->password) 
@@ -213,14 +228,18 @@ http_internet_login (config_data_t *config, int verbose)
   temp = (char *) malloc (length);
   if (!temp)
     {
+      close (config->sockfd);
       ERROR ("Failed to allocate memory (%d bytes): %s\n",
              length, strerror (errno));
+
       return -1;
     }
 
   result = 0;
   if (config->login_string_header)
-    result = sprintf (temp, "%s&", config->login_string_header);
+    {
+      result = sprintf (temp, "%s&", config->login_string_header);
+    }
   
   result += sprintf (&temp[result], "%s=%s&%s=%s",
                      config->username_key,
@@ -229,24 +248,26 @@ http_internet_login (config_data_t *config, int verbose)
                      config->password);
 
   if (config->login_string_footer)
-    result += sprintf (&temp[result], "&%s", config->login_string_footer);
+    {
+      result += sprintf (&temp[result], "&%s", config->login_string_footer);
+    }
   
 #ifdef DEBUG
-  if (verbose)
-    {
-      LOG("Non-url-encoded login string:\n%s\n", temp);
-    }
+  LOG("Non-url-encoded login string:\n%s\n", temp);
 #endif
 
   login_string = (char *) malloc (length);
   if (!login_string)
     {
       free (temp);
+      close (config->sockfd);
       ERROR ("Failed to allocate memory (%d bytes): %s\n",
              length, strerror (errno));
+
       return -1;
     }
 
+  /* Encode the the login string. No spaces! */
   {
     int i;
 
@@ -260,6 +281,7 @@ http_internet_login (config_data_t *config, int verbose)
       }
   }
 
+  /* Paste it all into the login template */
   sprintf (config->send_msg, LOGIN_MSG,
            config->login_page,
            config->login_server,
@@ -272,12 +294,10 @@ http_internet_login (config_data_t *config, int verbose)
   free (temp);
 
 #ifdef DEBUG
-  if (verbose)
-    {
-      LOG("Sent:\n%s\n", config->send_msg);
-    }
+  LOG("Sent:\n%s\n", config->send_msg);
 #endif
 
+  /* Send login string to server */
   tries = 0;
   do
     {
@@ -289,15 +309,15 @@ http_internet_login (config_data_t *config, int verbose)
 
   if (-1 == result)
     {
-      ERROR("Send login request to login server (%s): %s\n", 
-	    config->login_server, strerror(errno));
       close (config->sockfd);
+      ERROR("Failed to send login request to login server (%s): %s\n", 
+	    config->login_server, strerror(errno));
+
       return -1;
     }
 
-  /* Wait for a while before reading the server
-   * result. Maybe we could find another way to
-   * synchronize with the server ... ?
+  /* Wait for a while before reading the server result. Maybe we could find
+   * another way to synchronize with the server ... ?
    */
   tries = 0;
   do 
@@ -314,8 +334,9 @@ http_internet_login (config_data_t *config, int verbose)
 
   if (-1 == result)
     {
-      ERROR("Read login reply: %s\n", strerror (errno));
       close (config->sockfd);
+      ERROR("Read login reply: %s\n", strerror (errno));
+
       return -1;
     }
 #ifdef DEBUG
@@ -331,6 +352,17 @@ http_internet_login (config_data_t *config, int verbose)
 }
 
 
+/**
+ * http_internet_logout - Handles the graceful logout for the client.
+ * @config:  Pointer to configuration data.
+ * @verbose: Diagnostic output.
+ *
+ * This function is called by the client to gracefully logout from
+ * the login server.
+ *
+ * Returns: 0 when logged out OK, otherwise -1.
+ */
+
 int
 http_internet_logout (config_data_t *config, int verbose)
 {
@@ -340,10 +372,12 @@ http_internet_logout (config_data_t *config, int verbose)
 
   result = http_pre_login (config, verbose);
   if (-1 == result)
-    return result;
+    {
+      return result;
+    }
 
   /* Are we logged in? */
-  if (strstr (config->get_msg, config->logged_in_string) != NULL)
+  if (http_logged_in_already (config))
     {
       /* Open a connection to the login server */
       config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
@@ -351,6 +385,7 @@ http_internet_logout (config_data_t *config, int verbose)
         {
           ERROR("Failed to connect to login server (%s): %s\n",
 		config->login_server, strerror (errno));
+
           return -1;
         }
 
@@ -361,10 +396,7 @@ http_internet_logout (config_data_t *config, int verbose)
                config->init_page, config->login_server);
 
 #ifdef DEBUG
-      if (verbose)
-        {
-          LOG ("Sent:\n%s\n", config->send_msg);
-        }
+      LOG ("Sent:\n%s\n", config->send_msg);
 #endif
 
       result = send (config->sockfd, config->send_msg,
@@ -372,11 +404,11 @@ http_internet_logout (config_data_t *config, int verbose)
       
       if (-1 == result)
         {
-          ERROR("Logout request failed: %s\n", strerror(errno));
           close (config->sockfd);
+          ERROR("Logout request failed: %s\n", strerror(errno));
+
           return -1;
         }
-
 
       FD_ZERO (&check_sockfd);
       FD_SET (config->sockfd, &check_sockfd);
@@ -389,97 +421,144 @@ http_internet_logout (config_data_t *config, int verbose)
       result = select (1, &check_sockfd, NULL, NULL, &c_tv);
       if (-1 == result)
         {
-          ERROR("%s does not respond, cannot log out!\n", config->logout_page);
           close (config->sockfd);
+          ERROR("%s does not respond, cannot log out!\n", config->logout_page);
+
           return -1;
         }
 
       result = read (config->sockfd, config->get_msg, sizeof (config->get_msg));
       if (-1 == result)
         {
-          ERROR("Read logout reply: %s\n", strerror (errno));
           close (config->sockfd);
+          ERROR("Read logout reply: %s\n", strerror (errno));
+
           return -1;
         }
 
 #ifdef DEBUG
-      if (verbose)
-        {
-          LOG ("Received:\n%s", config->get_msg);
-        }
+      LOG ("Received:\n%s", config->get_msg);
 #endif
 
-      if (strstr (config->get_msg, config->logged_out_string) == NULL)
+      /* Interpret answer from server. */
+      if (http_test_if_logged_out (config))
         {
+          close (config->sockfd);
           ERROR("%s: LOGOUT FAILED\n", PACKAGE_NAME);
+
           return -1;
         }
 
       LOG("%s: SUCCESSFUL LOGOUT\n", PACKAGE_NAME);
-      config->logged_in = 0;
     }
 
+  /* Make sure to close the connection before leaving. */
   close (config->sockfd);
 
   return 0;
 }
 
 
-/* Used by the daemon
- * XXX - should perhaps be renamed to http_do_login() and simplified somewhat. 
+/** 
+ * http_do_login - Handles periodic logins for the daemon only
+ * @config:  Pointer to configuration data.
+ * @verbose: Diagnostic output.
+ *
+ * Ths function is exclusively called by the daemon but placed here to keep
+ * all similar functionality in one place. It takes care to 
+ * 
+ *
+ * 
+ * Returns: Value of config->logged_in.
  */
 
 int
-http_log_login (config_data_t *config, int verbose)
+http_do_login (config_data_t *config, int verbose)
 {
-  int i;
-  struct tm *timep;
-  time_t the_time;
+  int try, result;
 
-  (void) time (&the_time);
-  timep = localtime (&the_time);
-
-  if (http_internet_login (config, verbose))
+  /* XXX - I've tried to redo this function as a do-while() loop instead
+   * of this brain dead if-for()-break-continue mess. But it turned out
+   * that the actual ordering of events to the server got screwed up if
+   * http_pre_login() fails. We always need to get the login page up 
+   * first before we try the actual login otherwise the server will be
+   * very crossed with us.
+   */
+  result = http_internet_login (config, verbose);
+  /* If we fail to do the hokey pokey */
+  if (result || http_test_if_logged_in (config))
     {
-      /* If login fails, try three times with increasingly
-       * longer delays between each.
+      LOG (__FUNCTION__ "(): failed first login attempt.\n");
+
+      /* Login failed, or status unknown. */
+      config->logged_in = 0;
+
+      /* When login fails, retry two more times with increasingly
+       * longer delays between each try.
        */
-      for (i = 0; i < MAX_RETRIES; i++)
+      for (try = 1; try < MAX_RETRIES && result; try++)
         {
           /* Sleep for a while if it is not the first try... */
+          LOG (__FUNCTION__ "(): waiting a while before retrying...\n");
           sleep (5 * i);
 
           /* If we cannot get the login or csw pages we sleep some more */
-          if (-1 == http_pre_login (config, verbose))
+          result = http_pre_login (config, verbose);
+          if (result)
             {
-              ERROR("%s: Failed to bring up login page.\n", PACKAGE_NAME);
-              continue;
+              ERROR (__FUNCTION__ "(): failed to bring up login page.\n");
             }
-          
-          /* Test if we're logged in already. */
-          if (strstr (config->get_msg, config->logged_in_string))
+          else
             {
-              config->logged_in = 1;
-              break;
+              /* Okey dokey - pre-login phase OK. Now, see what page we 
+               * actually received: login page or CSW/Session Control Window/
+               * After each successful attempt to get the login page we
+               * also need to check if that page redirected us to the
+               * post login page - if so there is no need to actually
+               * do the login tango with the server.
+               */
+              result = http_test_if_logged_in (config);
+              if (result)
+                {
+                  /* Actual login page - do the login */
+                  result = http_internet_login (config, verbose);
+
+                  /* For the logfile -- tell status. */
+                  if (result)
+                    {
+                      LOG (__FUNCTION__ "(): failed to send login (attempt #%d).\n", try + 1);
+                    }
+                  else
+                    {
+                      result = http_internet_login (config, verbose);
+                      if (result)
+                        {
+                          LOG (__FUNCTION__ "(): login sent successfully but the reply was unexpected.\n");
+#ifdef DEBUG
+                          LOG (__FUNCTION__ "(): Here is the reply:\n");
+                          LOG (config->get_msg);
+#else
+                          LOG (__FUNCTION__ "(): To spare your logfile the actual reply is only visible in debug version.\n");
+                          LOG (__FUNCTION__ "(): Rebuild with --enable-debug option to configure script.\n");
+#endif
+                        }
+                      else
+                        {
+                          LOG (__FUNCTION__ "(): OK!\n");
+                        }
+                    }
+                }
             }
-          
-          if (!http_internet_login (config, verbose))
-            {
-              config->logged_in = 1;
-              break;
-            }
-	  else
-	    {
-              config->logged_in = 0;
-	    }
         }
     }
 
-  /* Tell those who want to know why we failed. */
-  if (!config->logged_in)
+  /* Check if we managed to login and in case we failed,
+   * tell those who want to know why we failed. 
+   */
+  if (result)
     {
-      ERROR("%s: login failed after %d retries - aborting!\n", 
-            PACKAGE_NAME, MAX_RETRIES);
+      ERROR (__FUNCTION__ "(): failed %d retries - backing off for a while.\n",
+             MAX_RETRIES);
     }
 
   return config->logged_in;
