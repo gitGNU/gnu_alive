@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+enum {LOG_NONE = 0, LOG_FILE, LOG_CONSOLE};
 
 void write_log (char *fmt, ...);
 
