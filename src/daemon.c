@@ -12,7 +12,7 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -87,7 +87,7 @@ daemonize (void)
       signal (SIGTSTP, SIG_IGN);
 #endif
       /* Become session leader and group process leader
-       * with no controlling terminal 
+       * with no controlling terminal
        */
       setsid ();
     }
@@ -127,7 +127,7 @@ daemon_sighandler (int signal)
 
 /**
  * autologin_daemon - This is what keeps us going
- * 
+ *
  * This thread function is the one responsible for keeping the
  * connection open.  This function is called when a properly
  * daemonized thread is started.
@@ -140,12 +140,12 @@ daemon_sighandler (int signal)
 void
 daemon_thread (config_data_t *config, int verbose)
 {
-  int result, slept, latched_logged_in = 0;
+  int result, slept, latched_logged_in = -1;
   unsigned int timeout = 60 * config->daemon_delay;
   pid_t mypid = getpid ();
 
-  (void) signal (SIGTERM, daemon_sighandler);
-  (void) signal (SIGHUP, daemon_sighandler);
+  signal (SIGTERM, daemon_sighandler);
+  signal (SIGHUP, daemon_sighandler);
 
   result = lock_create (&config->pid_file, mypid);
   if (result)
@@ -178,19 +178,15 @@ daemon_thread (config_data_t *config, int verbose)
       slept = sleep (timeout);
 
       /* The "ping" daemon only reads /sd/init */
-      result = http_pre_login (config, verbose);
-      if (result)
-        {
-          LOG ("Failed to bring up login page.");
-          continue;
-        }
+      http_pre_login (config, verbose);
 
       /* The login daemon also tries to login, but only if
        * the call to http_pre_login() did *not* bring up
        * the "redirect page".
        */
-      if (config->daemon_type && http_test_if_logged_in (config))
+      if (config->daemon_type && !config->logged_in)
         {
+          LOG ("Daemon logging in again.");
           http_do_login (config, verbose);
         }
 
@@ -206,5 +202,16 @@ daemon_thread (config_data_t *config, int verbose)
               write_logfile (LOG_INFO, "Forced relogin FAILED!");
             }
         }
+      else
+        {
+          LOG ("Periodic relogin %s.", config->logged_in ? "OK" : "FAILED");
+        }
     }
 }
+
+/* Local Variables:
+ * mode: C;
+ * c-file-style: gnu;
+ * indent-tabs-mode: nil;
+ * End:
+ */
