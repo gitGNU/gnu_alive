@@ -1,12 +1,29 @@
 2004-02-16  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
+	* lib/conf/parser.y (log): Add neat log functionality that can be
+	turned on with -DDEBUG, --enable-debug.
+
 	* src/config.c (config_load): Don't continue if conf_read_file() fails.
 
 	* lib/conf/tokens.l: Clean up mess when values inside "". 
 
+	(log): Add neat log functionality that can be turned on with
+	-DDEBUG, --enable-debug.
+
+	Also, fix missing stuff for "lexer in lexer" while parsing values
+	included in ""'s.
+
 	* lib/conf/conf.c (strlndup): Don't overwrite last character of
-	string with NUL.
-	(conf_set_value): len decremented too much.
+	string with NUL. Also, make sure we don't try to copy NULL strings.
+	
+	(conf_set_value): len decremented too much. Make sure to check
+	for sane values of len before decrementing it. Also, we cannot
+	free value if value has been tampered with, so we save value in
+	orig_value and free it instead.
+
+	(conf_read_file): Remove unnecessary yyin, using stdin instead. 
+	Plus minor formatting cleanups.
+
 
 2004-02-10  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 

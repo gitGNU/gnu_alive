@@ -17,10 +17,21 @@ OTHER [\!\@\#\£\¤\$\%\&\/\{\(\[\)\]\}\?\+\\~\"\'\*\,\.\:]
 
  */
 %{
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <string.h>
 
 #include "parser.h"
+
+#ifdef DEBUG
+#define log(args...) fprintf (stderr, args);
+#else
+#define log(args...)
+#endif
 
 %}
 
@@ -34,7 +45,7 @@ ALPHA           [a-zA-Z_\-]
 NAME            ^{WS}{ALPHA}+
 VALUE           ({DIGIT}|{ALPHA}|{OTHER})+[;]*
 
-%x VALUE_INPUT
+%x ARG_MODE
 %option yylineno
 /* %option reentrant */
 /* %option bison-bridge */
@@ -43,26 +54,27 @@ VALUE           ({DIGIT}|{ALPHA}|{OTHER})+[;]*
 /* %option noyywrap */
 %%
 
-{COMMENT}       {/* printf("%s", yytext); */}
+{COMMENT}       {log ("%s", yytext);}
 
-{WS}            {/* printf("%s", yytext); */}
+{WS}            {log ("%s", yytext);}
 
-[sS][eE][tT]    {/* printf("SET "); */
+[sS][eE][tT]    {log ("SET ");
                  return SET;}
 
-=               {/* printf(" EQU "); */
+=               {log (" EQU ");
                  return EQU;}
 
 {NAME}          {yylval.str = strdup(yytext);  /*XXX - Check for NULL */
-                 /* printf("ID(%s)", yylval.str); */
+                 log ("ID(%s)", yylval.str);
                  return ID;}
 
 {VALUE}         {yylval.str = strdup(yytext); /* XXX - Check for NULL */
-                 /* printf("ARG(%s)", yylval.str); */
+                 log ("ARG(%s)", yylval.str);
                  return ARG;}
 
-\"               {BEGIN(VALUE_INPUT); yylval.str = NULL;}
-<ARG_MODE>[^\"]* {yylval.str = strdup(yytext);}
+\"               {BEGIN(ARG_MODE); yylval.str = NULL;}
+<ARG_MODE>[^\"]+ {yylval.str = strdup(yytext);
+                  log ("ARG(%s)", yylval.str);}
 <ARG_MODE>\"     {BEGIN(INITIAL); if (!yylval.str) yylval.str = strdup(""); return ARG;}
 
 %%

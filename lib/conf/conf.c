@@ -1,6 +1,10 @@
 /* conf.c -  
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +34,6 @@ conf_read_file (param_t *parameter_list, char *file)
   FILE   *fp; 
   param_t *p;
   int result;
-  extern FILE *yyin;
 
   if (!parameter_list)
     {
@@ -38,8 +41,8 @@ conf_read_file (param_t *parameter_list, char *file)
       return -1;
     }
 
-   stdin_fd = fileno(stdin);   /*save descriptor for 'stdin' */ 
-   fd       = dup(stdin_fd); 
+   stdin_fd = fileno (stdin);   /* save descriptor for 'stdin' */ 
+   fd       = dup (stdin_fd); 
  
    if (fd == -1) 
       return -1;               /* failed to duplicate input descriptor */ 
@@ -60,7 +63,7 @@ conf_read_file (param_t *parameter_list, char *file)
    /* UNDO: now undo the effects of redirecting input... */ 
    fclose(stdin); 
  
-   stdin = fdopen(stdin_fd, "r"); 
+   stdin = fdopen (stdin_fd, "r"); 
  
    if (!stdin) 
       return -4;               /* failed to reestablish 'stdin' */ 
@@ -128,6 +131,9 @@ strlndup (char *src, size_t len)
 {
   char *dst;
 
+  if (!src)			/* Cannot copy non-existing string. */
+    return NULL;
+
   dst = malloc (len + 1);
   if (!dst)
     return NULL;
@@ -180,6 +186,7 @@ conf_set_value (param_t *parameter_list, char *key, char *value)
 {
   int result;
   param_t *parm;
+  char    *orig_value = value;
 
   /* Check if Flex failed to allocate a new string. */
   if (!key || !value)
@@ -197,15 +204,15 @@ conf_set_value (param_t *parameter_list, char *key, char *value)
       char *str;
 
       /* Cleanup of argument. It can be any of the following:
-       * value
-       * "value"
-       * value;
-       * "value";
+       * value     len=6
+       * "value"   len=8
+       * value;"   len=7
+       * "value";  len=9
        */
-      if (value [len - 1] == ';')
+      if (len > 0 && value [len - 1] == ';')
 	len --;
 
-      if (value [0] == '"' && value [len - 1] == '"')
+      if (len > 1 && value [0] == '"' && value [len - 1] == '"')
 	{
 	  len -= 1;
 	  value++;
@@ -213,10 +220,11 @@ conf_set_value (param_t *parameter_list, char *key, char *value)
 
       str = strlndup (value, len);
 
-      /* Free the string strdup():ed by flex.
+      /* Free the string strdup():ed by flex, not the one
+       * we might have been messing around with, pointer-wise.
        * XXX - Interface-wise this is not very good, flex should do it.
        */
-      free (value);
+      free (orig_value);
 
       parm->value = str;
       result  = 0;

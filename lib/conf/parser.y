@@ -1,9 +1,19 @@
 /* Hey Emacs, this is code for yacc to eat, treat it as -*-C-*- code */
 %{
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 
 #include "conf.h"
 #include "config.h"
+
+#ifdef DEBUG
+#define log(args...) fprintf (stderr, args);
+#else
+#define log(args...)
+#endif
 
 extern int yylex (void);
 
@@ -24,11 +34,13 @@ extern int yylineno;
 
 int yyerror (char *s)
 {
-  fprintf (stderr, "ERROR: %s\n", s);
+  /* XXX - Add filename to syntax error message. */
+  fprintf (stderr, "<filename>:%d -- %s\n", yylineno, s);
 
   return -1;
 }
 
+/* XXX - Add filename to syntax error message. */
 #define conf_set(key,value)				\
   if (conf_set_value ((param_t *)list, key, value))	\
     fprintf (stderr,					\
@@ -57,9 +69,9 @@ tuples : tuple
        | SET tuple
        ;
 
-tuple  : ID EQU ARG             {/* printf ("\nBison(ID:%s)(ARG:%s)", $1, $3); */
+tuple  : ID EQU ARG             {log ("\nBison(ID:%s)(ARG:%s)", $1, $3);
                                  conf_set ($1, $3);}
-       | ID ARG                 {/* printf ("%s(%s)\n", $1, $2); */
+       | ID ARG                 {log ("%s(%s)\n", $1, $2);
                                  conf_set ($1, $2);}
        ;
  
