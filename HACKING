@@ -1,0 +1,89 @@
+Contributors to qadsl are welcome, but please follow the below
+guide lines. Specifically the section on patches.
+
+
+Working with qadsl
+==================
+
+The qadsl daemon is divided into logical blocks:
+
+etc/
+lib/
+  conf/
+  html/
+src/
+
+http://www.gnu.org/prep/maintain_toc.html
+
+
+The qadsl coding style
+======================
+
+Make yourself familiar with the GNU coding standards (shipped with
+most GNU/Linux systems as the standards.info file), then read the
+Linux kernel coding standards and ignore Linus' jokes.  Then look at
+the Gtk+ header files to get aquainted on how to write nice header
+files that are almost self documenting. 
+
+Uses spaces instead of tabs and set Emacs to use gnu indentation
+style, "C-c .2 is the shortkey.
+
+TODO: add emacs style file headers -*-C-*- plus magic of setting
+      up the rest correctly (spaces for tabs and GNU style).
+
+qadsl is prepared for gtk-doc function header comment parsing. Please
+follow that style of coding.
+
+Example:
+
+   /**
+    * function_name - Short description
+    * @variable_1: Description.
+    * @variable_2: Description.
+    * @variable_3: Description.
+    * @variable_4: Description.
+    *
+    * Empty line, then function description with references to
+    * input variables like @variable_1 or other functions(), 
+    * %CONSTANTS and more. See the gtk-doc specification written
+    * origianlly by Miguel de Icaza. 
+    *
+    * New subsections are started like this:
+    *
+    * Subsection: yada yada
+    *
+    * Finish off with the output/generated data.
+    *
+    * Returns: -1 for all errors.
+    *           0 when OK.
+    */
+
+For all other multi-line comments use
+
+   /* text
+    * is written
+    * like
+    * this.
+    */
+
+
+Submitting patches
+==================
+
+Patches are preferrably submitted against the latest CVS head
+revision of the file(s) in question:
+
+# cvs diff -u -r HEAD filename > patch-qadsl-file-brief-description.diff
+
+Otherwise the following always applies:
+
+# ls 
+qadsl-orig qadsl
+
+# diff -ruN qadsl-orig qadsl >patch-qadsl-brief-description.diff
+
+If the .diff is a bit on the large side it can be gzipped,
+or bzip2:ed. But for small diffs that is not recommended.
+
+# gzip -9 patch-qadsl-brief-description.diff
+
