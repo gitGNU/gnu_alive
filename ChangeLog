@@ -1,5 +1,7 @@
 2004-02-16  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
+	* configure.in: Bump verion number.
+
 	* lib/conf/parser.y (log): Add neat log functionality that can be
 	turned on with -DDEBUG, --enable-debug.
 
