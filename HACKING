@@ -87,3 +87,52 @@ or bzip2:ed. But for small diffs that is not recommended.
 
 # gzip -9 patch-qadsl-brief-description.diff
 
+
+Doing releases
+==============
+
+First we try to make sure the HEAD of qadsl builds, installs and works 
+at least within some basic boundaries of what one could expect.
+
+Second we do some sort of freeze where we cancel CVS commits, only
+the release engineer is allowed to commit changes. Only critical 
+patches are let in. This freeze phase is preferably done on its
+own release branch, patches made on this branch should of course
+also be committed on HEAD.
+
+Third, the branch (might still be HEAD) is tagged using the following
+notation:
+
+	RELEASE-MAJOR_MINOR_FIX
+                  |     |    |
+                  |     |    +------ Fix/Patch release number
+                  |     +----------- Minor number, minor feature additions.
+                  +----------------- Major stuff, big code rewrites etc.
+Example:
+       RELEASE-1_3_1 is actually qadsl-1.3.1 where dots are replaced with
+       underscores. It's just that simple! :-)
+
+Fourth, when tagged a new tree is checked out from CVS using the following:
+cvs co -r RELEASE-MAJOR_MINOR_FIX -d qadsl-major.minor.fix-cvs qadsl
+
+Fifth, from that directory a tar.gz source distribution is built:
+cd qadsl-major.minor.fix-cvs/
+./configure                    <--- Just to get a Makefile
+make dist
+mv qadsl-major.minor.fix.tar.gz ../
+cd ..
+
+Sixth, the built source distribution is then the basis for the deb
+(and rpm) package(s). Like this:
+tar xvfz qadsl-major.minor.fix.tar.gz
+cd qadsl-major.minor.fix/
+dpkg-buildpackage -tc -b
+
+Signing of the debs can, at this point, only be done by the deb
+package maintainer.
+
+Seventh, the .tar.gz and .deb files are signed with gpg -b before
+being uploaded to ftp://savannah.gnu.org/incoming/savannah/qadsl/.
+All relevant files is then uploaded using anonymous FTP to the
+above location.
+
