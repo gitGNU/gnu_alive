@@ -6,14 +6,21 @@
 #include "config.h"
 
 extern int yylex (void);
-extern int yyget_lineno (void);
 
 /* Defines needed for a pure reentrant parser/lexer.
    These are dsiabled for now due to failure to realize.
    #define YYLEX_PARAM   foo
  */
 #define YYPARSE_PARAM list
+
+#if 0 /* Not yet reentrant ... 
+       * reverting in the meantime for the sake of cygwin port 
+       */
+extern int yyget_lineno (void);
 #define yylineno      yyget_lineno ()
+#else
+extern int yylineno;
+#endif
 
 int yyerror (char *s)
 {
