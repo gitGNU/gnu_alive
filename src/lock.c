@@ -1,5 +1,5 @@
 /* lock.c - Lock file management for qADSL.
- * 
+ *
  * Copyright (C) 2003, 2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  * Copyright (C) 2002, 2003 Torgny Lyon <torgny()enterprise!hb!se>
  *
@@ -12,7 +12,7 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -82,20 +82,20 @@ lock_create (char **file, pid_t pid)
   lock.l_start = 0;
   lock.l_whence = SEEK_SET;
   lock.l_len = 0;
-  if (fcntl (fd, F_SETLK, &lock) == -1) 
+  if (fcntl (fd, F_SETLK, &lock) == -1)
     {
       close(fd);
       return -1;
     }
 #elif defined(LOCK_FLOCK)
-  if (flock(fd,  LOCK_EX | LOCK_NB) == -1) 
+  if (flock(fd,  LOCK_EX | LOCK_NB) == -1)
     {
       close(fd);
       return -1;
     }
 #elif defined(LOCK_LOCKF)
   lseek(fd, 0, SEEK_SET);
-  if (lockf(fd, F_TLOCK, 0) == -1) 
+  if (lockf(fd, F_TLOCK, 0) == -1)
     {
       close(fd);
       return -1;
@@ -106,26 +106,26 @@ lock_create (char **file, pid_t pid)
   tlock.l_whence = SEEK_SET;
   tlock.l_start = 0;
   tlock.l_len = 0;
-  if (fcntl(fd, F_FREESP, &tlock) != 0) 
+  if (fcntl(fd, F_FREESP, &tlock) != 0)
     {
       close (fd);
       return -1;
     }
 #else
-  if (ftruncate(fd, (off_t) 0) == -1) 
+  if (ftruncate(fd, (off_t) 0) == -1)
     {
       close(fd);
       return -1;
     }
 #endif
   fp = fdopen(fd, "w");
-  if (NULL == fp) 
+  if (NULL == fp)
     {
       close(fd);
       return -1;
     }
-	
-  if (fprintf(fp, "%ld\n", (long) pid) < 0) 
+
+  if (fprintf(fp, "%ld\n", (long) pid) < 0)
     {
       fclose(fp);
       return -1;
@@ -166,18 +166,18 @@ lock_read (char **file)
   do
     {
       fd = open(*file, O_RDONLY);
-      if (-1 == fd) 
+      if (-1 == fd)
         {
           *file = fallback_pid_files [fallback++];
           if (NULL == *file)
             {
                /* This makes us depend on procps and coreutils in GNU/Linux
-		* but only coreutils in GNU/Hurd. 
-		* Question is: Do we want this? 
+		* but only coreutils in GNU/Hurd.
+		* Question is: Do we want this?
 		* Answer:      No, do not allow daemon to start if no lockfile.
 		*/
 /*                system ("ps --no-heading -C qadsl | head -1 | cut -f 1 -d ' ' >"); */
-               
+
               if (ENOENT == errno)
                 return 0;
               else
@@ -238,7 +238,7 @@ lock_remove (char *file)
   int result;
 
   result = unlink (file);
-  if (result == -1) 
+  if (result == -1)
     {
       if (errno == ENOENT)
         result = 0;
@@ -247,3 +247,9 @@ lock_remove (char *file)
   return result;
 }
 
+/* Local Variables:
+ * mode: C;
+ * c-file-style: gnu;
+ * indent-tabs-mode: nil;
+ * End:
+ */
