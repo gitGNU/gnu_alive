@@ -5,4 +5,5 @@
 
 rm -rf autom4te.cache
 gettextize --intl -f -c
-autoreconf -f -i -W gnu
+autoreconf -f -i -W portability
+

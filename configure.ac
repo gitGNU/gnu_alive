@@ -16,6 +16,7 @@ ISODATE=`date +%Y-%m-%d`
 AC_SUBST(ISODATE)
 
 AC_CANONICAL_HOST
+AM_MAINTAINER_MODE
 
 dnl Checks for programs.
 AC_PROG_INSTALL
