@@ -1,3 +1,10 @@
+2004-02-10  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* lib/conf/conf.c: Add unistd.h, dup() needs it.
+
+	* lib/conf/parser.y: Temporarily revert to non-reentrant yylineno
+	behaviour to be able to build on cygwin.
+
 2004-02-09  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* lib/conf/conf.c (strlndup): Renamed copy_string() to strlndup().
