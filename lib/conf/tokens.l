@@ -24,7 +24,7 @@ OTHER           [!\"@#гд\$%&\/\{\(\[\)\]\}?+\\~\'*,\.:]
 ALPHA           [a-zA-Z_\-]
 
 NAME            ^{WS}{ALPHA}+
-VALUE           ({DIGIT}|{ALPHA}|{OTHER})+[;]*
+VALUE           ({DIGIT}|{ALPHA}|{OTHER})+
 
 %option yylineno
 %%
@@ -43,7 +43,11 @@ VALUE           ({DIGIT}|{ALPHA}|{OTHER})+[;]*
                  /* printf("ID(%s)", yylval.str); */
                  return ID;}
 
-{VALUE}         {yylval.str = strdup(yytext);  /* XXX - Check for NULL */
+{VALUE}[;]*     {yylval.str = strdup(yytext);  /* XXX - Check for NULL */
+                 /* printf("ARG(%s)", yylval.str); */
+                 return ARG;}
+
+\"{VALUE}\"[;]* {yylval.str = strdup(yytext);  /* XXX - Check for NULL */
                  /* printf("ARG(%s)", yylval.str); */
                  return ARG;}
 

@@ -97,7 +97,31 @@ conf_set_value (char *key, char *value)
   parm = conf_find_key (key);
   if (parm)
     {
-      parm->value = value;
+      int len = strlen (value);
+      char *str;
+
+      /* Cleanup of argument. It can be any of the following:
+       * value
+       * "value"
+       * value;
+       * "value";
+       */
+      if (value [len - 1] == ';')
+	len --;
+
+      if (value [0] == '"' && value [len - 1] == '"')
+	{
+	  len -= 2;
+	  str = strndup (++value, len);
+	}
+      else
+	{
+	  str = strndup (value, len);
+	}
+
+      free (value);
+
+      parm->value = str;
       result  = 0;
     }
   else
