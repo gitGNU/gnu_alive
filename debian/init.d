@@ -1,9 +1,9 @@
 #!/bin/sh
 # GNU Alive init script
 #
-# Written by Miquel van Smoorenburg <miquels@cistron.nl>.
-# Modified for Debian GNU/Linux by Ian Murdock <imurdock@gnu.ai.mit.edu>.
-# Further modified for alive by http://savannah.gnu.org/projects/alive/
+# Written by Miquel van Smoorenburg <miquels()cistron!nl>.
+# Modified for Debian GNU/Linux by Ian Murdock <imurdock()gnu!ai!mit!edu>.
+# Further modified for GNU Alive by Joachim Nilsson <joachim!nilsson()member!fsf!org>.
 #
 # Version:	@(#)skeleton  1.8  03-Mar-1998  miquels@cistron.nl
 #

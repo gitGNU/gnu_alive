@@ -1,0 +1,39 @@
+#!/bin/sh -e
+# If /etc/qadsl.conf exists, rename it alive.conf to preserve
+# user settings.  OK, GNU Alive can read old qadsl.conf files,
+# the alive.deb does otherwise install alive.conf which makes
+# the system collect cruft, and alive.conf is the premiere
+# choice for the program, so if it's unconfigured things might
+# go bad.
+#
+
+CONF_FILE=/etc/alive.conf
+
+db_get alive/use_debconf_question
+if [ "$RET" == "true" ]; then
+    db_get alive/login_server_question
+    SERVER=$RET
+    db_get alive/username_question
+    USERNAME=$RET
+    db_get alive/password_question
+    PASSWORD=$RET
+
+    sed [-n] '
+s/^\([	]?USERNAME[	]?=\).*$/\1 $USERNAME/
+s/^\([	]?PASSWIRD[	]?=\).*$/\1 $PASSWORD/
+s/^\([	]?SERVER[	]?=\).*$/\1 $SERVER/
+' <$CONF_FILE >$CONF_FILE.old && mv $CONF_FILE.old $CONF_FILE
+
+    if [ -x "/etc/init.d/alive" ]; then
+        update-rc.d alive defaults >/dev/null
+        if [ -x /usr/sbin/invoke-rc.d ]; then
+	    invoke-rc.d alive start || exit 0
+        else
+	    /etc/init.d/alive start || exit 0
+        fi
+    fi
+else
+    if [ -x "/etc/init.d/alive" ]; then
+        update-rc.d alive defaults >/dev/null
+    fi
+fi

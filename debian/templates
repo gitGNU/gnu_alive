@@ -1,0 +1,104 @@
+Template: alive/use_debconf_question
+Type: boolean
+Descript: Let Debian handle /etc/alive.conf?
+ If you answer yes then Debian will ask all necessary questions
+ and setup /etc/alive.conf for you.  All your answers will be
+ remembered for future upgrades, so you will not be bugged again.
+ .
+ Answer no to this question to handle /etc/alive.conf yourself.
+ Please note that GNU Alive will not be started automatically
+ if you answer no.
+
+
+Template: alive/reuse_qadsl_conf_values_question
+Type: boolean
+Description: Reuse settings from old qadsl.conf in alive.conf?
+ A configuration file from a previous installation was found
+ in /etc/qadsl.conf.  Would you like to reuse the settings in
+ alive.conf or configure a new one?
+ .
+ Recently qadsl was renamed GNU Alive and as such it is completely
+ backwards compatible.  If your old settings file is correct then
+ it is safe to answer yes here.
+ .
+ Please note, however, that this installation program does not
+ take old local dotfiles, i.e. ~/.qadslrc, into account.  The
+ program itself though does, but to avoid any future confusion
+ it is strongly suggested that you rename that file ~/.aliverc
+ or create a new one.
+ .
+ The config file search order for GNU Alive is:
+   1. Any file given on the command line.
+   2. ~/.aliverc
+   3. ~/.qadslrc
+   4. /etc/alive.conf
+   5. /etc/qadsl.conf
+ .
+ Answer yes to let reuse old qadsl.conf settings in alive.conf.
+ Answer no to create a new /etc/alive.conf with Debconf.
+
+Template: alive/template_installed_stmt
+Type: note
+Description: An alive.conf template installed!
+ A template configuration file has been installed in /etc/alive.conf.
+ .
+ Please edit it to suit your needs and then enable the daemon by also
+ editing the init script, /etc/init.d/alive.
+ .
+ As is customary for these kinds of installations the daemon is
+ disabled by default so no unintended communication to the outside
+ world is attempted.
+
+Template: alive/login_server_question
+Type: string
+Default: 10.0.0.1
+Description: Login server name or IP number?
+ Please input here the login server name or IP number.
+ .
+ In most cases the default IP number is sufficient, and in 
+ any case you should have received this information from
+ your ISP, Internet Service Provider, along with your
+ username and password.
+
+Template: alive/username_question
+Type: string
+Description: Your login- or username?
+ Please input your designated username.
+ .
+ This is information you must have from your ISP.  You cannot
+ access the login server without it.
+
+Template: alive/password_question
+Type: password
+Description: Your password?
+ Please input your password.  It will not be displayed
+ in clear text here, but might be sent in clear text over
+ the Internet, depending on the server configuration.
+ .
+ This information might have been sent separately from the rest
+ of your login information, or it was all on the same piece of
+ paper from your ISP.  You can probably not access the login
+ server without it.
+
+Template: alive/done_stmt
+Type: note
+Description: All done - /etc/alive.conf created!
+ A generic configuration file has been created based on your
+ input.  The file has been set up to match a generic login server 
+ and may not work for you.  Therefore we suggest that you take
+ it for a "test drive" before you enable the automatic start
+ of the daemon.
+ .
+ For help with debugging your particular setup and with all the
+ different configuration options, see the man pages alive(8),
+ alive.conf(5) and the info document.
+ .
+ When you are confident that your setup works you can go ahead
+ and enable the daemon in /etc/init.d/alive.
+
+
+
+
+    
+
+
