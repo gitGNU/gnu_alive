@@ -7,4 +7,7 @@ libconf_a_SOURCES = conf/conf.c     \
                     conf/tokens.l   \
                     ../include/conf.h
 
-libost_a_SOURCES = strcasecmp.c
+libost_a_SOURCES = strcasecmp.c \
+	           getopt.c     \
+		   getopt1.c    \
+                   ../include/getopt.h

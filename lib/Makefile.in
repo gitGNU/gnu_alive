@@ -129,7 +129,11 @@ libconf_a_SOURCES = conf/conf.c     \
                     ../include/conf.h
 
 
-libost_a_SOURCES = strcasecmp.c
+libost_a_SOURCES = strcasecmp.c \
+	           getopt.c     \
+		   getopt1.c    \
+                   ../include/getopt.h
+
 subdir = lib
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -143,13 +147,15 @@ am_libconf_a_OBJECTS = conf.$(OBJEXT) parser.$(OBJEXT) tokens.$(OBJEXT)
 libconf_a_OBJECTS = $(am_libconf_a_OBJECTS)
 libost_a_AR = $(AR) cru
 libost_a_LIBADD =
-am_libost_a_OBJECTS = strcasecmp.$(OBJEXT)
+am_libost_a_OBJECTS = strcasecmp.$(OBJEXT) getopt.$(OBJEXT) \
+	getopt1.$(OBJEXT)
 libost_a_OBJECTS = $(am_libost_a_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)/include
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/conf.Po ./$(DEPDIR)/parser.Po \
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/conf.Po ./$(DEPDIR)/getopt.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/getopt1.Po ./$(DEPDIR)/parser.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/strcasecmp.Po ./$(DEPDIR)/tokens.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -197,6 +203,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/conf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strcasecmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tokens.Po@am__quote@
