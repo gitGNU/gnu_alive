@@ -1,6 +1,9 @@
 #ifndef __LOG_H__
 #define __LOG_H__
 
+#include <stdio.h>
+
+
 void write_log (char *fmt, ...);
 
 #define LOG(args...)				\
