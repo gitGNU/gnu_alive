@@ -1,0 +1,17 @@
+                                                            -*-outline-*-
+* v1.2.1 to v1.3.0
+
+** Major rewrite of most of the code 
+Most of the code has been restructured and rewritten to simplify the
+next big step - extension - qadsl is going places.
+
+** .conf file parser in CFG
+Bison and Flex has been called upon to do their magic on the .conf 
+file format. This has enabled a much more free and extensible file
+format.
+
+** http handling improved
+State management has been improved to be more fault tolerant. As well
+as also being cleaned up immensely.
+
+
