@@ -33,6 +33,9 @@ dnl    AC_MSG_FAILURE([Cannot find Bison, aborting.
 dnl qadsl, or rather libconf, needs Bison to generate reentrant code.])
 dnl fi
 
+dnl Add _GNU_SOURCE to enable features and activate legacy API.
+CFLAGS="${CFLAGS} -D_GNU_SOURCE"
+
 dnl Here is a check for GCC which sets all necessary flags, most notably
 dnl CFLAGS and CXXFLAGS. Checks for other compilers should do the same.
 if test "$GCC" = "yes" ; then
