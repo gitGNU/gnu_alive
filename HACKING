@@ -22,11 +22,11 @@ The qadsl coding style
 Make yourself familiar with the GNU coding standards (shipped with
 most GNU/Linux systems as the standards.info file), then read the
 Linux kernel coding standards and ignore Linus' jokes.  Then look at
-the Gtk+ header files to get aquainted on how to write nice header
+the Gtk+ header files to get acquainted on how to write nice header
 files that are almost self documenting. 
 
 Uses spaces instead of tabs and set Emacs to use gnu indentation
-style, "C-c .2 is the shortkey.
+style, "C-c .2 is the short key.
 
 TODO: add emacs style file headers -*-C-*- plus magic of setting
       up the rest correctly (spaces for tabs and GNU style).
@@ -46,7 +46,7 @@ Example:
     * Empty line, then function description with references to
     * input variables like @variable_1 or other functions(), 
     * %CONSTANTS and more. See the gtk-doc specification written
-    * origianlly by Miguel de Icaza. 
+    * originally by Miguel de Icaza. 
     *
     * New subsections are started like this:
     *
@@ -70,7 +70,7 @@ For all other multi-line comments use
 Submitting patches
 ==================
 
-Patches are preferrably submitted against the latest CVS head
+Patches are preferably submitted against the latest CVS head
 revision of the file(s) in question:
 
 # cvs diff -u -r HEAD filename > patch-qadsl-file-brief-description.diff

@@ -4,89 +4,140 @@
 #ifndef __SETTINGS_H__
 #define __SETTINGS_H__
 
-/* Define this to the location of the global config file */
+/* 
+   Define this to the location of the global
+   config file */
 #undef GLOBAL_CONF
 
-/* Define to 1 if you have the <errno.h> header file. */
+/* 
+   Define to 1 if you have the <errno.h>
+   header file. */
 #undef HAVE_ERRNO_H
 
-/* Define to 1 if you have the <inttypes.h> header file. */
+/* 
+   Define to 1 if you have the <inttypes.h>
+   header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the <memory.h> header file. */
+/* 
+   Define to 1 if you have the <memory.h>
+   header file. */
 #undef HAVE_MEMORY_H
 
-/* Define to 1 if you have the <netdb.h> header file. */
+/* 
+   Define to 1 if you have the <netdb.h>
+   header file. */
 #undef HAVE_NETDB_H
 
-/* Define to 1 if you have the <stdint.h> header file. */
+/* 
+   Define to 1 if you have the <stdint.h>
+   header file. */
 #undef HAVE_STDINT_H
 
-/* Define to 1 if you have the <stdio.h> header file. */
+/* 
+   Define to 1 if you have the <stdio.h>
+   header file. */
 #undef HAVE_STDIO_H
 
-/* Define to 1 if you have the <stdlib.h> header file. */
+/* 
+   Define to 1 if you have the <stdlib.h>
+   header file. */
 #undef HAVE_STDLIB_H
 
-/* Define to 1 if you have the <strings.h> header file. */
+/* 
+   Define to 1 if you have the <strings.h>
+   header file. */
 #undef HAVE_STRINGS_H
 
-/* Define to 1 if you have the <string.h> header file. */
+/* 
+   Define to 1 if you have the <string.h>
+   header file. */
 #undef HAVE_STRING_H
 
-/* Define to 1 if you have the <sys/stat.h> header file. */
+/* 
+   Define to 1 if you have the <sys/stat.h>
+   header file. */
 #undef HAVE_SYS_STAT_H
 
-/* Define to 1 if you have the <sys/types.h> header file. */
+/* 
+   Define to 1 if you have the <sys/types.h>
+   header file. */
 #undef HAVE_SYS_TYPES_H
 
-/* Define to 1 if you have the <unistd.h> header file. */
+/* 
+   Define to 1 if you have the <unistd.h>
+   header file. */
 #undef HAVE_UNISTD_H
 
-/* I am a hack, please send patch to remove me. */
+/* 
+   I am a hack, please send patch to
+   remove me. */
 #undef MAXDATASIZE
 
-/* I am a hack, please send patch to remove me. */
+/* 
+   I am a hack, please send patch to
+   remove me. */
 #undef MAXLEN
 
-/* Name of package */
+/* 
+   Name of package */
 #undef PACKAGE
 
-/* Define to the address where bug reports for this package should be sent. */
+/* 
+   Define to the address where bug reports for
+   this package should be sent. */
 #undef PACKAGE_BUGREPORT
 
-/* Define to the full name of this package. */
+/* 
+   Define to the full name of this package.
+   */
 #undef PACKAGE_NAME
 
-/* Define to the full name and version of this package. */
+/* 
+   Define to the full name and version of
+   this package. */
 #undef PACKAGE_STRING
 
-/* Define to the one symbol short name of this package. */
+/* 
+   Define to the one symbol short name of
+   this package. */
 #undef PACKAGE_TARNAME
 
-/* Define to the version of this package. */
+/* 
+   Define to the version of this package. */
 #undef PACKAGE_VERSION
 
-/* Define this to the location of the user config file */
+/* 
+   Define this to the location of the user
+   config file */
 #undef PID_FILE
 
-/* Define this to the HTTP port number. */
+/* 
+   Define this to the HTTP port number. */
 #undef PORT
 
-/* Define to 1 if you have the ANSI C header files. */
+/* 
+   Define to 1 if you have the ANSI
+   C header files. */
 #undef STDC_HEADERS
 
-/* Define to 1 if your <sys/time.h> declares `struct tm'. */
+/* 
+   Define to 1 if your <sys/time.h> declares `struct
+   tm'. */
 #undef TM_IN_SYS_TIME
 
-/* Define this to the location of the user config file */
+/* 
+   Define this to the location of the user
+   config file */
 #undef USER_CONF
 
-/* Version number of package */
+/* 
+   Version number of package */
 #undef VERSION
 
-/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
-   `char[]'. */
+/* 
+   Define to 1 if `lex' declares `yytext' as
+   a `char *' by default, not a `char[]'. */
 #undef YYTEXT_POINTER
 
 
@@ -95,7 +146,9 @@
 # define _GNU_SOURCE
 #endif
 
-/* Define strcasecmp as stricmp if you have one but not the other */
+/* 
+   Define strcasecmp as stricmp if you have one
+   but not the other */
 #undef strcasecmp
 
 #endif /* __SETTINGS_H__ */
