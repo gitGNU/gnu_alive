@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: bug-alive@gnu.org\n"
-"POT-Creation-Date: 2004-08-29 02:57+0200\n"
+"POT-Creation-Date: 2005-02-13 22:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,26 +75,26 @@ msgstr ""
 msgid "Memory exhausted"
 msgstr ""
 
-#: src/config.c:258
+#: src/config.c:262
 #, c-format
 msgid "Cannot find configuration file %s: %s\n"
 msgstr ""
 
-#: src/config.c:267
+#: src/config.c:271
 msgid "Read configuration:"
-msgstr ""
-
-#: src/config.c:329
-#, c-format
-msgid "Failed to read username from configuration file %s.\n"
 msgstr ""
 
 #: src/config.c:333
 #, c-format
+msgid "Failed to read username from configuration file %s.\n"
+msgstr ""
+
+#: src/config.c:337
+#, c-format
 msgid "Failed to read password from configuration file %s.\n"
 msgstr ""
 
-#: src/config.c:336
+#: src/config.c:340
 msgid "You must supply at least a username and password.\n"
 msgstr ""
 
@@ -179,12 +179,12 @@ msgstr ""
 msgid "Failed to create a socket: %s"
 msgstr ""
 
-#: src/http.c:98 src/http.c:166 src/http.c:269 src/http.c:437
+#: src/http.c:98 src/http.c:166 src/http.c:269 src/http.c:440
 #, c-format
 msgid "Failed to connect to login server (%s): %s"
 msgstr ""
 
-#: src/http.c:162 src/http.c:265 src/http.c:433
+#: src/http.c:162 src/http.c:265 src/http.c:436
 #, c-format
 msgid "Connecting to login server, %s:%d."
 msgstr ""
@@ -198,11 +198,11 @@ msgstr ""
 msgid "Closing connection to login server."
 msgstr ""
 
-#: src/http.c:190 src/http.c:357
+#: src/http.c:190 src/http.c:360
 msgid "Waiting for reply from server..."
 msgstr ""
 
-#: src/http.c:194 src/http.c:361
+#: src/http.c:194 src/http.c:364
 msgid "No reply from login server."
 msgstr ""
 
@@ -216,14 +216,14 @@ msgstr ""
 msgid "%s(): Login server \"pinged\": not logged in..."
 msgstr ""
 
-#: src/http.c:231 src/http.c:402 src/http.c:515
+#: src/http.c:231 src/http.c:405 src/http.c:518
 #, c-format
 msgid ""
 "%s(): Here is the reply:\n"
 "%s"
 msgstr ""
 
-#: src/http.c:235 src/http.c:406 src/http.c:519
+#: src/http.c:235 src/http.c:409 src/http.c:522
 #, c-format
 msgid "%s(): Start %s with --verbose --debug to see whole reply."
 msgstr ""
@@ -232,105 +232,105 @@ msgstr ""
 msgid "Composing non-url-encoded login string."
 msgstr ""
 
-#: src/http.c:285 src/http.c:306
+#: src/http.c:285 src/http.c:309
 #, c-format
 msgid "Failed to allocate memory (%d bytes): %s"
 msgstr ""
 
-#: src/http.c:300
+#: src/http.c:303
 #, c-format
 msgid "Login string: %s"
 msgstr ""
 
-#: src/http.c:338
+#: src/http.c:341
 #, c-format
 msgid "Cannot send login request to server (%s): %s"
 msgstr ""
 
-#: src/http.c:349
+#: src/http.c:352
 #, c-format
 msgid "Failed to send login request to server (%s): %s"
 msgstr ""
 
-#: src/http.c:369
+#: src/http.c:372
 #, c-format
 msgid "%s(): Error reading login reply: %s"
 msgstr ""
 
-#: src/http.c:399
+#: src/http.c:402
 #, c-format
 msgid "%s(): login failed."
 msgstr ""
 
-#: src/http.c:455
+#: src/http.c:458
 #, c-format
 msgid "Logout request failed: %s"
 msgstr ""
 
-#: src/http.c:461
+#: src/http.c:464
 msgid "Waiting for logout reply, 5 second timeout ..."
 msgstr ""
 
-#: src/http.c:466
+#: src/http.c:469
 #, c-format
 msgid "%s does not respond, cannot log out!"
 msgstr ""
 
-#: src/http.c:472
+#: src/http.c:475
 msgid "Poll says a reply has arrived, reading reply..."
 msgstr ""
 
-#: src/http.c:477
+#: src/http.c:480
 #, c-format
 msgid "Read logout reply: %s"
 msgstr ""
 
-#: src/http.c:483
+#: src/http.c:486
 #, c-format
 msgid ""
 "Received:\n"
 "%s"
 msgstr ""
 
-#: src/http.c:489
+#: src/http.c:492
 msgid "LOGOUT FAILED"
 msgstr ""
 
-#: src/http.c:495
+#: src/http.c:498
 msgid "SUCCESSFUL LOGOUT"
 msgstr ""
 
-#: src/http.c:512
+#: src/http.c:515
 #, c-format
 msgid "%s(): logout failed."
 msgstr ""
 
-#: src/http.c:556
+#: src/http.c:559
 #, c-format
 msgid "%s(): failed first login attempt."
 msgstr ""
 
-#: src/http.c:567
+#: src/http.c:570
 #, c-format
 msgid "%s(): waiting a while before retrying..."
 msgstr ""
 
-#: src/http.c:574
+#: src/http.c:577
 #, c-format
 msgid "%s(): failed to bring up login page."
 msgstr ""
 
-#: src/http.c:594
+#: src/http.c:597
 #, c-format
 msgid "%s(): failed to send login (attempt #%d)."
 msgstr ""
 
-#: src/http.c:599 src/http.c:617
+#: src/http.c:602 src/http.c:620
 #, c-format
 msgid "%s(): Success."
 msgstr ""
 
-#: src/http.c:612
+#: src/http.c:615
 #, c-format
 msgid "%s(): failed %d retries - backing off for a while."
 msgstr ""
@@ -374,62 +374,63 @@ msgstr ""
 msgid "Usage: %s [-h] [-c conffile] [-p pidfile] [-loPsdvV]\n"
 msgstr ""
 
-#: src/main.c:132
+#: src/main.c:138
 #, c-format
 msgid "%s version %s\n"
 msgstr ""
 
-#: src/main.c:158
+#: src/main.c:164
 #, c-format
 msgid "Unrecognised option, %s"
 msgstr ""
 
-#: src/main.c:187
+#: src/main.c:193
 #, c-format
 msgid ""
 "%s - Auto-login & keep-alive for Internet connections.\n"
 "\n"
 msgstr ""
 
-#: src/main.c:191
-#, c-format
-msgid ""
-"Options:\n"
-"-l, --login               Send login request\n"
-"-o, --logout              Send logout request\n"
-"-c, --conf-file=FILE      Use settings from FILE instead of "
-msgstr ""
-
-#: src/main.c:195
-#, c-format
-msgid ""
-"\n"
-"-p, --pid-file=FILE       Use FILE to store PID, default is "
-msgstr ""
-
-#: src/main.c:196
-#, c-format
-msgid ""
-"\n"
-"-P, --port=PORT           Connect to PORT on server, default is "
-msgstr ""
-
 #: src/main.c:197
 #, c-format
 msgid ""
-"\n"
-"-s, --status              Display status of login daemon\n"
+"Options:\n"
+"-l, --login               Send login request.\n"
+"-q, --quit                Quit daemon, don't logout.\n"
+"-o, --logout              Send logout request.\n"
+"-c, --conf-file=FILE      Use settings from FILE instead of "
+msgstr ""
+
+#: src/main.c:202
+#, c-format
+msgid ""
+".\n"
+"-p, --pid-file=FILE       Use FILE to store PID, default is "
+msgstr ""
+
+#: src/main.c:203
+#, c-format
+msgid ""
+".\n"
+"-P, --port=PORT           Connect to PORT on server, default is "
+msgstr ""
+
+#: src/main.c:204
+#, c-format
+msgid ""
+".\n"
+"-s, --status              Display status of login daemon.\n"
 "-v, --verbose             Display more information, on screen and in "
-"logfile\n"
+"logfile.\n"
 "-d, --debug               Display even more information, huge amounts!\n"
-"-V, --version             Display version information and exit\n"
-"-h, --help                Display this help and exit\n"
-"    --usage               Give a short usage message\n"
+"-V, --version             Display version information and exit.\n"
+"-h, --help                Display this help and exit.\n"
+"    --usage               Give a short usage message.\n"
 "\n"
 "Report bugs to <"
 msgstr ""
 
-#: src/main.c:205
+#: src/main.c:212
 #, c-format
 msgid ">\n"
 msgstr ""
@@ -489,32 +490,28 @@ msgstr ""
 msgid "Failed to delete old PID file, %s - %s"
 msgstr ""
 
-#: src/process.c:130
-msgid "No active session found, will logout anyway."
+#: src/process.c:141
+msgid "No operation selected, reverting to query status."
 msgstr ""
 
-#: src/process.c:142
-msgid "Neither login or logout selected. Reverting to query status."
-msgstr ""
-
-#: src/process.c:146
+#: src/process.c:145
 #, c-format
 msgid "Current status: %s"
 msgstr ""
 
-#: src/process.c:146
+#: src/process.c:147
 msgid "CONNECTED"
 msgstr ""
 
-#: src/process.c:146
+#: src/process.c:148
 msgid "DISCONNECTED"
 msgstr ""
 
-#: src/process.c:150
+#: src/process.c:152
 #, c-format
 msgid "Login daemon running with PID = %d"
 msgstr ""
 
-#: src/process.c:155
+#: src/process.c:157
 msgid "Login daemon not running."
 msgstr ""
