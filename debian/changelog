@@ -1,8 +1,8 @@
 qadsl (1.3.1-1) unstable; urgency=low
 
-  * Third release, based on upstream 1.3.1
+  * Third release, based on upstream 1.3.1 
 
- -- Joachim Nilsson <crash@isengard.vmlinux.org>  Sat, 31 Jan 2004 21:48:46 +0100
+ -- Joachim Nilsson <joachim.nilsson@member.fsf.org>  Sat, 31 Jan 2004 21:57:04 +0100
 
 qadsl (1.3.0-1) unstable; urgency=low
 
