@@ -33,6 +33,12 @@ Redo/cleanup the netfunc/http code some more.
 
 Mostly done. /Joachim 2004-01-20
 
+* --enable-old-config-parser
+We have the old conf-file parser still in src/config.c it
+could "easily" be made available as --enable-old-config-parser
+for people who cannot make new qadsl versions play nice with
+their old style conf-files.
+
 * Cleanup http.c
 The name space in http.c is the old code. Should look better if
 changed to http_server_init(), http_server_login() etc.
