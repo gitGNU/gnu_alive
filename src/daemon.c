@@ -1,7 +1,7 @@
 /* daemon.c - Holds the auto-login daemon and its code.
  *
- * Copyright (c) 2001 Jakob "kuba" Stasilowicz <kuba@unix.se>
- * Copyright (c) 2003 Joachim Nilsson <joachim.nilsson@vmlinux.org>
+ * Copyright (c) 2001 Jakob "kuba" Stasilowicz <kuba()unix!se>
+ * Copyright (c) 2003,2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  *
  * qADSL is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -157,18 +157,15 @@ daemon_thread (config_data_t *config, int verbose)
        * daemon to start since there is no way (other than ps)
        * to communicate the PID to the outside world.
        */
-      write_log ("%s[%d]: Cannot write PID(%d) to file, %s - %s\n"
-		 "Aborting daemon - cannot communicate PID to outside world.\n",
-                 PACKAGE_NAME, (int)mypid, (int)mypid, config->pid_file, strerror (errno));
+      ERROR ("%s[%d]: Cannot write PID(%d) to file, %s - %s\n"
+             "Aborting daemon - cannot communicate PID to outside world.\n",
+             PACKAGE_NAME, (int)mypid, (int)mypid, config->pid_file, strerror (errno));
       /* Bye bye */
       return;
     }
 
   while (1)
     {
-      /* Close all connections before going to sleep. */
-      close (config->sockfd);
-
       /* Now, sleep before we reconnect and check status. */
       slept = sleep (timeout);
 
@@ -176,29 +173,28 @@ daemon_thread (config_data_t *config, int verbose)
       result = http_pre_login (config, verbose);
       if (result)
         {
-          write_log ("%s: Failed to bring up login page.\n", PACKAGE_NAME);
+          ERROR ("%s: Failed to bring up login page.\n", PACKAGE_NAME);
           continue;
         }
-      /* Test if we're logged in already. */
-      if (strstr (config->get_msg, config->logged_in_string))
+
+      /* The login daemon also tries to login, but only if
+       * the call to http_pre_login() did *not* bring up
+       * the "redirect page".
+       */
+      if (config->daemon_type && !http_logged_in_already (config))
         {
-          config->logged_in = 1;
-        }
-      
-      /* The login daemon also tries to login. */
-      if (config->daemon_type && !(config->logged_in))
-        {
-          http_log_login (config, verbose);
+          http_do_login (config, verbose);
         }
 
+      /* This stuff added for verbosity */
       if (slept > 0)		/* Awoken by SIGHUP */
 	if (config->logged_in)
 	  {
-	    write_log ("%s: Forced relogin successful!\n", PACKAGE_NAME);
+	    LOG ("%s: Forced relogin successful!\n", PACKAGE_NAME);
 	  }
 	else
 	  {
-	    write_log ("%s: Forced relogin FAILED!\n", PACKAGE_NAME);
+	    LOG ("%s: Forced relogin FAILED!\n", PACKAGE_NAME);
 	  }
     }
 }
