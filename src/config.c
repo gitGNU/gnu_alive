@@ -49,8 +49,8 @@ param_t parms [] = {
   {{"DEAMON_S", "DEAMON_START", "DAEMON_START", "START_DEAMON", "START_DAEMON", NULL}, NULL, "true"},
   /* Default: re-login every DAEMON_DELAY minutes. */
   {{"DEAMON_T", "DEAMON_TYPE", "DAEMON_TYPE", NULL},  NULL, "login"},
-  /* Default: relogin every 20 minutes to keep the connection alive. */
-  {{"DEAMON_D", "DEAMON_DELAY", "DAEMON_DELAY", "INTERVAL", NULL}, NULL, "20"},
+  /* Default: relogin every 5 minutes to keep the connection alive. */
+  {{"DEAMON_D", "DEAMON_DELAY", "DAEMON_DELAY", "INTERVAL", NULL}, NULL, "5"},
 
   /* NULL terminate for libconf. */
   {{NULL}, NULL, NULL}
