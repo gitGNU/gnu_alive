@@ -40,18 +40,19 @@ http_open_server (char *name, short port, int verbose)
   
 
   /* Try to find the login host */
-  LOG("DNS lookup of %s.\n", name);
+  LOG("DNS lookup - ");
 
   he = gethostbyname (name);
   if (he == NULL)
     {
-      ERROR("The DNS cannot find login server: %s\n", name);
+      ERROR("cannot find the IP# of the login server (%s): %s\n", 
+	    name, strerror (errno));
       result = -1;
     }
   else
     {
       /* Setup a socket */
-      LOG("DNS lookup of %s=0x%s\n", name, he->h_addr);
+      LOG("%s=0x%X\n", he->name, he->h_addr);
 
       sockfd = socket (PF_INET, SOCK_STREAM, 0);
       if (-1 == sockfd)
