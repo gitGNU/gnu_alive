@@ -1,0 +1,21 @@
+Begin3
+Title:		GNU Alive
+Version:	@VERSION@
+Entered-date:	@ISODATE@
+Description:	Auto-login & keep-alive for Internet connections.
+		@configure_input@
+		Please edit alive.lsm.in to fix the Keywords and
+		Primary-site entries, add several more lines of
+		description here if appropriate, and to delete these
+		instructions.
+Keywords:	[substitute your keywords here]
+Author: 	joachim!nilsson()member!fsf!org (Joachim Nilsson)
+Maintained-by:	joachim!nilsson()member!fsf!org (Joachim Nilsson)
+Primary-site:	metlab.unc.edu pub/Linux/apps/some/directory
+		31k alive-@VERSION@.tar.gz
+		500  alive.lsm
+Alternate-site: 
+Original-site:  http://www.gnu.org/software/alive/
+Platforms:      
+Copying-policy:	GNU copyleft
+End
