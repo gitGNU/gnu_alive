@@ -86,13 +86,20 @@ conf_find_key (char *key)
 }
 
 
+/* Our very own strndup(), this should go into a compatibility lib. */
 static char *copy_string (char *src, size_t len)
 {
-  char *str;
+  char *dst;
 
-  str = malloc (len + 1); /* XXX - check for return value */
-  strncpy (str, src, len);
+  str = malloc (len + 1);
+  if (!dst)
+    return NULL;
+
+  strncpy (dst, src, len);
+
   str[len] = '\0';
+
+  return dst;
 }
 
 /* XXX - what if the key doesn't exist?
