@@ -121,13 +121,15 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AM_YFLAGS = -d
 
-noinst_LIBRARIES = libconf.a
+noinst_LIBRARIES = libconf.a libost.a
 
 libconf_a_SOURCES = conf/conf.c     \
                     conf/parser.y   \
                     conf/tokens.l   \
                     ../include/conf.h
 
+
+libost_a_SOURCES = strcasecmp.c
 subdir = lib
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -139,22 +141,26 @@ libconf_a_AR = $(AR) cru
 libconf_a_LIBADD =
 am_libconf_a_OBJECTS = conf.$(OBJEXT) parser.$(OBJEXT) tokens.$(OBJEXT)
 libconf_a_OBJECTS = $(am_libconf_a_OBJECTS)
+libost_a_AR = $(AR) cru
+libost_a_LIBADD =
+am_libost_a_OBJECTS = strcasecmp.$(OBJEXT)
+libost_a_OBJECTS = $(am_libost_a_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)/include
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/conf.Po ./$(DEPDIR)/parser.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tokens.Po
+@AMDEP_TRUE@	./$(DEPDIR)/strcasecmp.Po ./$(DEPDIR)/tokens.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 LEXCOMPILE = $(LEX) $(LFLAGS) $(AM_LFLAGS)
 YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
-DIST_SOURCES = $(libconf_a_SOURCES)
+DIST_SOURCES = $(libconf_a_SOURCES) $(libost_a_SOURCES)
 DIST_COMMON = $(srcdir)/Makefile.in Makefile.am parser.c parser.h \
 	tokens.c
-SOURCES = $(libconf_a_SOURCES)
+SOURCES = $(libconf_a_SOURCES) $(libost_a_SOURCES)
 
 all: all-am
 
@@ -179,6 +185,10 @@ libconf.a: $(libconf_a_OBJECTS) $(libconf_a_DEPENDENCIES)
 	-rm -f libconf.a
 	$(libconf_a_AR) libconf.a $(libconf_a_OBJECTS) $(libconf_a_LIBADD)
 	$(RANLIB) libconf.a
+libost.a: $(libost_a_OBJECTS) $(libost_a_DEPENDENCIES) 
+	-rm -f libost.a
+	$(libost_a_AR) libost.a $(libost_a_OBJECTS) $(libost_a_LIBADD)
+	$(RANLIB) libost.a
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -188,6 +198,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/conf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strcasecmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tokens.Po@am__quote@
 
 .c.o:

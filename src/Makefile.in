@@ -130,7 +130,8 @@ qadsl_SOURCES = config.c  ../include/config.h  \
                 main.c    ../include/settings.h.in
 
 
-qadsl_LDADD = $(top_builddir)/lib/libconf.a
+qadsl_LDFLAGS = -L$(top_builddir)/lib
+qadsl_LDADD = -lconf -lost
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -142,8 +143,7 @@ PROGRAMS = $(sbin_PROGRAMS)
 am_qadsl_OBJECTS = config.$(OBJEXT) daemon.$(OBJEXT) http.$(OBJEXT) \
 	lock.$(OBJEXT) log.$(OBJEXT) process.$(OBJEXT) main.$(OBJEXT)
 qadsl_OBJECTS = $(am_qadsl_OBJECTS)
-qadsl_DEPENDENCIES = $(top_builddir)/lib/libconf.a
-qadsl_LDFLAGS =
+qadsl_DEPENDENCIES =
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)/include
 depcomp = $(SHELL) $(top_srcdir)/depcomp

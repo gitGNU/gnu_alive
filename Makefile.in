@@ -153,10 +153,10 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive pdf-recursive \
 	installdirs-recursive install-recursive uninstall-recursive \
 	check-recursive installcheck-recursive
 DIST_COMMON = README $(srcdir)/Makefile.in $(srcdir)/configure \
-	././include/settings.h.in ./include/settings.h.in AUTHORS \
-	COPYING ChangeLog INSTALL Makefile.am NEWS TODO aclocal.m4 \
-	config.guess config.sub configure configure.in depcomp \
-	install-sh missing mkinstalldirs qadsl.lsm.in qadsl.spec.in
+	./include/settings.h.in AUTHORS COPYING ChangeLog INSTALL \
+	Makefile.am NEWS TODO aclocal.m4 config.guess config.sub \
+	configure configure.in depcomp install-sh missing mkinstalldirs \
+	qadsl.lsm.in qadsl.spec.in
 DIST_SUBDIRS = $(SUBDIRS)
 all: all-recursive
 
@@ -340,7 +340,7 @@ distcleancheck_listfiles = find . -type f -print
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkinstalldirs) $(distdir)/. $(distdir)/././include $(distdir)/./include $(distdir)/debian
+	$(mkinstalldirs) $(distdir)/. $(distdir)/./include $(distdir)/debian
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
