@@ -13,7 +13,7 @@
 .\" along with this program; see the file COPYING.  If not, write to
 .\" the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 .\"
-.TH QADSL 1 "July 6, 2003"
+.TH QADSL 1 "1st January, 2004"
 .\" Please update the above date whenever this man page is modified.
 .\"
 .\" Some roff macros, for reference:
@@ -42,12 +42,19 @@ For those of you who hate configuration files or never have seen
 one before, you should proceed directly to the examples section.
 
 For most of the time you only need to supply a USERNAME, PASSWORD
-and LOGIN_SERVER. Like this
+and LOGIN_SERVER. Like this:
 
 USERNAME     = 123456@tiscali
 PASSWORD     = zw2d4a
 LOGIN_SERVER = valo1.tiscali.se
 
+However, most of the time the LOGIN_SERVER setting should be given
+as a pure IP address, like this:
+
+LOGIN_SERVER = 10.0.0.6
+
+This because the name of the login server sometimes is not listed
+in the name server (DNS) of your ISP.
 
 .SH AUTHOR
-Joachim Nilsson <joachim@gnufans.org>.
+Joachim Nilsson <joachim.nilsson@member.fsf.org>.
