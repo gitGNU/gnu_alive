@@ -1,3 +1,43 @@
+2004-02-22  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* lib/getopt.c: New functionality that adds GNU getopt() and 
+	getopt_long() support for platforms that do not have it. 
+
+	* lib/getopt1.c: dito.
+
+	* include/getopt.h: dito.
+	
+	* include/daemon.h (daemon_kill): Add verbsity to prototype.
+
+	* include/log.h: Define log types.
+
+	* lib/conf/parser.y (conf_set): Use log() macro instead of fprintf().
+
+	* lib/conf/tokens.l: Cleanup.
+
+	* lib/conf/conf.c (conf_read_file): We only need read permission
+	to evaluate the .conf file. Also, make sure to check if we succeed
+	in opening it, otherwise the parser will not have anything to read
+	from and hang forever waiting for input from a truncated stdin.
+
+	* src/daemon.c (daemon_thread): Let the verbosity level from the
+	client propagate to the daemon and increase the verbosity of the
+	latter in the logfile.
+
+	* src/http.c (http_log_login): Keep track of when we are no longer
+	logged in so that we can take note of all state changes in the logfile.
+
+	* src/lock.c (lock_read): Truncate already existing pid file and
+	make sure it is world readable, the PID is not secret.
+
+	* src/main.c (main): Add long option support and update usage()
+	function. Exit on NOP operations with a usage() printout.
+	Swap meanings of -v and -V to verbose and version,
+	respectively. To be more like the majority of the other GNU tools.
+
+	* src/process.c (process): Let verbosity propagate to dameon and
+	report result from SIGHUP sent to an already running daemon.
+
 2004-02-20  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* lib/conf/conf.c (conf_read_file): Does not work with yacc,
