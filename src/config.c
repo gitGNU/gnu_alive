@@ -25,10 +25,10 @@ param_t parms [] = {
   {{"SERVER_PORT", NULL},                              NULL, PORT},
 
   /* This builds the internet_login() login_string. */
-  {{"LOGIN_STRING_HEADER", NULL},                      NULL, NULL},
+  {{"LOGIN_STRING_HEADER", "LOGIN_DATA_HEADER", NULL}, NULL, NULL},
   {{"USERNAME_KEY", NULL},                             NULL, "username"},
   {{"PASSWORD_KEY", NULL},                             NULL, "password"},
-  {{"LOGIN_STRING_FOOTER", NULL},                      NULL, "submitForm=Login"},
+  {{"LOGIN_STRING_FOOTER", "LOGIN_DATA_FOOTER", NULL}, NULL, "submitForm=Login"},
 
   /* Subtext to look for as result of a successful login */
   {{"LOGGED_IN_STRING", NULL},                         NULL, "/sd/create_session_window"}, /* "newPane()" */
@@ -46,11 +46,11 @@ param_t parms [] = {
   {{"PID_FILE", NULL},                                 NULL, PID_FILE},
 
   /* Default: start the keep-alive daemon */
-  {{"DEAMON_S", "DAEMON_START", "START_DAEMON", NULL}, NULL, "true"},
+  {{"DEAMON_S", "DEAMON_START", "DAEMON_START", "START_DEAMON", "START_DAEMON", NULL}, NULL, "true"},
   /* Default: re-login every DAEMON_DELAY minutes. */
-  {{"DEAMON_T", "DAEMON_TYPE", NULL},                  NULL, "login"},
+  {{"DEAMON_T", "DEAMON_TYPE", "DAEMON_TYPE", NULL},  NULL, "login"},
   /* Default: relogin every 20 minutes to keep the connection alive. */
-  {{"DEAMON_D", "DAEMON_DELAY", "INTERVAL", NULL},     NULL, "20"},
+  {{"DEAMON_D", "DEAMON_DELAY", "DAEMON_DELAY", "INTERVAL", NULL}, NULL, "20"},
 
   /* NULL terminate for libconf. */
   {{NULL}, NULL, NULL}
