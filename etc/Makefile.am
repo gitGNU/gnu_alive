@@ -1,4 +1,7 @@
+## Process this file with automake to produce Makefile.in
 sysconf_DATA = qadsl.conf
+
+EXTRA_DIST = qadsl.conf
 
 install-data-hook:
 	@list='$(sysconf_DATA)';							      \

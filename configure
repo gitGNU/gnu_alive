@@ -3368,21 +3368,23 @@ else
 fi
 
 
+CFLAGS="-std=gnu99"
+
 # Check whether --enable-debug or --disable-debug was given.
 if test "${enable_debug+set}" = set; then
   enableval="$enable_debug"
 
-CFLAGS="-g -DDEBUG -DYYERROR_VERBOSE"
+CFLAGS="$CFLAGS -g -DDEBUG -DYYERROR_VERBOSE"
 else
 
-CFLAGS="-O2"
+CFLAGS="$CFLAGS -O2"
 LDFLAGS="-s"
 fi;
 
 # Check whether --enable-pedantic-compiler or --disable-pedantic-compiler was given.
 if test "${enable_pedantic_compiler+set}" = set; then
   enableval="$enable_pedantic_compiler"
-  CFLAGS+="-Wall -ansi -pedantic -Wformat=2 -Wunreachable-code -Winline"
+  CFLAGS="$CFLAGS -Wall -pedantic -Wformat=2 -Wunreachable-code -Winline"
 fi;
 
 

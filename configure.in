@@ -26,15 +26,17 @@ AC_PROG_YACC
 dnl Checks for libraries.
 AC_PROG_RANLIB
 
+CFLAGS="-std=gnu99"
+
 AC_ARG_ENABLE(debug, 
               AC_HELP_STRING([--enable-debug], [Enable debugging with GDB [default=no]]),[
-CFLAGS="-g -DDEBUG -DYYERROR_VERBOSE"],[
-CFLAGS="-O2"
+CFLAGS="$CFLAGS -g -DDEBUG -DYYERROR_VERBOSE"],[
+CFLAGS="$CFLAGS -O2"
 LDFLAGS="-s"])
 
 AC_ARG_ENABLE(pedantic-compiler,
               AC_HELP_STRING([--enable-pedantic-compiler], [Enable pedantic checks in GCC [default=no]]), 
-              [CFLAGS+="-Wall -ansi -pedantic -Wformat=2 -Wunreachable-code -Winline"])
+              [CFLAGS="$CFLAGS -Wall -pedantic -Wformat=2 -Wunreachable-code -Winline"])
 
 
 dnl Checks for standard header files:

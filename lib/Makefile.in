@@ -123,9 +123,11 @@ AM_YFLAGS = -d
 
 noinst_LIBRARIES = libconf.a
 
+libconf_a_SOURCES = conf/conf.c     \
+                    conf/parser.y   \
+                    conf/tokens.l   \
+                    ../include/conf.h
 
-#BUILT_SOURCES     = parser.h parser.c tokens.c
-libconf_a_SOURCES = conf/conf.c conf/parser.y conf/tokens.l
 subdir = lib
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs

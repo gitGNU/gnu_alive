@@ -121,7 +121,15 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 sbin_PROGRAMS = qadsl
 
-qadsl_SOURCES = config.c daemon.c http.c lock.c log.c main.c process.c
+qadsl_SOURCES = config.c  ../include/config.h  \
+                daemon.c  ../include/daemon.h  \
+                http.c    ../include/http.h    \
+                lock.c    ../include/lock.h    \
+                log.c     ../include/log.h     \
+                process.c ../include/process.h \
+                main.c    ../include/settings.h.in
+
+
 qadsl_LDADD = $(top_builddir)/lib/libconf.a
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -132,7 +140,7 @@ sbin_PROGRAMS = qadsl$(EXEEXT)
 PROGRAMS = $(sbin_PROGRAMS)
 
 am_qadsl_OBJECTS = config.$(OBJEXT) daemon.$(OBJEXT) http.$(OBJEXT) \
-	lock.$(OBJEXT) log.$(OBJEXT) main.$(OBJEXT) process.$(OBJEXT)
+	lock.$(OBJEXT) log.$(OBJEXT) process.$(OBJEXT) main.$(OBJEXT)
 qadsl_OBJECTS = $(am_qadsl_OBJECTS)
 qadsl_DEPENDENCIES = $(top_builddir)/lib/libconf.a
 qadsl_LDFLAGS =

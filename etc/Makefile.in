@@ -120,6 +120,8 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 sysconf_DATA = qadsl.conf
+
+EXTRA_DIST = qadsl.conf
 subdir = etc
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
