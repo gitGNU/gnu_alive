@@ -28,66 +28,95 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-qADSL \- In pursuit of a free Internet!
+qADSL \- Auto-login & keep-alive for Internet connections.
 
 .SH SYNOPSIS
 .B qadsl
-[
-.B \-h
-]
-[
-.BI \-c " file"
-]
-[
-.B \-l
-]
-[
-.B \-o
-]
+[-h] [-c conffile] [-p pidfile] [-loPsdvV]
 
 .SH DESCRIPTION
+Frustrated about having to "log in" to your paid Internet connection?
+
 .B qadsl
-is a small utility to login to and keep ADSL/Internet services alive.
-Currently the Telia AB ADSL service, COMHEM Cable internet and Tiscali
-Internet services are known to work well with qadsl. It has features
-like keep-alive daemon and login/logout functions. The keep-alive
-daemon can be configured to either login or to ping your login-server
-after a chosen delay in minutes. 
+is a small utility that automates the login process to Telia, COMHEM,
+Tiscali and other Internet Service Providers, ISPs. It features a
+keep-alive daemon that periodically connects to your ISP ensuring that
+your connection to the Internet are not logged out all of a sudden.
+
+qadsl works for any type of connection where your ISP has put a login
+server in your way.
 
 .SH OPTIONS
 .B qadsl
-options are in traditional POSIX one letter options prefixed with a
-single '\-'.
+options are available in traditional POSIX one letter options prefixed
+with a single '\-' or the new popular \-\-long\-options style.
 
 .TP
-.BR \-h
+\fB \-h, \-\-help \fR
 Displays a summary of the command line options.
 .TP
-\fB\-c \fIfile\fR
+\fB \-c, \-\-conf\-file=\fIfile \fR
 Use settings from
 .I file
 insted of default
 .I /etc/qadsl.conf
+or
+.I $HOME/.qadslrc
 
 .TP
-\fB\-p \fIfile\fR
+\fB\-p, \-\-pid\-file=\fIfile \fR
 Use
 .I file
 as pid/lock file instead of default
 .I /var/run/qadsl.pid
 
 .TP
-.BR \-l
+\fB\-P, \-\-port=\fIPORT \fR
+Use
+.I PORT
+to connect to on LOGIN_SERVER.
+.TP
+\fB \-l, \-\-login \fR
 Login to the given LOGIN_SERVER.
 .TP
-.BR \-o
+\fB \-o, \-\-logout \fR
 Try to logout, close the Internet connection.
 .TP
-.BR \-V
+\fB \-s, \-\-status \fR
+Display status of qadsl daemon.
+.TP
+\fB \-V, \-\-version \fR
 Displays version informaiton.
 .TP
-.BR \-v
+\fB \-v, \-\-verbose \fR
 Verbose, print more information at runtime.
+.TP
+\fB \-d, \-\-debug \fR
+Debug, print even more information, huge amounts.
+
+.SH USAGE
+First setup your qadsl.conf file with the information you have
+received from your ISP. It should be at least the name (or IP)
+of their login server, your login ID and and password.
+
+Different providers have setup their login servers differently.
+See the sample qadsl.conf file included in this package for
+help on setting up qadsl for your ISP.
+
+If you have problems connecting the flags --verbose and --debug
+are really useful tools that let you see all the interactions
+between qadsl and the login server. However, please note that
+when the login daemon has started you will not see anything more on
+your screen. Instead you have to consult the system logfiles. On a
+Debian system the file /var/log/daemon.log is where qadsl logs go.
+
+.SH FILES
+.TP
+.I /etc/qadsl.conf
+Usually the location of a system wide qadsl configuration file.
+.TP
+.I $HOME/.qadslrc
+User configuration file, takes precedent over any global file.
 
 .SH SEE ALSO
 The qadsl.conf (5) man page describes the componentes of the
@@ -98,7 +127,7 @@ Telia AB ADSL service, COMHEM Cable internet service, Tiscali Internet
 (ADSL or broadband), or similiar service based on Orbyte Wireless System.
 
 .SH AUTHORS
-Joachim Nilsson <joachim!nilsson()member!fsf!org>
+Joachim Nilsson
 .br
 Jakob "kuba" Stasilowicz
 .TP

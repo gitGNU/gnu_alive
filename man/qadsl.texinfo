@@ -2,19 +2,79 @@
 @c This file uses the @command command introduced in Texinfo 4.0.
 @c %**start of header
 @setfilename qadsl.info
-@settitle Auto-login & keep-alive for Internet connections.
+@settitle qadsl: Auto-login & keep-alive for Internet connections.
 @finalout
 @setchapternewpage odd
 @c %**end of header
 
-@set VERSION 1.3.0
+@set PACKAGE_NAME qadsl
+@set PACKAGE_VERSION 1.3.2
+
+@c All the nodes can be updated using the EMACS command
+@c texinfo-every-node-update, which is normally bound to C-c C-u C-e.
+@node Top, Introduction, (dir), (dir)
+@cindex Description
+@top @value{PACKAGE_NAME}: Auto-login & keep-alive daemon
 
 @ifinfo
-This file documents the @command{qadsl} utility. An auto-login &
+This file documents the @value{PACKAGE_NAME} utility. An auto-login &
 keep-alive daemon for Internet connections.
 
-Copyright (C) 2001 Jakob ``kuba'' Stasilowicz @email{kuba()unix!se}
-Copyright (C) 2003 Joachim Nilsson @email{joachim.nilsson()member!fsf!org}
+@value{PACKAGE_NAME} is based on qadsl 1.2.1 by Jakob Stasilowicz,
+@url{http://kuba.unix.se}.  It was completely rewritten by Joachim
+Nilsson for version 1.3.0.
+
+@value{PACKAGE_NAME} is free to share and change under the conditions
+stipulated in the GNU General Public License.  For details and
+examples see @ref{Copying}.
+
+@end ifinfo
+
+@c All the menus can be updated with the EMACS command
+@c texinfo-all-menus-update, which is normally bound to C-c C-u C-a.
+@menu
+* Introduction::                Introduction and history of qadsl.
+* Sample::                      Sample output from @value{PACKAGE_NAME}.
+* Invoking @value{PACKAGE_NAME}::              How to run @value{PACKAGE_NAME}.
+* Setting Up::                  Basic setup instructions.
+* Config File Format::          Describes the @value{PACKAGE_NAME}
+                                config file.
+* Reporting Bugs::              Savannah Bug reporting.
+* Copying::                     The GNU General Public License gives
+                                you permission to redistribute
+                                @value{PACKAGE_NAME} on certain terms;
+                                it also explains that there is no
+                                warranty.
+* Concept Index::               Index of concepts.
+
+
+@end menu
+
+@node Introduction, Sample, Top, Top
+@section Introduction
+@cindex Introduction
+@ifinfo
+Frustrated about having to "log in" to your paid Internet connection?
+
+@value{PACKAGE_NAME} is a small utility that automates the login
+process to Telia, COMHEM, Tiscali and other Internet Service
+Providers, ISPs. It features a keep-alive daemon that periodically
+connects to your ISP ensuring that your connection to the Internet are
+not logged out all of a sudden.
+
+@value{PACKAGE_NAME} works for any type of connection where your ISP
+has put a login server in your way.
+
+In fact, @value{PACKAGE_NAME} does not necessarily have to be used as
+Internet connection keeper, it can be used for any type of Internet
+based login service.
+
+Release 1.3.2 is the last release under the name qadsl, subsequent
+releases will be called GNU Alive.
+
+@section Copyrights & License
+Copyright (C) 2001 Jakob Stasilowicz@*
+Copyright (C) 2003, 2004 Joachim Nilsson
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -28,125 +88,91 @@ notice identical to this one except for the removal of this paragraph
 
 @end ignore
 Permission is granted to copy and distribute modified versions of this
-manual under the conditions for verbatim copying, provided that the entire
-resulting derived work is distributed under the terms of a permission
-notice identical to this one.
+manual under the conditions for verbatim copying, provided that the
+entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
 
-Permission is granted to copy and distribute translations of this manual
-into another language, under the above conditions for modified versions,
-except that this permission notice may be stated in a translation approved
-by the Foundation.
+Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be stated in a
+translation approved by the Foundation.
 @end ifinfo
 
 @titlepage
-@title qadsl
+@title @value{PACKAGE_NAME}
 @subtitle Auto-login & keep-alive daemon for Internet connections.
-@subtitle for qadsl Version @value{VERSION}
+@subtitle for @value{PACKAGE_NAME} ver. @value{PACKAGE_VERSION}
 @author by Joachim Nilsson
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2003 Joachim Nilsson
+Copyright @copyright{} 2003, 2004 Joachim Nilsson
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
 are preserved on all copies.
 
 Permission is granted to copy and distribute modified versions of this
-manual under the conditions for verbatim copying, provided that the entire
-resulting derived work is distributed under the terms of a permission
-notice identical to this one.
+manual under the conditions for verbatim copying, provided that the
+entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
 
-Permission is granted to copy and distribute translations of this manual
-into another language, under the above conditions for modified versions,
-except that this permission notice may be stated in a translation approved
-by the Foundation.
+Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be stated in a
+translation approved by the Foundation.
 @end titlepage
 
-@c All the nodes can be updated using the EMACS command
-@c texinfo-every-node-update, which is normally bound to C-c C-u C-e.
-@node Top, Instructions, (dir), (dir)
+@shortcontents
+@contents
 
-@ifinfo
-This file documents the @command{qadsl} utility. An auto-login &
-keep-alive daemon for Internet connections.
-@end ifinfo
-
-@c All the menus can be updated with the EMACS command
-@c texinfo-all-menus-update, which is normally bound to C-c C-u C-a.
-@menu
-* Instructions::                How to read this manual. 
-* Copying::                     How you can copy and share @command{qadsl}.
-* Overview::                    Preliminary information.
-* Sample::                      Sample output from @command{qadsl}.
-* Invoking qadsl::              How to run @command{qadsl}.
-* Problems::                    Reporting bugs.
-* Concept Index::               Index of concepts.
-@end menu
-
-@node Instructions, Copying, Top, Top
-@chapter How to Read This Manual
-
-@cindex reading
-@cindex manual, how to read
-@cindex how to read
-To read this manual, begin at the beginning, reading from left to right
-and top to bottom, until you get to the end.  Then stop.  You may pause
-for a beer anywhere in the middle as well, if you wish.  (Please note,
-however, that The King strongly advises against heavy use of
-prescription pharmaceuticals, based on his extensive personal and
-professional experience.)
-
-@node Copying, Overview, Instructions, Top
-@include gpl.texinfo
-
-@node Overview, Sample, Copying, Top
-@chapter Overview
-@cindex greetings
-@cindex overview
-
-GNU @command{qadsl} produces the familiar, UNIX traditional, complete
-lack of output when everything works.
-
-It allows nonprogrammers to use a classic computer science tool which
-would otherwise be unavailable to them.  Because it is protected by the
-GNU General Public License, users are free to share and change it.
-
-GNU @command{qadsl} was written by Joachim Nilsson. Its predecessor,
-qadsl was written by Jakob Stasilowicz.
-
-@node Sample, Invoking qadsl, Overview, Top
+@node Sample, Invoking @value{PACKAGE_NAME}, Introduction, Top
 @chapter Sample Output
+@cindex starting
+@cindex running
 @cindex sample
 
-Here are some realistic examples of running @command{qadsl}.
+@value{PACKAGE_NAME} produces the familiar, UNIX traditional, complete
+lack of output when everything works.  Using the switches
+@code{--verbose} and @code{--debug} more interesting information is
+printed, both to logfile(s) and screen.
 
-This is the output of the command @samp{qadsl}:
+
+Here are some realistic examples of running @value{PACKAGE_NAME}.
+
+This is the output of the command @samp{@value{PACKAGE_NAME} --login} when there is
+an already running instance of @value{PACKAGE_NAME}:
 
 @example
-hello, world!
+ ERR @value{PACKAGE_NAME}[4777]: kill(788, SIGHUP) failed: Operation not permitted
+Maybe a stale lockfile (/tmp/@value{PACKAGE_NAME}.pid) is present and the damon is not running?
+ ERR @value{PACKAGE_NAME}[4777]: Couldn't remove possible stale lockfile (/tmp/@value{PACKAGE_NAME}.pid).
+Maybe the process (788) is running as root, but you are not?
 @end example
 
-This is the output of the command @samp{qadsl --help}:
+This is the output of the command @samp{@value{PACKAGE_NAME} --help}:
 
 @example
-Usage: qadsl [OPTION...]
-Auto-login & keep-alive for Internet connections.
+@value{PACKAGE_NAME} - Auto-login & keep-alive for Internet connections.
 
-  -v, --verbose              Print more information
-  -?, --help                 Give this help list
-      --usage                Give a short usage message
-  -V, --version              Print program version
-  -l, --login                Login to the Internet
-  -o, --logout               Logout the connection
-  -p, --pid-file=file        Use file instead of /var/run/qadsl.pid
-  -c, --conf-file=file       Use file instead of /etc/qadsl.conf
+Usage: @value{PACKAGE_NAME} [-h] [-c conffile] [-p pidfile] [-loPsvV]
+Options:
+-l, --login               Try to login
+-o, --logout              Try to logout
+-c, --conf-file=FILE      Use settings from FILE instead of /etc/@value{PACKAGE_NAME}.conf
+-p, --pid-file=FILE       Use FILE to store PID
+-P, --port=PORT           Connect to PORT on server, default is 80
+-s, --status              Display status of @value{PACKAGE_NAME} daemon
+-v, --verbose             Display more information, on screen and in logfile
+-d, --debug               Display even more information, huge amounts!
+-V, --version             Display version information and exit
+-h, --help                Display this help and exist
 
-Report bugs to @email{joachim.nilsson()member!fsf!org}
+Report bugs to <http://savannah.gnu.org/bugs/?group=@value{PACKAGE_NAME}>
 @end example
 
-@node Invoking qadsl, Problems, Sample, Top
-@chapter Invoking @command{qadsl}
+@node Invoking @value{PACKAGE_NAME}, Setting Up, Sample, Top
+@chapter Invoking @value{PACKAGE_NAME}
 @cindex invoking
 @cindex version
 @cindex options
@@ -154,19 +180,49 @@ Report bugs to @email{joachim.nilsson()member!fsf!org}
 @cindex help
 @cindex getting help
 
-The format for running the @command{qadsl} program is:
+The format for running the @value{PACKAGE_NAME} program is:
 
 @example
-qadsl @var{option} @dots{}
+@value{PACKAGE_NAME} @var{option} @dots{}
 @end example
 
-@code{qadsl} supports the following options:
+@value{PACKAGE_NAME} supports the following options:
 
 @c Formatting copied from the Texinfo 4.0 manual.
 @table @code
 @item --verbose
 @itemx -v
 Print more information.
+
+@item --debug
+@itemx -d
+Print even more information, huge amounts.
+
+@item --login
+@itemx -l
+Login to the Internet connection.
+
+@item --logout
+@itemx -o
+Logout from the Internet connection.
+
+@item --status
+@itemx -s
+Show status of @value{PACKAGE_NAME}, is the keep-alive daemon running or not?
+
+@item --pid-file=file
+@itemx -p file
+Use file as lock file instead of the default /var/run/@value{PACKAGE_NAME}.pid
+
+@item --port=PORT
+@itemx -P PORT
+Connect to PORT on server, default is a system dependant value
+that you can see by running @samp{@value{PACKAGE_NAME} --help} under the
+port option.  However, it is most likely port 80.
+
+@item --conf-file=file
+@itemx -c file
+Use file as configuration file instead of the default /etc/@value{PACKAGE_NAME}.conf
 
 @item --help
 @itemx -?
@@ -178,50 +234,258 @@ Briefly list the options.
 
 @item --version
 @itemx -V
-Print the version number of @command{qadsl} on the standard output
+Print the version number of @value{PACKAGE_NAME} on the standard output
 and then exit successfully.
-
-@item --login
-@itemx -l
-Login to the Internet connection.
-
-@item --logout
-@itemx -o
-Logout from the Internet connection.
-
-@item --pid-file file
-@itemx -p file
-Use file as lock file instead of the default /var/run/qadsl.pid
-
-@item --conf-file file
-@itemx -c file
-Use file as configuration file instead of the default /etc/qadsl.conf
 @end table
 
-@node Problems, Concept Index, Invoking qadsl, Top
+@node Setting Up, Config File Format, Invoking @value{PACKAGE_NAME}, Top
+@chapter Setting Up
+@cindex setup
+@cindex Config file format
+Start off by taking a close look at the sample configuration file
+included with @value{PACKAGE_NAME}, it is called @file{@value{PACKAGE_NAME}.conf} and, depending
+on your system, it may already be installed in @file{/etc/@value{PACKAGE_NAME}.conf}.
+
+The configuration file basically needs three things for you to setup,
+all of which you should have received from your ISP:
+@enumerate 1
+@item
+Name, IP# or URL to login server
+@item
+Login ID
+@item
+Password
+@end enumerate
+
+In the configuration file this could, for example, look something
+like this:
+
+@example
+@cartouche
+# Login server
+SERVER = valo1.tiscali.se
+
+# Username
+USERNAME = 123456@@tiscali
+
+# Password
+PASSWORD = imrekertesz
+@end cartouche
+@end example
+
+Different providers have setup their login servers differently.
+See the sample @value{PACKAGE_NAME}.conf file included in this package for
+help on setting up @value{PACKAGE_NAME} for your ISP.  However, the above
+example is probably all you really need to setup.
+
+Nevertheless, if you experience problems, try using the flags
+@code{--verbose} and @code{--debug}.  They increase the useful output
+from @value{PACKAGE_NAME} to let you see all the interactions between
+@value{PACKAGE_NAME} and the login server.  Beware, though, that when
+the login daemon has started you will not see anything more on your
+screen. Instead you have to consult the system logfiles.  On a Debian
+system the file /var/log/daemon.log is where @value{PACKAGE_NAME} logs
+go.  Other systems may have to inspect how syslogd is setup by
+inspecting the @file{/etc/syslog.conf} file.
+
+@node Config File Format, Reporting Bugs, Setting Up, Top
+@chapter Config File Format
+Here follows a very brief rundown of available configuration file
+parameters.
+
+@table @code
+@item USER
+@itemx USERNAME
+Your login username.
+
+No default value, must be set by you.
+
+@item PASS
+@itemx PASSWORD
+Your login password.
+
+No default value, must be set by you.
+
+@item SERV
+@itemx SERVER
+@itemx LOGIN_SERVER
+Name, IP number or URL to YOUR ISP login server, e.g.,
+valo1.tiscali.se
+
+No default value, must be set by you.
+
+@item PORT
+@itemx SERVER_PORT
+Port to connect to on login server.  This is usually set to be port
+80, http, but is defined at build time so it is system dependant.
+To find out what your @value{PACKAGE_NAME} binary was built with read the --help
+option for the port setting.
+
+Default: Probably 80
+
+@item  DEAMON_S
+@itemx DEAMON_START
+@itemx DAEMON_START
+@itemx START_DEAMON
+@itemx START_DAEMON
+Start automatic keep-alive daemon, TRUE or FALSE.  This daemon is what
+continously keeps your connection alive.
+
+Default: TRUE
+
+@item  DEAMON_T
+@itemx DEAMON_TYPE
+@itemx DAEMON_TYPE
+Daemon type, PING or LOGIN.  This determines weather the keep-alive
+daemon should just ``ping'' or do a complete login when the connection
+is down.  Should be left in the default setting, unless very special
+circumstances exist.
+
+Default: LOGIN
+
+@item  DEAMON_D
+@itemx DEAMON_DELAY
+@itemx DAEMON_DELAY
+@itemx INTERVAL
+Time in minutes for the keep-alive daemon to sleep between each
+connection check.
+
+Default: 5
+
+@item  PID_FILE
+Complete path to the lock file.  Usually @file{/var/lock/@value{PACKAGE_NAME}.pid},
+but will probaly vary between different systems.
+
+Default: Determined at build time.
+
+@item  INIT_PAGE
+@itemx INIT
+This page on the login server will be requested @emph{before} doing the
+actual login.  If this is set to the empty string, "", then the
+login script on the server will be called immediately.
+
+Default: "/sd/init"
+
+@item LOGIN_PAGE
+@itemx LOGIN
+The INIT_PAGE displays the login form in which this login page is
+listed.  The USERNAME and PASSWORD is sent to this page.
+
+If the default setting does not work the corrent login page name can
+be found by using the @code{--verbose} and @code{--debug} flags to the
+@code{--login} command.  The page name is listed at the beginning of
+the ``<FORM...>'' tag.  Example:
+
+@example
+<FORM NAME="pwdenter" ACTION="login" METHOD="POST">
+@end example
+
+In the above example ``ACTION'' is set to ``login'', which in this
+case means ``/sd/login'' because the the INIT_PAGE was located at
+``/sd/init''.  So, unless ACTION begins with a slash the LOGIN_PAGE
+location is relative to the location of the INIT_PAGE.
+
+Confused yet?  Then just send the maintainer an email or checkout the
+website or mailing lists, someone else might have already fixed your
+problem.
+
+Default: "/sd/login"
+
+@item LOGOUT_PAGE
+@itemx LOGOUT
+Page with logout button on the login server.  You might not ever use
+this functionality, but it is here because of both symmetry reasons
+and future use.  So, unless you do @emph{not} pay flat rate for your
+Internet connection you can probably stop reading now.
+
+However, if the default value does not work for you the LOGIN_PAGE
+description might help you.  In this case you wait for the login to
+complete and redirect you to --- on the redirect page there is very
+likely a small form saying something like this:
+
+@example
+<FORM NAME="logout" ACTION="logout" METHOD="POST">
+<INPUT TYPE="submit" NAME="logout" VALUE="Logout">
+</FORM>
+@end example
+
+Again, the ACTION field specifies the page/script on the login server
+to be called and is the relative path.  So, for this, as for the above
+example, the LOGOUT_PAGE is composed from the base URL plus the
+contents of the ACTION field to be ``/sd/logout''.
+
+Default: "/sd/logout"
+
+@item LOGGED_IN_STRING
+Substring to search for in login reply from server,
+used to determine if logged in or not.  This can be found by running
+@value{PACKAGE_NAME} with the --verbose and --debug flags in conjuction with --login.
+
+@item LOGGED_OUT_STRING
+Substring to search for in logout reply from server,
+used to determine if logged out properly.  This can be found by
+running @value{PACKAGE_NAME} with the @code{--verbose} and @code{--debug} flags in
+conjuction with @code{--logout}.
+
+@item  LOGIN_STRING_HEADER
+@itemx LOGIN_DATA_HEADER
+
+Default: ""
+
+@item USERNAME_KEY
+
+Default: "username"
+
+@item PASSWORD_KEY
+
+Default: "password"
+
+@item  LOGIN_STRING_FOOTER
+@itemx LOGIN_DATA_FOOTER
+
+These fields are used to compose the actual login string sent to the
+login page/script on the login server. It is composed as follows; if
+a LOGIN_STRING_HEADER is specified it is put first on the login
+string, second is the USERNAME_KEY followed by a '=' sign plus the
+value of the USERNAME setting.  This is followed by an '&' the value
+of the PASSWORD_KEY another '=' sign and the value of PASSWORD.  Now,
+if the LOGIN_STRING_FOOTER is defined the login string is concluded
+with yet another '&' and the value of the LOGIN_STRING_FOOTER.
+
+Default: "submitForm=Login"
+
+@end table
+
+@node Reporting Bugs, Copying, Config File Format, Top
 @chapter Reporting Bugs
 @cindex bugs
 @cindex problems
 
-If you find a bug in @command{qadsl}, please report it using the
-Savannah bug report tool at http://savannah.nongnu.org/bugs/?group=qadsl
+If you find a bug in @value{PACKAGE_NAME}, please report it using the
+Savannah bug report tool at
+@url{http://savannah.nongnu.org/bugs/?group=@value{PACKAGE_NAME}} or
+to the mailing list.
 
-Include the version number, which you can find by running 
-@w{@samp{qadsl --version}}.  Also include in your message the
-output that the program produced and the output you expected.@refill
+Include the version number, which you can find by running
+@w{@samp{@value{PACKAGE_NAME} --version}}.  Also include in your
+message the output that the program produced and the output you
+expected.@refill
 
 If you have other questions, comments or suggestions about
-@command{qadsl}, use the mailing lists listed on the qadsl project
-page on Savannah, http://savannah.gnu.org/projects/qadsl/.  The author
-will try to help you out, although he may not have time to fix your
-problems.
+@value{PACKAGE_NAME}, use the mailing lists listed on the
+@value{PACKAGE_NAME} project page on Savannah,
+@url{http://savannah.gnu.org/projects/@value{PACKAGE_NAME}/}.  The
+author will try to help you out, although he may not have time to fix
+your problems.
 
-@node Concept Index,  , Problems, Top
+
+@node Copying, Concept Index, Reporting Bugs, Top
+@unnumbered Copying
+@cindex License
+@include gpl.texinfo
+
+@node Concept Index,  , Copying, Top
 @unnumbered Concept Index
 
-@cindex tail recursion
 @printindex cp
-
-@shortcontents
-@contents
 @bye
