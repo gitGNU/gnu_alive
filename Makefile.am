@@ -3,5 +3,6 @@
 # Dive in and do what these dirs tell you.
 SUBDIRS    = lib src man etc
 
-# Cruft 
+# .lsm:  Linux Software Map - http://lsm.execpc.com/lsm/
+# .spec: RedHat Package Manager template
 EXTRA_DIST = qadsl.lsm.in qadsl.spec.in
