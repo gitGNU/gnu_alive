@@ -5,7 +5,15 @@
 #include "conf.h"
 #include "config.h"
 
+
 extern int yylineno;
+
+int yyerror (char *s)
+{
+  fprintf (stderr, "ERR‰OR: %s\n", s);
+
+  return -1;
+}
 
 #define conf_set(key,value)				\
    if (conf_set_value (key, value))			\
@@ -42,9 +50,3 @@ tuple  : ID EQU ARG             {/* printf ("\nBison(ID:%s)(ARG:%s)", $1, $3); *
  
 %%
 
-int yyerror (char *s)
-{
-  fprintf (stderr, "ERR‰OR: %s\n", s);
-
-  return -1;
-}
