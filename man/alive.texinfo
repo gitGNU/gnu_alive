@@ -159,7 +159,7 @@ Usage: @value{PACKAGE_NAME} [-h] [-c conffile] [-p pidfile] [-loPsvV]
 Options:
 -l, --login               Try to login
 -o, --logout              Try to logout
--c, --conf-file=FILE      Use settings from FILE instead of /etc/@value{PACKAGE_NAME}.conf
+-c, --conf-file=FILE      Use settings from FILE instead of default /etc/@value{PACKAGE_NAME}.conf
 -p, --pid-file=FILE       Use FILE to store PID
 -P, --port=PORT           Connect to PORT on server, default is 80
 -s, --status              Display status of @value{PACKAGE_NAME} daemon
@@ -222,7 +222,11 @@ port option.  However, it is most likely port 80.
 
 @item --conf-file=file
 @itemx -c file
-Use file as configuration file instead of the default /etc/@value{PACKAGE_NAME}.conf
+Use file as configuration file instead of the default
+/etc/@value{PACKAGE_NAME}.conf or ~/.@value{PACKAGE_NAME}rc.
+
+Please note, if neither of the default files can be found the
+old names /etc/qadsl.conf and ~/.qadslrc are also searched for.
 
 @item --help
 @itemx -?
@@ -245,6 +249,9 @@ and then exit successfully.
 Start off by taking a close look at the sample configuration file
 included with @value{PACKAGE_NAME}, it is called @file{@value{PACKAGE_NAME}.conf} and, depending
 on your system, it may already be installed in @file{/etc/@value{PACKAGE_NAME}.conf}.
+
+Please note, if neither of the default files can be found the
+old names /etc/qadsl.conf and ~/.qadslrc are also searched for.
 
 The configuration file basically needs three things for you to setup,
 all of which you should have received from your ISP:

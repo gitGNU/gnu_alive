@@ -2,6 +2,11 @@
 
 * TODO List - Items listed in falling priority order - first most important
 
+** Tool shakedown
+
+Run stuff like flawfinder on the source, there's a lot of stuff that
+needs fixing.
+
 ** Rename cofig.c?
 Config.c and its header file config.h clashes with autoconf meaning
 of config.h and does perhaps not need to be called config.c at all?

@@ -88,17 +88,20 @@ char *fallback_pid_files[] = {"/tmp/alive.pid",
                               NULL};
 
 /* What conf file to use:
- *   ~/.qadslrc,
- *   /etc/qadsl.conf
- *   ~/.aliverc
- *   /etc/alive.conf
- *   from the command line?
+ *   1. Command line option
+ *   2. ~/.aliverc
+ *   3. ~/.qadslrc,
+ *   4. /etc/alive.conf
+ *   5. /etc/qadsl.conf
  */
-char *possible_conf_files[] = {"~/.qadslrc",
-                               "/etc/qadsl.conf",
-                               "~/.aliverc",
-                               "/etc/alive.conf",
-                               NULL};
+char *possible_conf_files[] =
+  {
+    "~/.aliverc",
+    "~/.qadslrc",
+    "/etc/alive.conf",
+    "/etc/qadsl.conf",
+    NULL
+  };
 
 /**
  * does_file_exist - Answers the question if the file exists.
@@ -137,8 +140,9 @@ static int does_file_exist (char *file)
 
 static char *tilde_expand (char *file, int verbose)
 {
-  char *new_file;
-  char *user_home = getenv("HOME");
+  size_t len;
+  char  *new_file;
+  char  *user_home = getenv("HOME");
 
   assert (NULL != file);
   assert (NULL != user_home);
@@ -149,16 +153,16 @@ static char *tilde_expand (char *file, int verbose)
       return strdup (file);
     }
 
-  new_file = (char *)malloc (strlen (user_home) +
-                             strlen (file));
+  len = strlen (user_home) + strlen (file);
+  new_file = (char *)malloc (len);
   if (!new_file)
     {
       ERROR ("Failed allocating space for file name");
       return NULL;
     }
 
-  strcpy (new_file, user_home);
-  strcat (new_file, &file[1]);
+  strncpy (new_file, user_home, strlen (user_home));
+  strncat (new_file, &file[1], strlen (file) - 1);
 
   return new_file;
 }

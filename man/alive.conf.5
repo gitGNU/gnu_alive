@@ -29,8 +29,13 @@
 .SH NAME
 alive.conf \- GNU Alive configuration file
 .SH DESCRIPTION
-Usually found in /etc/alive.conf and contains username, password and
-login server information for your Internet connection.
+Usually found in /etc/alive.conf or ~/.aliverc it contains username,
+password and login server information for your Internet connection.
+
+  GNU Alive was previously called qadsl, so if neither of the above
+mentioned config files can be located the files /etc/qadsl.conf and
+~/.qadslrc are also checked.  If no config file can be found Alive
+exits and displays an error message.
 
 .SH SYNTAX
 The alive.conf syntax is extremely free form. So if you have ever

@@ -287,7 +287,10 @@ static int __http_internet_login (config_data_t *config, int verbose)
       return -1;
     }
 
-  if (config->login_string_header) result = sprintf (temp, "%s&", config->login_string_header);
+  if (config->login_string_header)
+    {
+      result = sprintf (temp, "%s&", config->login_string_header);
+    }
 
   result += sprintf (&temp[result], "%s=%s&%s=%s",
                      config->username_key,
@@ -553,7 +556,7 @@ http_do_login (config_data_t *config, int verbose)
   /* If we fail to do the hokey pokey */
   if (result)
     {
-      ERROR (_("%s(): failed first login attempt."), __FUNCTION__);
+      DEBUG (_("%s(): failed first login attempt."), __FUNCTION__);
 
       /* Login failed, or status unknown. */
       config->logged_in = 0;

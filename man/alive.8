@@ -63,7 +63,14 @@ Use settings from
 insted of default
 .I /etc/alive.conf
 or
-.I $HOME/.aliverc
+.I $HOME/.aliverc.
+Old configuration files under the name
+.I /etc/qadsl.conf
+or
+.I $HOME/.qadslrc
+are only considered if neither of the former default config file
+names are not found.  If no config file at all is found GNU Alive
+quits and displays an error message.
 
 .TP
 \fB\-p, \-\-pid\-file=\fIfile \fR
