@@ -105,7 +105,7 @@ AH_VERBATIM([_GNU_SOURCE], [
 #endif])
 
 dnl If not found, replace with components from -lost
-AC_REPLACE_FUNCS(strcasecmp getopt getopt_long)
+AC_REPLACE_FUNCS(rindex strcasecmp getopt getopt_long)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 
