@@ -32,11 +32,11 @@
 #include "process.h"
 
 
-#define USAGE(name)							\
-  "Usage: %s [-h] [-c file] [-lovV]\n"					\
-  "       -h       Print this message\n"				\
+#define USAGE(name)                                                     \
+  "Usage: %s [-h] [-c file] [-lovV]\n"                                  \
+  "       -h       Print this message\n"                                \
   "       -c file  Use settings from file instead of " GLOBAL_CONF "\n"	\
-  "       -l       Try to login\n"					\
+  "       -l       Try to login\n"                                      \
   "       -o       Try to logout\n"                                     \
   "       -p file  Use this PID file\n"                                 \
   "       -V       Be verbose.\n", name
@@ -54,8 +54,8 @@ main (int argc, char *argv[])
   int sockfd, i, result;
   char c;
 
-/*   printf ("%s %s - http://savannah.gnu.org/projects/qadsl/\n", */
-/* 	  PACKAGE_NAME, PACKAGE_VERSION); */
+  /*   printf ("%s %s - http://savannah.gnu.org/projects/qadsl/\n", */
+  /* 	  PACKAGE_NAME, PACKAGE_VERSION); */
 
   /* XXX - Find out if there is an instance of qadsl running already -> pid-file/lock-file
    *   if threre is && no option -> presume logout.
@@ -68,42 +68,42 @@ main (int argc, char *argv[])
   while ((c = getopt (argc, argv, "lc:ovVp:h?")) != -1)
     {
       switch (c)
-	{
-	case 'l':		/* Login */
-	  operation = LOGIN;
-	  break;
+        {
+        case 'l':		/* Login */
+          operation = LOGIN;
+          break;
 
-	case 'c':		/* Use this config file */
-	  conf_file = optarg;
-	  break;
+        case 'c':		/* Use this config file */
+          conf_file = optarg;
+          break;
 
-	case 'o':		/* Logout */
-	  operation = LOGOUT;
-	  break;
+        case 'o':		/* Logout */
+          operation = LOGOUT;
+          break;
 
-	case 's':		/* Show qADSL status */
-	  operation = STATUS;
-	  break;
+        case 's':		/* Show qADSL status */
+          operation = STATUS;
+          break;
 
-	case 'v':		/* Print version. */
-	  printf ("%s version %s\n", PACKAGE_NAME, PACKAGE_VERSION);
-	  break;
+        case 'v':		/* Print version. */
+          printf ("%s version %s\n", PACKAGE_NAME, PACKAGE_VERSION);
+          break;
 
-	case 'V':		/* Set verbosity to high */
-	  verbose = 2; 		/* 2 is for client side verbosity */
-	  break;
+        case 'V':		/* Set verbosity to high */
+          verbose = 2; 		/* 2 is for client side verbosity */
+          break;
 
-	case 'p':
-	  pid_file = optarg;
-	  break;
+        case 'p':
+          pid_file = optarg;
+          break;
 
-	case '?':
-	case 'h':
-	default:
-	  printf (USAGE((progname)));
-	  exit (EXIT_SUCCESS);
-	  break;
-	}
+        case '?':
+        case 'h':
+        default:
+          printf (USAGE((progname)));
+          exit (EXIT_SUCCESS);
+          break;
+        }
     }
 
   /* Read /etc/qadsl.conf or similar */
