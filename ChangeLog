@@ -1,5 +1,9 @@
 2005-02-21  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
+	* (-: Oupsla, a new release.  How unexpectedly.
+
+2005-02-21  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
 	* src/main.c: New command line switch -q, --quit.  Exits daemon
 	without logging out.
 
