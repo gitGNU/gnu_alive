@@ -49,3 +49,10 @@ make them be checked for by configure.
 
 * Configure checks for sysconf and friends. Look at Zsh.
 http://www.zsh.org/mla/workers/2000/msg03388.html
+
+* Include Debian patches
+Just like we have a qadsl.spec file we should also include the
+debian stuff - all I ever use is debian (except from work) -
+so why not?
+
+
