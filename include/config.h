@@ -5,7 +5,15 @@
 /* Include configure settings */
 #include "settings.h"
 
-
+/* Taken in part from zsh.h */
+#ifdef __hpux
+// pull in off_t
+#define _INCLUDE_POSIX_SOURCE
+#define _INCLUDE_XOPEN_SOURCE
+#define _INCLUDE_HPUX_SOURCE
+#include <sys/types.h>
+#endif
+                                                                                               
 struct config_data
 {
   char *username;
