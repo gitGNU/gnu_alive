@@ -1,6 +1,9 @@
 #!/usr/bin/make -f
 # Sample debian/rules that uses debhelper.
 # GNU copyright 1997 to 1999 by Joey Hess.
+#
+# TODO: While installing the new alive package references to old qadsl
+#       should be removed somehow.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -40,8 +43,9 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	# Add here commands to install the package into debian/qadsl.
-	$(MAKE) install DESTDIR=$(CURDIR)/debian/qadsl
+	# Add here commands to install the package into debian/alive
+	# $(MAKE) install DESTDIR=$(CURDIR)/debian/qadsl
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/alive
 
 
 # Build architecture-independent files here.
@@ -53,7 +57,7 @@ binary-arch: build install
 #	dh_testversion
 	dh_testdir
 	dh_testroot
-#	dh_installdebconf	
+#	dh_installdebconf
 	dh_installdocs
 	dh_installexamples
 	dh_installmenu
@@ -64,7 +68,7 @@ binary-arch: build install
 	dh_installmanpages
 	dh_installinfo
 #	dh_undocumented
-	dh_installchangelogs 
+	dh_installchangelogs
 	dh_link
 	dh_strip
 	dh_compress

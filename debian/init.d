@@ -1,19 +1,19 @@
 #!/bin/sh
-# qadsl init script
+# GNU Alive init script
 #
 # Written by Miquel van Smoorenburg <miquels@cistron.nl>.
 # Modified for Debian GNU/Linux by Ian Murdock <imurdock@gnu.ai.mit.edu>.
-# Further modified for qadsl by http://savannah.gnu.org/projects/qadsl/
+# Further modified for alive by http://savannah.gnu.org/projects/alive/
 #
 # Version:	@(#)skeleton  1.8  03-Mar-1998  miquels@cistron.nl
 #
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DAEMON=/usr/sbin/qadsl
-# PIDFILE=/var/run/qadsl.pid
-CONFIG=/etc/qadsl.conf
-NAME=qadsl
-DESC=qadsl
+DAEMON=/usr/sbin/alive
+# PIDFILE=/var/run/alive.pid
+CONFIG=/etc/alive.conf
+NAME=alive
+DESC=alive
 ACTIVE=no
 
 [ "$ACTIVE" = "yes" ] || { echo "Please edit $0" ; exit; }

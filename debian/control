@@ -1,23 +1,27 @@
-Source: qadsl
-Section: unknown
+Source: alive
+Section: Networking
 Priority: optional
 Maintainer: Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 Standards-Version: 3.0.1
 
-Package: qadsl
+Package: alive
 Architecture: any
 Depends: ${shlibs:Depends}
+Replaces: qadsl
 Description: Auto-login & keep-alive for Internet connections.
- Frustrated about having to "log in" to your paid Internet connection?
+ Frustrated about having to "log in" to your flat-rate Internet connection?
  .
- qadsl is a small utility that automates the login process to Telia,
- COMHEM, Tiscali and other Internet Service Providers, ISPs.
+ GNU Alive is a small utility that automates login processes.  Currently
+ it is somewhat limitied to accessing Internet Service Providers, such as
+ Telia, COMHEM, Tiscali and others.  But it can be used to periodically log
+ in to any online service and fetch a record, albeit limited to HTTP.
  .
- It features a keep-alive daemon that periodically connects to your ISP
- ensuring that your connection to the Internet are not logged out all of
- a sudden.
+ It features a keep-alive daemon that periodically (re)connects to your ISP
+ ensuring that your connection to the Internet is not logged out all of a
+ sudden.  Very useful if you, for instance, want to be sure to have access
+ to your home computer from work.
  .
- qadsl works for any type of connection where your ISP has put a login
+ GNU Alive works for any type of connection where your ISP has put a login
  server in your way.
  .
- qadsl - In pursuit of a free Internet!
+ GNU Alive was previously known as qadsl.
