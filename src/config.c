@@ -1,5 +1,9 @@
 /* config.c - Interfaces with libconf and handles all program setup. */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,7 +11,6 @@
 #include <strings.h>
 
 #include "conf.h"
-#include "config.h"
 
 
 /* Default values are for a standard Orbyte Wireless server.
