@@ -27,30 +27,27 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-qadsl \- Auto-login & keep-alive for Internet connections.
-.SH SYNOPSIS
-.B qadsl
-.RI [ options ]
+qadsl.conf \- qadsl configuration file
 .SH DESCRIPTION
-\fBqadsl\fP washes your windows, mends your fences, mows your lawn...
-.PP
-It also...
-.SH OPTIONS
-\fBqadsl\fP accepts the following options:
-.TP
-.BR  -i , " --interactive"
-Prompt for confirmation.
-.TP
-.B  -v, --verbose
-Print more information.
-.TP
-.B \-h, \-\-help
-Show summary of options.
-.TP
-.B \-V, \-\-version
-Show version of program.
-.\" .SH "SEE ALSO"
-.\" .BR foo (1), 
-.\" .BR bar (1).
+\fBqadsl.conf\fP is usually found in /etc/qadsl.conf and contains
+username, password and login server information for your Internet
+connection.
+
+.SH SYNTAX
+The qadsl.conf syntax is extremely free form. So if you have ever
+peeked into a UNIX configuration file before, you should be right
+at home, you should even not have to read any further ...
+
+For those of you who hate configuration files or never have seen
+one before, you should proceed directly to the examples section.
+
+For most of the time you only need to supply a USERNAME, PASSWORD
+and LOGIN_SERVER. Like this
+
+USERNAME     = 123456@tiscali
+PASSWORD     = zw2d4a
+LOGIN_SERVER = valo1.tiscali.se
+
+
 .SH AUTHOR
 Joachim Nilsson <joachim@gnufans.org>.
