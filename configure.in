@@ -20,23 +20,43 @@ AC_CANONICAL_HOST
 dnl Checks for programs.
 AC_PROG_INSTALL
 AC_PROG_CC
+dnl Flex will soon be needed to build fully reentrant parsers with Bison
 AM_PROG_LEX
-if test "$LEX" != flex; then
-   AC_MSG_FAILURE([Cannot find Flex, aborting.
-qadsl, or rather libconf, needs Bison to generate reentrant code.])
-fi
+dnl if test "$LEX" != flex; then
+dnl    AC_MSG_FAILURE([Cannot find Flex, aborting.
+dnl qadsl, or rather libconf, needs Bison to generate reentrant code.])
+dnl fi
+dnl Bison will soon be needed to build fully reentrant parsers.
 AC_PROG_YACC
-if test "$YACC" != "bison -y"; then
-   AC_MSG_FAILURE([Cannot find Bison, aborting.
-qadsl, or rather libconf, needs Bison to generate reentrant code.])
+dnl if test "$YACC" != "bison -y"; then
+dnl    AC_MSG_FAILURE([Cannot find Bison, aborting.
+dnl qadsl, or rather libconf, needs Bison to generate reentrant code.])
+dnl fi
+
+if test "$GCC" = "yes" ; then
+    # set GCC compiler options that should work with all versions
+    CFLAGS="${CFLAGS} -Wall -pedantic -fpic -Wno-long-long"
+    SHAREDLIB_LDFLAGS="-shared ${SHAREDLIB_LDFLAGS}"
+    DEPEND_CCFLAGS="-MM"
+
+    # -std=c99 is only supported in later releases of GCC and causes
+    # Linux headers to go into strict ANSI mode, dropping non-ANSI functions
+    # so we have to fall back to -std=gnu99 if c99 doesn't work
+    save_CFLAGS="${CFLAGS}"
+    CFLAGS="${CFLAGS} -std=c99 -Werror-implicit-function-declaration"
+    AC_MSG_CHECKING([whether GNU cc -std=c99 option works])
+    AC_COMPILE_IFELSE([ AC_LANG_PROGRAM([[#include <string.h> char *a; a = strdup("foo");]])],
+	AC_MSG_RESULT([yes]) ; CFLAGS="$save_CFLAGS -std=c99",
+	AC_MSG_RESULT([no])
+	CFLAGS="$save_CFLAGS -std=gnu99 -Werror-implicit-function-declaration"
+    	AC_MSG_CHECKING([whether GNU cc -std=gnu99 option works])
+	AC_COMPILE_IFELSE([ AC_LANG_PROGRAM([[#include <string.h> char *a; a = strdup("foo");]]) ],
+		AC_MSG_RESULT([yes]) ; CFLAGS="$save_CFLAGS -std=gnu99",
+		AC_MSG_RESULT([no]) ; CFLAGS="$save_CFLAGS"))
 fi
-
-
 
 dnl Checks for libraries.
 AC_PROG_RANLIB
-
-CFLAGS="-std=gnu99"
 
 AC_ARG_ENABLE(debug, 
               AC_HELP_STRING([--enable-debug], [Enable debugging with GDB [default=no]]),[
