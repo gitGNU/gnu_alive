@@ -2,6 +2,17 @@
 
 * v1.3.2 to v1.3.3
 
+** Bugfix: config.c
+
+The actual login part of the daemon was never run even if it was
+activated in the configuration file.  Bad use of strcasecmp() led
+to that part of the config file to be interpreted in the straight
+opposite of the setting.
+
+** Documentation updated
+
+At least the TeXinfo documentation has been updated.
+
 ** --long-options implemented
 To support long options getopt_long() and getopt() has been made
 a part of the qadsl source tree.  This because long options are

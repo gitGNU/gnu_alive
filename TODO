@@ -2,9 +2,20 @@
 
 * TODO List - Items listed in falling priority order - first most important
 
+** GNU Alive
+
+Recently qadsl was dubbed a GNU package under the new name Alive.
+For this kick in several issues must be taken care of:
+
+   1. for file in *; do s/qadsl/Alive/g <$file >$file.new
+   2. Savannah maintainters to move us to new structure.
+   3. Update web pages that after 2) now sit at gnu.org/software/alive
+
 ** Update documentation.
 
-Before next release the TeXinfo and man pages *must* be updated.
+The texinfo documentation works well with the info reader but the
+PDF, PS and HTML outputs are really ugly.  We need to add more @ifinfo
+and such to separate the output.
 
 ** Liblockfile?
 
