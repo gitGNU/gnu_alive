@@ -7,7 +7,7 @@ Standards-Version: 3.0.1
 Package: qadsl
 Architecture: any
 Depends: ${shlibs:Depends}
-Description: Automatically logs in to keep your Internet connection alive.
+Description: Auto-login & keep-alive for Internet connections.
  qadsl - In pursuit of a free Internet.
  .
  qadsl is a small program made to automatically login to Telia, COMHEM,
