@@ -7,6 +7,14 @@
 The qadsl to GNU Alive transition was made.  New location of homepage
 and downloads are on the gnu.org server, or any of its mirrors.
 
+    http://www.gnu.org/software/alive/
+    http://savannah.gnu.org/projects/alive/
+
+** New command line switch -q,--quit
+
+A new command -q,--quit has been added.  This only quits the
+keep-alive daemon without logging out. 
+
 ** FreeBSD build fixes
 
 The sneak introduction of alloca() broke the build on several
