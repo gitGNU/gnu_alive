@@ -74,25 +74,13 @@ AH_VERBATIM([_GNU_SOURCE], [
 # define _GNU_SOURCE
 #endif])
 
-dnl Look for implementations for these:
-AC_CHECK_FUNCS()
-
-dnl 
-dnl XXX - Much of these fine checks are taken from QuakeForge.net
-dnl 
-
-dnl Checks for stricmp/strcasecmp
-AC_CHECK_FUNC(strcasecmp, strcasecmp=yes, strcasecmp=no)
-if test $strcasecmp = no; then
-	AC_CHECK_FUNC(stricmp,
-		AC_DEFINE(strcasecmp, stricmp, [Define strcasecmp as stricmp if you have one but not the other]),
-		AC_MSG_ERROR([Neither stricmp nor strcasecmp found])
-	)
-fi
+dnl If not found, replace with -lost
+AC_REPLACE_FUNCS(strcasecmp)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 
 dnl Checks for library functions.
+AC_CHECK_FUNCS()
 
 dnl Check for various --with-??? directives
 
