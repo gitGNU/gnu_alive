@@ -1,5 +1,11 @@
 2004-02-17  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
+	* etc/qadsl.conf (INTERVAL): Reduce default sleep interval
+	from 20 to 5 to alleviate against buggy login servers.
+
+	* src/config.c: Reduce default sleep interval between logins to
+	reduce possible long periods of being disconnected.
+
 	* src/process.c (process): Call kill() directly instead of
 	unecessary wrapper functions.
 
