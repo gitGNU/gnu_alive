@@ -8,6 +8,8 @@ Package: alive
 Architecture: any
 Depends: ${shlibs:Depends}
 Replaces: qadsl
+Conflicts: qadsl
+Provides: qadsl
 Description: Auto-login & keep-alive for Internet connections.
  Frustrated about having to "log in" to your flat-rate Internet connection?
  .

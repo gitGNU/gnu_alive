@@ -18,6 +18,7 @@ EXTRA_DIST = config.rpath  alive.lsm.in alive.spec.in \
              debian/dirs          \
              debian/docs          \
              debian/init.d        \
+             debian/postinst      \
              debian/rules
 
 ACLOCAL_AMFLAGS = -I m4

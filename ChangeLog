@@ -1,3 +1,9 @@
+2004-08-29  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* configure.ac: A name change constitutes quite a big
+	change in the overall opinion of the program, so I'm
+	bumping the minor version to 1.4.0.
+
 2004-08-27  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* intl/: New subdir.

@@ -1,6 +1,6 @@
                                                             -*-outline-*-
 
-* v1.3.3 to v1.3.4
+* v1.3.3 to v1.4.0
 
 ** GNU Alive 
 
@@ -30,6 +30,11 @@ configuraion and PID (lock) files also have been renamed the
 program is still backwards compatible.  The qadsl.conf and
 .qadslrc are detected first, then alive.conf et. al.  The same
 goes for the lock files.
+
+** Bugfixes and minor additions
+
+The usual minor bugfixes and minor additions in verbosity and debug
+messages, as expected.
 
 
 * v1.3.2 to v1.3.3

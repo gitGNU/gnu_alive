@@ -13,6 +13,7 @@ lib/xmalloc.c
 src/config.c
 src/daemon.c
 src/http.c
+src/lock.c
 src/log.c
 src/main.c
 src/process.c

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: bug-alive@gnu.org\n"
-"POT-Creation-Date: 2004-08-26 14:22+0200\n"
+"POT-Creation-Date: 2004-08-29 02:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,26 +75,26 @@ msgstr ""
 msgid "Memory exhausted"
 msgstr ""
 
-#: src/config.c:254
+#: src/config.c:258
 #, c-format
 msgid "Cannot find configuration file %s: %s\n"
 msgstr ""
 
-#: src/config.c:263
+#: src/config.c:267
 msgid "Read configuration:"
-msgstr ""
-
-#: src/config.c:325
-#, c-format
-msgid "Failed to read username from configuration file %s.\n"
 msgstr ""
 
 #: src/config.c:329
 #, c-format
+msgid "Failed to read username from configuration file %s.\n"
+msgstr ""
+
+#: src/config.c:333
+#, c-format
 msgid "Failed to read password from configuration file %s.\n"
 msgstr ""
 
-#: src/config.c:332
+#: src/config.c:336
 msgid "You must supply at least a username and password.\n"
 msgstr ""
 
@@ -333,6 +333,25 @@ msgstr ""
 #: src/http.c:612
 #, c-format
 msgid "%s(): failed %d retries - backing off for a while."
+msgstr ""
+
+#: src/lock.c:168
+#, c-format
+msgid "Looking for PID file: %s."
+msgstr ""
+
+#: src/lock.c:183
+msgid "Cannot find any PID file, daemon not running."
+msgstr ""
+
+#: src/lock.c:230
+#, c-format
+msgid "Old qadsl version running: %s, with PID = %d"
+msgstr ""
+
+#: src/lock.c:234
+#, c-format
+msgid "Found PID file %s with PID = %d"
 msgstr ""
 
 #: src/log.c:60

@@ -165,7 +165,7 @@ pid_t lock_read (char **file, int verbose)
   fallback = 0;
   do
     {
-      DEBUG("Looking for PID file: %s.", *file);
+      DEBUG(_("Looking for PID file: %s."), *file);
 
       fd = open(*file, O_RDONLY);
       if (-1 == fd)
@@ -180,7 +180,7 @@ pid_t lock_read (char **file, int verbose)
                 */
 /*                system ("ps --no-heading -C qadsl | head -1 | cut -f 1 -d ' ' >"); */
 
-              DEBUG("Cannot find any PID file, daemon not running.");
+              DEBUG(_("Cannot find any PID file, daemon not running."));
               if (ENOENT == errno)
                 return 0;
               else
@@ -227,11 +227,11 @@ pid_t lock_read (char **file, int verbose)
    */
   if (strstr (*file, "qadsl"))
     {
-      ERROR("Old qadsl version running: %s, with PID = %d", *file, pid);
+      ERROR(_("Old qadsl version running: %s, with PID = %d"), *file, pid);
     }
   else
     {
-      DEBUG("Found PID file %s with PID = %d", *file, pid);
+      DEBUG(_("Found PID file %s with PID = %d"), *file, pid);
     }
 
   return pid;

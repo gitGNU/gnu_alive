@@ -2,16 +2,6 @@
 
 * TODO List - Items listed in falling priority order - first most important
 
-** Check in new GNU Alive files in CVS
-
-Translations, file renames etc.
-
-** debian/* files must be updated...
-
-** Test on FreeBSD et. al.
-
-** Release 1.3.4
-
 ** Rename cofig.c?
 Config.c and its header file config.h clashes with autoconf meaning
 of config.h and does perhaps not need to be called config.c at all?
