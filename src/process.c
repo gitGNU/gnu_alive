@@ -123,27 +123,29 @@ process (config_data_t *config, op_t operation, int verbose)
         }
       break;
 
-      /* Logout, discarding all possible errors - just logout */
+      /* Release connection, call logout page. Then fall through to QUIT. */
     case LOGOUT:
-      if (!running)
-        {
-          ERROR (_("No active session found, will logout anyway."));
-        }
-      else
+      result = http_internet_logout (config, verbose);
+
+      /* Quit daemon */
+    case QUIT:
+      if (running)
         {
           /* Send SIGTERM to gracefully let the daemon process .. exit. */
           kill (running, SIGTERM);
           lock_remove (config->pid_file);
         }
-      result = http_internet_logout (config, verbose);
       break;
 
     case NOP:
-      LOG (_("Neither login or logout selected. Reverting to query status."));
+      LOG (_("No operation selected, reverting to query status."));
     default:
     case STATUS:
       http_pre_login (config, verbose);
-      LOG (_("Current status: %s"), config->logged_in ? _("CONNECTED") : _("DISCONNECTED"));
+      LOG (_("Current status: %s"),
+           config->logged_in
+           ? _("CONNECTED")
+           : _("DISCONNECTED"));
 
       if (running > 0)
         {

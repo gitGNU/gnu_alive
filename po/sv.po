@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alive 1.3.4\n"
 "Report-Msgid-Bugs-To: bug-alive@gnu.org\n"
-"POT-Creation-Date: 2004-08-29 02:57+0200\n"
-"PO-Revision-Date: 2004-08-14 14:42+0200\n"
+"POT-Creation-Date: 2005-02-13 22:37+0100\n"
+"PO-Revision-Date: 2005-02-13 22:46+0100\n"
 "Last-Translator: Joachim Nilsson <joachim.nilsson@member.fsf.org>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -75,28 +75,28 @@ msgstr "%s: flaggan \"-W %s\" tar inget argument\n"
 msgid "Memory exhausted"
 msgstr "minnet slut"
 
-#: src/config.c:258
+#: src/config.c:262
 #, c-format
 msgid "Cannot find configuration file %s: %s\n"
 msgstr "Kan inte hitta konfigurationsfilen %s: %s\n"
 
-#: src/config.c:267
+#: src/config.c:271
 msgid "Read configuration:"
 msgstr "Inläst konfiguration:"
 
-#: src/config.c:329
+#: src/config.c:333
 #, c-format
 msgid "Failed to read username from configuration file %s.\n"
 msgstr ""
 "Kunde inte utläsa användarnamnet (USERNAME=) från konfigurationsfilen %s.\n"
 
-#: src/config.c:333
+#: src/config.c:337
 #, c-format
 msgid "Failed to read password from configuration file %s.\n"
 msgstr ""
 "Kunde inte utläsa lösenordet (PASSWORD=) från konfigurationsfilen: %s.\n"
 
-#: src/config.c:336
+#: src/config.c:340
 msgid "You must supply at least a username and password.\n"
 msgstr ""
 "Åtminstone användarnamn (USERNAME=) och lösenord (PASSWORD=) måste anges.\n"
@@ -184,12 +184,12 @@ msgstr "gethostbyname() returnerar: %s"
 msgid "Failed to create a socket: %s"
 msgstr "Kunde inte skapa en socket: %s"
 
-#: src/http.c:98 src/http.c:166 src/http.c:269 src/http.c:437
+#: src/http.c:98 src/http.c:166 src/http.c:269 src/http.c:440
 #, c-format
 msgid "Failed to connect to login server (%s): %s"
 msgstr "Kunde inte ansluta till loginserver (%s): %s"
 
-#: src/http.c:162 src/http.c:265 src/http.c:433
+#: src/http.c:162 src/http.c:265 src/http.c:436
 #, c-format
 msgid "Connecting to login server, %s:%d."
 msgstr "Ansluter till loginserver, %s:%d."
@@ -203,11 +203,11 @@ msgstr "Kunde inte skicka begäran efter %s."
 msgid "Closing connection to login server."
 msgstr "Stänger anslutning till loginserver.c"
 
-#: src/http.c:190 src/http.c:357
+#: src/http.c:190 src/http.c:360
 msgid "Waiting for reply from server..."
 msgstr "Inväntar svar från server..."
 
-#: src/http.c:194 src/http.c:361
+#: src/http.c:194 src/http.c:364
 msgid "No reply from login server."
 msgstr "Inget svar från loginserver."
 
@@ -221,7 +221,7 @@ msgstr "Kunde inte \"pinga\" loginservern: %s"
 msgid "%s(): Login server \"pinged\": not logged in..."
 msgstr "%s(): Loginservern \"pingad\": ej inloggad..."
 
-#: src/http.c:231 src/http.c:402 src/http.c:515
+#: src/http.c:231 src/http.c:405 src/http.c:518
 #, c-format
 msgid ""
 "%s(): Here is the reply:\n"
@@ -230,7 +230,7 @@ msgstr ""
 "%s(): Här är svaret:\n"
 "%s"
 
-#: src/http.c:235 src/http.c:406 src/http.c:519
+#: src/http.c:235 src/http.c:409 src/http.c:522
 #, c-format
 msgid "%s(): Start %s with --verbose --debug to see whole reply."
 msgstr ""
@@ -240,60 +240,60 @@ msgstr ""
 msgid "Composing non-url-encoded login string."
 msgstr "Komponerar icke-url-kodad loginsträng."
 
-#: src/http.c:285 src/http.c:306
+#: src/http.c:285 src/http.c:309
 #, c-format
 msgid "Failed to allocate memory (%d bytes): %s"
 msgstr "Kunde inte allokera minne (%d bytes): %s"
 
-#: src/http.c:300
+#: src/http.c:303
 #, c-format
 msgid "Login string: %s"
 msgstr "Loginsträng: %s"
 
-#: src/http.c:338
+#: src/http.c:341
 #, c-format
 msgid "Cannot send login request to server (%s): %s"
 msgstr "Kan inte sända loginbegäran till server (%s): %s"
 
-#: src/http.c:349
+#: src/http.c:352
 #, c-format
 msgid "Failed to send login request to server (%s): %s"
 msgstr "Kunde inte sända loginbegäran till server (%s): %s"
 
-#: src/http.c:369
+#: src/http.c:372
 #, c-format
 msgid "%s(): Error reading login reply: %s"
 msgstr "%s(): Fel vid läsning av svar från loginbegäran: %s"
 
-#: src/http.c:399
+#: src/http.c:402
 #, c-format
 msgid "%s(): login failed."
 msgstr "%s(): Login misslyckades."
 
-#: src/http.c:455
+#: src/http.c:458
 #, c-format
 msgid "Logout request failed: %s"
 msgstr "Utloggningsbegäran misslyckades: %s"
 
-#: src/http.c:461
+#: src/http.c:464
 msgid "Waiting for logout reply, 5 second timeout ..."
 msgstr "Inväntar svar på utloggningsbegäran, 5 sekunders timeout ..."
 
-#: src/http.c:466
+#: src/http.c:469
 #, c-format
 msgid "%s does not respond, cannot log out!"
 msgstr "%s svarar inte, kan inte logga ut!"
 
-#: src/http.c:472
+#: src/http.c:475
 msgid "Poll says a reply has arrived, reading reply..."
 msgstr "Poll skvallrar om ett svar, läser svaret..."
 
-#: src/http.c:477
+#: src/http.c:480
 #, c-format
 msgid "Read logout reply: %s"
 msgstr "Läst svar på utloggningsbegäran: %s"
 
-#: src/http.c:483
+#: src/http.c:486
 #, c-format
 msgid ""
 "Received:\n"
@@ -302,45 +302,45 @@ msgstr ""
 "Mottaget:\n"
 "%s"
 
-#: src/http.c:489
+#: src/http.c:492
 msgid "LOGOUT FAILED"
 msgstr "UTLOGGNING MISSLYCKADES"
 
-#: src/http.c:495
+#: src/http.c:498
 msgid "SUCCESSFUL LOGOUT"
 msgstr "UTLOGGNING LYCKADES"
 
-#: src/http.c:512
+#: src/http.c:515
 #, c-format
 msgid "%s(): logout failed."
 msgstr "%s(): utloggning misslyckades."
 
-#: src/http.c:556
+#: src/http.c:559
 #, c-format
 msgid "%s(): failed first login attempt."
 msgstr "%s(): första loginförsöket misslyckades."
 
-#: src/http.c:567
+#: src/http.c:570
 #, c-format
 msgid "%s(): waiting a while before retrying..."
 msgstr "%s(): väntar ett slag innan jag försöker igen..."
 
-#: src/http.c:574
+#: src/http.c:577
 #, c-format
 msgid "%s(): failed to bring up login page."
 msgstr "%s(): kunde inte få upp inloggningssidan."
 
-#: src/http.c:594
+#: src/http.c:597
 #, c-format
 msgid "%s(): failed to send login (attempt #%d)."
 msgstr "%s(): kunde inte sända loginbegäran (försök #%d)."
 
-#: src/http.c:599 src/http.c:617
+#: src/http.c:602 src/http.c:620
 #, c-format
 msgid "%s(): Success."
 msgstr "%s(): Lyckat."
 
-#: src/http.c:612
+#: src/http.c:615
 #, c-format
 msgid "%s(): failed %d retries - backing off for a while."
 msgstr "%s(): %d misslyckade försök - avvaktar ett slag."
@@ -351,14 +351,13 @@ msgid "Looking for PID file: %s."
 msgstr "Söker efter låsfil: %s."
 
 #: src/lock.c:183
-#, fuzzy
 msgid "Cannot find any PID file, daemon not running."
-msgstr "Kan ej hitta aktiv låsfil, logindemonen ej aktiv."
+msgstr "Hittade ingen aktiv låsfil, logindemonen ej aktiv."
 
 #: src/lock.c:230
-#, fuzzy, c-format
+#, c-format
 msgid "Old qadsl version running: %s, with PID = %d"
-msgstr "Gammal qadsl-version aktiv under PID = %d"
+msgstr "Gammal qadsl-version aktiv: %s, med PID = %d"
 
 #: src/lock.c:234
 #, c-format
@@ -385,17 +384,17 @@ msgstr "%s FEL %s[%d]: "
 msgid "Usage: %s [-h] [-c conffile] [-p pidfile] [-loPsdvV]\n"
 msgstr "Användning: %s [-h] [-c conffile] [-p pidfile] [-loPsdvV]\n"
 
-#: src/main.c:132
+#: src/main.c:138
 #, c-format
 msgid "%s version %s\n"
 msgstr "%s version %s\n"
 
-#: src/main.c:158
+#: src/main.c:164
 #, c-format
 msgid "Unrecognised option, %s"
 msgstr "Okänd flagga %s"
 
-#: src/main.c:187
+#: src/main.c:193
 #, c-format
 msgid ""
 "%s - Auto-login & keep-alive for Internet connections.\n"
@@ -404,52 +403,54 @@ msgstr ""
 "%s - Loggar in och håller din Internetkoppling vid liv.\n"
 "\n"
 
-#: src/main.c:191
-#, c-format
-msgid ""
-"Options:\n"
-"-l, --login               Send login request\n"
-"-o, --logout              Send logout request\n"
-"-c, --conf-file=FILE      Use settings from FILE instead of "
-msgstr ""
-"Flaggor:\n"
-"-l, --login               Skicka loginbegäran\n"
-"-o, --logout              Skicka utloggningsbegäran\n"
-"-c, --conf-file=FILE      Använd inställningar från FILE istf. "
-
-#: src/main.c:195
-#, c-format
-msgid ""
-"\n"
-"-p, --pid-file=FILE       Use FILE to store PID, default is "
-msgstr ""
-"\n"
-"-p, --pid-file=FILE       Använd FILE för att lagra PID, default är "
-
-#: src/main.c:196
-#, c-format
-msgid ""
-"\n"
-"-P, --port=PORT           Connect to PORT on server, default is "
-msgstr ""
-"\n"
-"-P, --port=PORT           Anslut till PORT på loginserver, default är "
-
 #: src/main.c:197
 #, c-format
 msgid ""
-"\n"
-"-s, --status              Display status of login daemon\n"
+"Options:\n"
+"-l, --login               Send login request.\n"
+"-q, --quit                Quit daemon, don't logout.\n"
+"-o, --logout              Send logout request.\n"
+"-c, --conf-file=FILE      Use settings from FILE instead of "
+msgstr ""
+"Flaggor:\n"
+"-l, --login               Skicka loginbegäran.\n"
+"-q, --quit                Avsluta demonen utan att logga ut.\n"
+"-o, --logout              Skicka utloggningsbegäran.\n"
+"-c, --conf-file=FILE      Använd inställningar från FILE istf. "
+
+#: src/main.c:202
+#, c-format
+msgid ""
+".\n"
+"-p, --pid-file=FILE       Use FILE to store PID, default is "
+msgstr ""
+".\n"
+"-p, --pid-file=FILE       Använd FILE för att lagra PID, default är "
+
+#: src/main.c:203
+#, c-format
+msgid ""
+".\n"
+"-P, --port=PORT           Connect to PORT on server, default is "
+msgstr ""
+".\n"
+"-P, --port=PORT           Anslut till PORT på loginserver, default är "
+
+#: src/main.c:204
+#, c-format
+msgid ""
+".\n"
+"-s, --status              Display status of login daemon.\n"
 "-v, --verbose             Display more information, on screen and in "
-"logfile\n"
+"logfile.\n"
 "-d, --debug               Display even more information, huge amounts!\n"
-"-V, --version             Display version information and exit\n"
-"-h, --help                Display this help and exit\n"
-"    --usage               Give a short usage message\n"
+"-V, --version             Display version information and exit.\n"
+"-h, --help                Display this help and exit.\n"
+"    --usage               Give a short usage message.\n"
 "\n"
 "Report bugs to <"
 msgstr ""
-"\n"
+".\n"
 "-s, --status              Visa status för login demonen.\n"
 "-v, --verbose             Visa mer information, på skärmen och i loggfilen.\n"
 "-d, --debug               Visa ännu mer information, stora mängder!\n"
@@ -459,7 +460,7 @@ msgstr ""
 "\n"
 "Rapportera buggar till <"
 
-#: src/main.c:205
+#: src/main.c:212
 #, c-format
 msgid ">\n"
 msgstr ">\n"
@@ -520,32 +521,32 @@ msgstr "Redan inloggad."
 msgid "Failed to delete old PID file, %s - %s"
 msgstr "Kunde inte ta bort den gamla PID-filen, %s: %s"
 
-#: src/process.c:130
-msgid "No active session found, will logout anyway."
-msgstr "Kunde inte hitta en aktiv session, loggar ut ändå."
+#: src/process.c:141
+msgid "No operation selected, reverting to query status."
+msgstr "Ingen operation vald. Faller tillbaka på att visa status."
 
-#: src/process.c:142
-msgid "Neither login or logout selected. Reverting to query status."
-msgstr "Varken login eller logout valt.  Faller tillbaka på att visa status."
-
-#: src/process.c:146
+#: src/process.c:145
 #, c-format
 msgid "Current status: %s"
 msgstr "Nuvarande status: %s"
 
-#: src/process.c:146
+#: src/process.c:147
 msgid "CONNECTED"
 msgstr "ANSLUTEN"
 
-#: src/process.c:146
+#: src/process.c:148
 msgid "DISCONNECTED"
 msgstr "EJ ANSLUTEN"
 
-#: src/process.c:150
+#: src/process.c:152
 #, c-format
 msgid "Login daemon running with PID = %d"
 msgstr "Logindemonen kör med PID = %d"
 
-#: src/process.c:155
+#: src/process.c:157
 msgid "Login daemon not running."
 msgstr "Logindemonen ej aktiv."
+
+#, fuzzy
+#~ msgid "No active session found."
+#~ msgstr "Kunde inte hitta en aktiv session."

@@ -74,6 +74,7 @@ main (int argc, char *argv[])
   struct option const long_options[] = {
     {"login", no_argument, 0, 'l'},
     {"logout", no_argument, 0, 'o'},
+    {"quit", no_argument, 0, 'q'},
     {"conf-file", required_argument, 0, 'c'},
     {"pid-file", required_argument, 0, 'p'},
     {"port", required_argument, 0, 'P'},
@@ -99,6 +100,7 @@ main (int argc, char *argv[])
                        "v"      /* verbose */
                        "V"      /* version */
                        "d"      /* debug */
+                       "q"      /* quit */
                        "h?",    /* help */
                        long_options, NULL);
 
@@ -112,8 +114,12 @@ main (int argc, char *argv[])
           conf_file = optarg;
           break;
 
-        case 'o':               /* Logout */
+        case 'o':               /* Actually logout */
           operation = LOGOUT;
+          break;
+
+        case 'q':               /* Quit, don't logout */
+          operation = QUIT;
           break;
 
         case 's':               /* Show GNU Alive status */
@@ -190,17 +196,18 @@ usage (int status)
 
   printf (_("\
 Options:\n\
--l, --login               Send login request\n\
--o, --logout              Send logout request\n\
--c, --conf-file=FILE      Use settings from FILE instead of " GLOBAL_CONF "\n\
--p, --pid-file=FILE       Use FILE to store PID, default is " PID_FILE "\n\
--P, --port=PORT           Connect to PORT on server, default is " PORT "\n\
--s, --status              Display status of login daemon\n\
--v, --verbose             Display more information, on screen and in logfile\n\
+-l, --login               Send login request.\n\
+-q, --quit                Quit daemon, don't logout.\n\
+-o, --logout              Send logout request.\n\
+-c, --conf-file=FILE      Use settings from FILE instead of " GLOBAL_CONF ".\n\
+-p, --pid-file=FILE       Use FILE to store PID, default is " PID_FILE ".\n\
+-P, --port=PORT           Connect to PORT on server, default is " PORT ".\n\
+-s, --status              Display status of login daemon.\n\
+-v, --verbose             Display more information, on screen and in logfile.\n\
 -d, --debug               Display even more information, huge amounts!\n\
--V, --version             Display version information and exit\n\
--h, --help                Display this help and exit\n\
-    --usage               Give a short usage message\n\
+-V, --version             Display version information and exit.\n\
+-h, --help                Display this help and exit.\n\
+    --usage               Give a short usage message.\n\
 \n\
 Report bugs to <" PACKAGE_BUGREPORT ">\n\
 "));
