@@ -1,15 +1,14 @@
-/*
- * qADSL - An automatic login daemon for WAN/LAN/ADSL connections
+/* main.c - GNU Alive: An auto-login & keep-alive daemon.
  *
- * Copyright (c) 2001 Jakob "kuba" Stasilowicz <kuba()unix!se> Copyright (c)
- * 2003,2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
+ * Copyright (c) 2001 Jakob "kuba" Stasilowicz <kuba()unix!se>
+ * Copyright (c) 2003,2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  *
- * qADSL is free software; you can redistribute it and/or modify it under the
+ * GNU Alive is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
  *
- * qADSL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * GNU Alive is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -33,11 +32,11 @@
 #include "getopt.h"
 #include "process.h"
 
-#define USAGE printf ("Usage: %s [-h] [-c conffile] [-p pidfile] [-loPsdvV]\n", program_name);
-static void usage (int status);
-
+#define USAGE printf (_("Usage: %s [-h] [-c conffile] [-p pidfile] [-loPsdvV]\n"), program_name);
 
 static const char *program_name;
+
+static void usage (int status);
 
 
 #ifndef HAVE_RINDEX
@@ -117,7 +116,7 @@ main (int argc, char *argv[])
           operation = LOGOUT;
           break;
 
-        case 's':               /* Show qADSL status */
+        case 's':               /* Show GNU Alive status */
           operation = STATUS;
           break;
 
@@ -130,7 +129,7 @@ main (int argc, char *argv[])
           break;
 
         case 'V':               /* Print version. */
-          printf ("%s version %s\n", PACKAGE_NAME, PACKAGE_VERSION);
+          printf (_("%s version %s\n"), PACKAGE_NAME, PACKAGE_VERSION);
           exit (EXIT_SUCCESS);
           break;
 
@@ -156,7 +155,7 @@ main (int argc, char *argv[])
           break;
 
         default:
-          ERROR ("Unrecognised option, %s", argv[0]);
+          ERROR (_("Unrecognised option, %s"), argv[0]);
           usage (EXIT_FAILURE);
         }
     }
@@ -185,26 +184,26 @@ main (int argc, char *argv[])
 static void
 usage (int status)
 {
-  printf ("%s - Auto-login & keep-alive for Internet connections.\n\n", program_name);
+  printf (_("%s - Auto-login & keep-alive for Internet connections.\n\n"), PACKAGE_NAME);
 
   USAGE;
 
-  printf ("\
+  printf (_("\
 Options:\n\
--l, --login               Try to login\n\
--o, --logout              Try to logout\n\
+-l, --login               Send login request\n\
+-o, --logout              Send logout request\n\
 -c, --conf-file=FILE      Use settings from FILE instead of " GLOBAL_CONF "\n\
 -p, --pid-file=FILE       Use FILE to store PID, default is " PID_FILE "\n\
 -P, --port=PORT           Connect to PORT on server, default is " PORT "\n\
--s, --status              Display status of qadsl daemon\n\
+-s, --status              Display status of login daemon\n\
 -v, --verbose             Display more information, on screen and in logfile\n\
 -d, --debug               Display even more information, huge amounts!\n\
 -V, --version             Display version information and exit\n\
--h, --help                Display this help and exist\n\
-    --usage               Give a shore usage message\n\
+-h, --help                Display this help and exit\n\
+    --usage               Give a short usage message\n\
 \n\
 Report bugs to <" PACKAGE_BUGREPORT ">\n\
-");
+"));
 
   exit (status);
 }

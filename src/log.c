@@ -2,12 +2,12 @@
  *
  * Copyright (C) 2003, 2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  *
- * qADSL is free software; you can redistribute it and/or modify it
+ * GNU Alive is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * qADSL is distributed in the hope that it will be useful, but
+ * GNU Alive is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -21,9 +21,9 @@
 #include "config.h"
 #endif
 
-#include <alloca.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <string.h>
 #include <syslog.h>
 #include <sys/types.h>
@@ -57,20 +57,20 @@ void write_message (int level, char *fmt, ...)
   switch (level)
     {
     case LOG_DEBUG:
-      printf ("%s DBG %s[%d]: ", time_string, PACKAGE_NAME, mypid);
+      printf (_("%s DBG %s[%d]: "), time_string, PACKAGE_NAME, mypid);
       vprintf (fmt, ap);
       printf ("\n");
       break;
 
     case LOG_INFO:
-      printf ("%s INF %s[%d]: ", time_string, PACKAGE_NAME, mypid);
+      printf (_("%s INF %s[%d]: "), time_string, PACKAGE_NAME, mypid);
       vprintf (fmt, ap);
       printf ("\n");
       break;
 
     default:
     case LOG_ERR:
-      fprintf (stderr, "%s ERR %s[%d]: ", time_string, PACKAGE_NAME, mypid);
+      fprintf (stderr, _("%s ERR %s[%d]: "), time_string, PACKAGE_NAME, mypid);
       vfprintf (stderr, fmt, ap);
       fprintf (stderr, "\n");
       break;

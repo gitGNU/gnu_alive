@@ -3,12 +3,12 @@
  * Copyright (c) 2001 Jakob "kuba" Stasilowicz <kuba()unix!se>
  * Copyright (c) 2003,2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  *
- * qADSL is free software; you can redistribute it and/or modify it
+ * GNU Alive is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * qADSL is distributed in the hope that it will be useful, but
+ * GNU Alive is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -113,13 +113,13 @@ daemon_sighandler (int signal)
   /* We quit on everything but HUP */
   if (SIGHUP != signal)
     {
-      write_logfile (LOG_INFO, "Got signal(%d), quitting.", signal);
+      write_logfile (LOG_INFO, _("Got signal(%d), quitting."), signal);
 
       exit (0);
     }
   else
     {
-      write_logfile (LOG_INFO, "Got signal(%d), forcing relogin.", signal);
+      write_logfile (LOG_INFO, _("Got signal(%d), forcing relogin."), signal);
     }
 }
 
@@ -154,23 +154,23 @@ daemon_thread (config_data_t *config, int verbose)
        * daemon to start since there is no way (other than ps)
        * to communicate the PID to the outside world.
        */
-      ERROR ("Cannot write PID(%d) to file, %s: %s",
+      ERROR (_("Cannot write PID(%d) to file, %s: %s"),
              (int)mypid, config->pid_file, strerror (errno));
-      ERROR ("Aborting daemon - cannot communicate PID to outside world.");
+      ERROR (_("Aborting daemon - cannot communicate PID to outside world."));
 
       /* Bye bye */
       return;
     }
   else
     {
-      write_logfile (LOG_INFO, "Keep-alive daemon started, pid: %d", mypid);
+      write_logfile (LOG_INFO, _("Keep-alive daemon started, pid: %d"), mypid);
     }
 
   while (1)
     {
       if (latched_logged_in != config->logged_in)
         {
-          write_logfile (LOG_INFO, "Login %s", config->logged_in ? "successful." : "FAILED!");
+          write_logfile (LOG_INFO, _("Login %s"), config->logged_in ? _("successful.") : _("FAILED!"));
         }
       latched_logged_in = config->logged_in;
 
@@ -186,7 +186,7 @@ daemon_thread (config_data_t *config, int verbose)
        */
       if (config->daemon_type && !config->logged_in)
         {
-          LOG ("Daemon logging in again.");
+          LOG (_("Daemon logging in again."));
           http_do_login (config, verbose);
         }
 
@@ -195,16 +195,16 @@ daemon_thread (config_data_t *config, int verbose)
         {
           if (config->logged_in)
             {
-              write_logfile (LOG_INFO, "Forced relogin successful.");
+              write_logfile (LOG_INFO, _("Forced relogin successful."));
             }
           else
             {
-              write_logfile (LOG_INFO, "Forced relogin FAILED!");
+              write_logfile (LOG_INFO, _("Forced relogin FAILED!"));
             }
         }
       else
         {
-          LOG ("Periodic relogin %s.", config->logged_in ? "OK" : "FAILED");
+          LOG (_("Periodic relogin %s."), config->logged_in ? _("OK") : _("FAILED"));
         }
     }
 }

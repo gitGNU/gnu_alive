@@ -1,13 +1,13 @@
-/* process.c - Processes operations for qADSL.
+/* process.c - Processes operations for GNU Alive.
  *
  * Copyright (c) 2003,2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  *
- * qADSL is free software; you can redistribute it and/or modify it
+ * GNU Alive is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * qADSL is distributed in the hope that it will be useful, but
+ * GNU Alive is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -39,7 +39,7 @@ int
 process (config_data_t *config, op_t operation, int verbose)
 {
   int   result  = 0;
-  pid_t running = lock_read (&config->pid_file);
+  pid_t running = lock_read (&config->pid_file, verbose);
 
   switch (operation)
     {
@@ -48,20 +48,20 @@ process (config_data_t *config, op_t operation, int verbose)
       if (running)
         {
          /* Force the daemon to wake up earlier and relogin. */
-          LOG ("Already running on pid %d, forcing relogin.", running);
+          LOG (_("Already running on pid %d, forcing relogin."), running);
          result = kill (running, SIGHUP);
          if (result)
            {
-             ERROR ("kill(%d, SIGHUP) failed: %s\n", running, strerror(errno));
-             ERROR ("Maybe a stale lockfile (%s)?", config->pid_file);
+             ERROR (_("kill(%d, SIGHUP) failed: %s\n"), running, strerror(errno));
+             ERROR (_("Maybe a stale lockfile (%s)?"), config->pid_file);
 
-             LOG ("Trying to remove possibly stale lockfile (%s)...", config->pid_file);
+             LOG (_("Trying to remove possibly stale lockfile (%s)..."), config->pid_file);
              result = lock_remove (config->pid_file);
              if (result)
                {
-                 ERROR ("Couldn't remove possible stale lockfile (%s).\n",
+                 ERROR (_("Couldn't remove possible stale lockfile (%s).\n"),
                         config->pid_file);
-                 ERROR ("Maybe the process (%d) is running as root, but you are not?",
+                 ERROR (_("Maybe the process (%d) is running as root, but you are not?"),
                         running);
 
                  return EXIT_FAILURE;
@@ -78,27 +78,27 @@ process (config_data_t *config, op_t operation, int verbose)
       if (!config->logged_in)
         {
           /* Nope, login first. */
-          LOG ("First check, not logged in yet.");
+          LOG (_("First check, not logged in yet."));
           result = http_internet_login (config, verbose);
           if (result)
             {
-              ERROR ("To diagnose, try the options --debug --verbose");
+              ERROR (_("To diagnose, try the options --debug --verbose"));
             }
           else
             {
               if (config->logged_in)
                 {
-                  LOG ("SUCCESSFUL LOGIN");
+                  LOG (_("SUCCESSFUL LOGIN"));
                 }
               else
                 {
-                  LOG ("LOGIN FAILED - To diagnose, try the options --debug --verbose");
+                  LOG (_("LOGIN FAILED - To diagnose, try the options --debug --verbose"));
                 }
             }
         }
       else
         {
-          LOG ("Already logged in.");
+          LOG (_("Already logged in."));
           result = 0;
         }
 
@@ -110,7 +110,7 @@ process (config_data_t *config, op_t operation, int verbose)
               /* Non-fatal error, it's OK if we run the first time. */
               if (EACCES == errno)
                 {
-                  ERROR ("Failed to delete old PID file, %s - %s",
+                  ERROR (_("Failed to delete old PID file, %s - %s"),
                          config->pid_file, strerror (errno));
                 }
             }
@@ -127,7 +127,7 @@ process (config_data_t *config, op_t operation, int verbose)
     case LOGOUT:
       if (!running)
         {
-          ERROR ("No active session found, will logout anyway.");
+          ERROR (_("No active session found, will logout anyway."));
         }
       else
         {
@@ -139,20 +139,20 @@ process (config_data_t *config, op_t operation, int verbose)
       break;
 
     case NOP:
-      LOG ("Neither login or logout selected. Reverting to query status.");
+      LOG (_("Neither login or logout selected. Reverting to query status."));
     default:
     case STATUS:
       http_pre_login (config, verbose);
-      LOG ("Current status: %s", config->logged_in ? "CONNECTED" : "DISCONNECTED");
+      LOG (_("Current status: %s"), config->logged_in ? _("CONNECTED") : _("DISCONNECTED"));
 
       if (running > 0)
         {
-          LOG ("Login daemon running with PID = %d", running);
+          LOG (_("Login daemon running with PID = %d"), running);
           result = running;
         }
       else
         {
-          LOG ("Login daemon not running.");
+          LOG (_("Login daemon not running."));
           result = -1;
         }
       break;
