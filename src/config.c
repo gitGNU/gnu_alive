@@ -186,7 +186,16 @@ config_load (char *file)
     }
 
   __config_area.daemon_start = conf_get_bool (parms, "DEAMON_S");
-  __config_area.daemon_type  = strcasecmp (conf_get_value (parms, "DEAMON_S"), "login") ? 1 : 0;
+  
+  temp = conf_get_value (parms, "DEAMON_T");
+  if (!temp)
+    {
+      __config_area.daemon_type  = 1;
+    }
+  else
+    {
+      __config_area.daemon_type  = strcasecmp (temp, "login") ? 1 : 0;
+    }
   __config_area.daemon_delay = atoi (conf_get_value (parms, "DEAMON_D"));
 
   __config_area.username     = conf_get_value (parms, "USER");
