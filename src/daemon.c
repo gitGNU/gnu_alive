@@ -113,15 +113,13 @@ daemon_sighandler (int signal)
   /* We quit on everything but HUP */
   if (SIGHUP != signal)
     {
-      write_log ("%s[%d]: Got signal(%d), quitting!\n", 
-		 PACKAGE_NAME, getpid (), signal);
+      write_log ("Got signal(%d), quitting!\n", signal);
 
       exit (0);
     }
   else
     {
-      write_log ("%s[%d]: Got signal(%d), forcing relogin!\n", 
-		 PACKAGE_NAME, getpid (), signal);
+      write_log ("Got signal(%d), forcing relogin!\n", signal);
     }
 }
 
@@ -138,14 +136,9 @@ daemon_sighandler (int signal)
 void
 daemon_thread (config_data_t *config, int verbose)
 {
-  int result, slept;
+  int result, slept, latched_logged_in = 0;
   unsigned int timeout = 60 * config->daemon_delay;
   pid_t mypid = getpid ();
-
-  write_log ("%s: Login %s. Keep-alive daemon started, pid: %d\n", 
-	     PACKAGE_NAME,
-	     config->logged_in ? "successful" : "FAILED",
-	     mypid);
 
   (void) signal (SIGTERM, daemon_sighandler);
   (void) signal (SIGHUP, daemon_sighandler);
@@ -157,15 +150,25 @@ daemon_thread (config_data_t *config, int verbose)
        * daemon to start since there is no way (other than ps)
        * to communicate the PID to the outside world.
        */
-      ERROR ("%s[%d]: Cannot write PID(%d) to file, %s - %s\n"
-             "Aborting daemon - cannot communicate PID to outside world.\n",
-             PACKAGE_NAME, (int)mypid, (int)mypid, config->pid_file, strerror (errno));
+      write_log ("Cannot write PID(%d) to file, %s - %s\n"
+                 "Aborting daemon - cannot communicate PID to outside world.\n",
+                 (int)mypid, config->pid_file, strerror (errno));
       /* Bye bye */
       return;
+    }
+  else
+    {
+      write_log ("Keep-alive daemon started, pid: %d\n", mypid);
     }
 
   while (1)
     {
+      if (latched_logged_in != config->logged_in)
+        {
+          write_log ("Login %s\n", config->logged_in ? "successful." : "FAILED!");
+        }
+      latched_logged_in = config->logged_in;
+
       /* Now, sleep before we reconnect and check status. */
       slept = sleep (timeout);
 
@@ -173,7 +176,7 @@ daemon_thread (config_data_t *config, int verbose)
       result = http_pre_login (config, verbose);
       if (result)
         {
-          ERROR ("%s: Failed to bring up login page.\n", PACKAGE_NAME);
+          LOG ("Failed to bring up login page.\n");
           continue;
         }
 
@@ -191,11 +194,11 @@ daemon_thread (config_data_t *config, int verbose)
         {
           if (config->logged_in)
             {
-              LOG ("%s: Forced relogin successful!\n", PACKAGE_NAME);
+              write_log ("Forced relogin successful!\n");
             }
           else
             {
-              LOG ("%s: Forced relogin FAILED!\n", PACKAGE_NAME);
+              write_log ("Forced relogin FAILED!\n");
             }
         }
     }
