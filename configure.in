@@ -21,7 +21,17 @@ dnl Checks for programs.
 AC_PROG_INSTALL
 AC_PROG_CC
 AM_PROG_LEX
+if test "$LEX" != flex; then
+   AC_MSG_FAILURE([Cannot find Flex, aborting.
+qadsl, or rather libconf, needs Bison to generate reentrant code.])
+fi
 AC_PROG_YACC
+if test "$YACC" != "bison -y"; then
+   AC_MSG_FAILURE([Cannot find Bison, aborting.
+qadsl, or rather libconf, needs Bison to generate reentrant code.])
+fi
+
+
 
 dnl Checks for libraries.
 AC_PROG_RANLIB
