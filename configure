@@ -3347,7 +3347,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
 echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
 	CFLAGS="$save_CFLAGS -std=gnu99 -Werror-implicit-function-declaration"
-    	echo "$as_me:$LINENO: checking whether GNU cc -std=gnu99 option works" >&5
+	echo "$as_me:$LINENO: checking whether GNU cc -std=gnu99 option works" >&5
 echo $ECHO_N "checking whether GNU cc -std=gnu99 option works... $ECHO_C" >&6
 	cat >conftest.$ac_ext <<_ACEOF
  /* confdefs.h.  */
@@ -3491,7 +3491,7 @@ fi
 if test "${enable_debug+set}" = set; then
   enableval="$enable_debug"
 
-CFLAGS="$CFLAGS -g -DDEBUG -DYYERROR_VERBOSE"
+CFLAGS="$CFLAGS -g -DYYDEBUG=1 -DYYERROR_VERBOSE"
 else
 
 CFLAGS="$CFLAGS $OPTIMIZER_CFLAGS"
@@ -3995,7 +3995,8 @@ done
 
 
 
-for ac_header in errno.h features.h netdb.h stdio.h
+
+for ac_header in errno.h features.h netdb.h stdio.h syslog.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if eval "test \"\${$as_ac_Header+set}\" = set"; then
