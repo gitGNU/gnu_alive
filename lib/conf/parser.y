@@ -8,9 +8,11 @@
 
 extern int yylineno;
 
+extern int yylex(void);
+
 int yyerror (char *s)
 {
-  fprintf (stderr, "ERR‰OR: %s\n", s);
+  fprintf (stderr, "ERROR: %s\n", s);
 
   return -1;
 }
