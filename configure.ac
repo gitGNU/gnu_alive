@@ -1,14 +1,14 @@
 dnl Process this file with autoconf to produce a configure script.
 
 dnl Every other copy of the package version number gets its value from here
-AC_INIT(qadsl, 1.3.3,
-        [http://savannah.gnu.org/bugs/?group=qadsl])
+AC_INIT(GNU Alive, 1.3.4,
+        [http://savannah.gnu.org/bugs/?group=alive])
 
 dnl create a config.h file (Automake will add -DHAVE_CONFIG_H)
 AM_CONFIG_HEADER(include/settings.h)
-AC_CONFIG_SRCDIR(configure.in)
+AC_CONFIG_SRCDIR(configure.ac)
 
-AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+AM_INIT_AUTOMAKE(alive, AC_PACKAGE_VERSION)
 
 AC_SUBST(VERSION)
 
@@ -24,13 +24,13 @@ dnl Flex will soon be needed to build fully reentrant parsers with Bison
 AM_PROG_LEX
 dnl if test "$LEX" != flex; then
 dnl    AC_MSG_FAILURE([Cannot find Flex, aborting.
-dnl qadsl, or rather libconf, needs Bison to generate reentrant code.])
+dnl GNU Alive, or rather libconf, needs Bison to generate reentrant code.])
 dnl fi
 dnl Bison will soon be needed to build fully reentrant parsers.
 AC_PROG_YACC
 dnl if test "$YACC" != "bison -y"; then
 dnl    AC_MSG_FAILURE([Cannot find Bison, aborting.
-dnl qadsl, or rather libconf, needs Bison to generate reentrant code.])
+dnl GNU Alive, or rather libconf, needs Bison to generate reentrant code.])
 dnl fi
 
 dnl Add _GNU_SOURCE to enable features and activate legacy API.
@@ -40,7 +40,7 @@ dnl Here is a check for GCC which sets all necessary flags, most notably
 dnl CFLAGS and CXXFLAGS. Checks for other compilers should do the same.
 if test "$GCC" = "yes" ; then
     # set GCC compiler options that should work with all versions
-    CFLAGS="${CFLAGS} -Wall -pedantic -fpic -Wno-long-long"
+    CFLAGS="${CFLAGS} -Wall -fpic -Wno-long-long"
     SHAREDLIB_LDFLAGS="-shared ${SHAREDLIB_LDFLAGS}"
     DEPEND_CCFLAGS="-MM"
 
@@ -80,19 +80,19 @@ LDLIBS="-lefence"])
 
 AC_ARG_ENABLE(pedantic-compiler,
               AC_HELP_STRING([--enable-pedantic-compiler], [Enable pedantic checks in GCC [default=no]]),
-              [CFLAGS="$CFLAGS -Wall -pedantic -Wformat=2 -Wunreachable-code -Winline"])
+              [CFLAGS="$CFLAGS -pedantic -Wformat=2 -Wunreachable-code -Winline"])
 
 
 dnl Checks for standard header files:
 dnl ANSI C header files, sys/types.h, sys/stat.h, stdlib.h, string.h,
 dnl memory.h, strings.h, inttypes.h, stdint.h, unistd.h
 AC_HEADER_STDC
-dnl Check for qadsl specific includes
+dnl Check for GNU Alive specific includes
 AC_CHECK_HEADERS(errno.h features.h netdb.h stdio.h syslog.h)
 
 dnl jm_CHECK_TYPE_STRUCT_UTIMBUF
 dnl AC_HEADER_MAJOR
-dnl AC_FUNC_ALLOCA
+AC_FUNC_ALLOCA
 AC_STRUCT_TM
 dnl AC_STRUCT_ST_BLOCKS
 dnl AC_FUNC_CLOSEDIR_VOID
@@ -121,10 +121,10 @@ dnl Check for various --with-??? directives
 default_globalconf="/etc/${PACKAGE}.conf"
 AC_ARG_WITH(global-cfg,
 [
-qADSL Features:
+GNU Alive Features:
   --with-global-cfg=FILE  If set will change the name and location of the
-                          global configuration file used by qADSL.
-                          Defaults to /etc/qadsl.conf],
+                          global configuration file used by GNU Alive.
+                          Defaults to /etc/alive.conf],
 globalconf="$withval", globalconf="auto")
 if test "x$globalconf" = "xauto" || test "x$globalconf" = "xyes" || \
 	test "x$globalconf" = "xno"; then  dnl yes/no sanity checks
@@ -135,8 +135,8 @@ AC_DEFINE_UNQUOTED(GLOBAL_CONF, "$globalconf", [Define this to the location of t
 default_userconf="~/.${PACKAGE}rc"
 AC_ARG_WITH(user-cfg,
 [  --with-user-cfg=FILE    If set will change the name and location of the
-                          user-specific configuration file used by qADSL.
-                          Defaults to ~/.qadslrc],
+                          user-specific configuration file used by GNU Alive.
+                          Defaults to ~/.aliverc],
 userconf="$withval", userconf="auto")
 if test "x$userconf" = "xauto" || test "x$userconf" = "xyes" || \
 	test "x$userconf" = "xno"; then  dnl yes/no sanity checks
@@ -144,11 +144,11 @@ if test "x$userconf" = "xauto" || test "x$userconf" = "xyes" || \
 fi
 AC_DEFINE_UNQUOTED(USER_CONF, "$userconf", [Define this to the location of the user config file])
 
-default_pidfile="/var/run/qadsl.pid"
+default_pidfile="/var/run/alive.pid"
 AC_ARG_WITH(pidfile,
 [  --with-pidfile=FILE     If set will change the name and location of the file
-                          used by qADSL to store the PID of its daemon process.
-			  Defaults to /var/run/qadsl.pid],
+                          used by qadsl to store the PID of its daemon process.
+			  Defaults to /var/run/alive.pid],
 pidfile="$withval", pidfile="auto")
 if test "x$pidfile" = "xauto" || test "x$pidfile" = "xyes" || \
 	test "x$pidfile" = "xno"; then  dnl yes/no sanity checks
@@ -167,6 +167,10 @@ fi
 AC_DEFINE_UNQUOTED(PORT, "$port", [Define this to the HTTP port number.])
 
 
+dnl internationalization macros
+AM_GNU_GETTEXT
+AM_GNU_GETTEXT_VERSION
+
 dnl XXX - These should be removed ASAP! /Joachim
 AC_DEFINE(MAXDATASIZE, 4091, [I am a hack, please send patch to remove me.])
 AC_DEFINE(MAXLEN, 256, [I am a hack, please send patch to remove me.])
@@ -175,8 +179,11 @@ AC_DEFINE(MAXLEN, 256, [I am a hack, please send patch to remove me.])
 dnl Create all the makefiles and stuff
 AC_OUTPUT([
 	Makefile
-	qadsl.lsm
-	qadsl.spec
+	alive.lsm
+	alive.spec
+        intl/Makefile
+        po/Makefile.in
+        m4/Makefile
 	lib/Makefile
 	src/Makefile
 	etc/Makefile
