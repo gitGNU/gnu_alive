@@ -7,6 +7,9 @@
 # go bad.
 #
 
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
 CONF_FILE=/etc/alive.conf
 
 db_get alive/use_debconf_question
