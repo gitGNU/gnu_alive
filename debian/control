@@ -8,7 +8,6 @@ Package: qadsl
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: Auto-login & keep-alive for Internet connections.
- .
  Frustrated about having to "log in" to your paid Internet connection?
  .
  qadsl is a small utility that automates the login process to Telia,
