@@ -1,5 +1,13 @@
 2004-03-04  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
+	* src/daemon.c (daemon_sighandler): Cleanup logs.
+	(daemon_thread): Cleanup logs and add important stage change log.
+
+	* src/http.c (http_do_login): Cleanup double brain damage induced
+	by duplicated calls to http_internet_login().
+	(http_internet_login): Always zero terminate the config->get_msg
+	string. Also, test if already logged in and add more LOGs.
+
 	* debian/control (Description): Bogus format of description fixed.
 
 2004-03-03  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
