@@ -1,3 +1,23 @@
+2004-02-20  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* lib/conf/conf.c (conf_read_file): Does not work with yacc,
+	revert while we wait for libconf to become reentrant. 
+	(conf_set_value): dito.
+
+	* lib/conf/parser.y (conf_set): dito.
+
+2004-02-18  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* src/http.c: Cleaned up namespace mess. All functions now have
+	the http_ prefix. 
+
+	* include/http.h: dito.
+
+	* src/process.c (process): Updated to match new namepace of http.c
+	
+	* src/daemon.c (daemon_thread): dito.
+
+
 2004-02-17  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* etc/qadsl.conf (INTERVAL): Reduce default sleep interval

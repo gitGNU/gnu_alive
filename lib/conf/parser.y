@@ -20,8 +20,8 @@ extern int yylex (void);
 /* Defines needed for a pure reentrant parser/lexer.
    These are dsiabled for now due to failure to realize.
    #define YYLEX_PARAM   foo
- */
 #define YYPARSE_PARAM list
+ */
 
 #if 0 /* Not yet reentrant ... 
        * reverting in the meantime for the sake of cygwin port 
@@ -40,9 +40,13 @@ int yyerror (char *s)
   return -1;
 }
 
-/* XXX - Add filename to syntax error message. */
+/* XXX - Add filename to syntax error message.
+  Use NULL, we are not yet reentrant.
+  otherwise use: if (conf_set_value ((param_t *)list, key, value))
+*/
+
 #define conf_set(key,value)				\
-  if (conf_set_value ((param_t *)list, key, value))	\
+  if (conf_set_value ((param_t *)NULL, key, value))     \
     fprintf (stderr,					\
 	     "Error on line %d in config file, "	\
 	     "%s is not a valid identifier.\n",		\

@@ -17,8 +17,13 @@
 
 #include "conf.h"
 
+#if 0  /* XXX - not yet reentrant */
 extern int yyparse (void *arg);
+#else
+extern int yyparse (void);
+#endif
 
+param_t *__current_list;
 
 /**
  * conf_read_file - Reads a .conf file and tries to set parameters in the given list. 
@@ -72,8 +77,14 @@ conf_read_file (param_t *parameter_list, char *file)
      close (temp_fd);
    }
 #endif
- 
+
+#if 0 /* Does not work with yacc, revert while we wait
+       * for libconf to become reentrant. */ 
    result = yyparse ((void *)parameter_list);
+#else
+   __current_list = parameter_list;
+   result = yyparse ();
+#endif
 
    /* UNDO: now undo the effects of redirecting input... */ 
 #if 0 /* Does not work on NetBSD 1.6 */
@@ -216,7 +227,11 @@ conf_set_value (param_t *parameter_list, char *key, char *value)
 	       strerror (errno));
       return -1;
     }
-  
+
+  /* XXX - temporary fix to allow use of yacc instead of bison */
+  if (!parameter_list)
+    parameter_list = __current_list;
+
   parm = conf_find_key (parameter_list, key);
   if (parm)
     {
