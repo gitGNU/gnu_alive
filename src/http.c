@@ -34,20 +34,21 @@
  *          any number less than or zero indicates an error.
  */
 
+
+/* Static because no one else needs really needs this function.
+ */
+static inline char tohex (const unsigned char c)
+{
+  return c > 9 ? c - 10 + 'A' : c + '0';
+}
+
+
 static unsigned int
 url_encode (char *dest, const char *src, unsigned int len) 
 {
   const char unsafe[]=" %<>\"#{}|\\^~[]`;/?:@=&";
   register const char* s = src;
   unsigned long written = 0, i;
-
-  /* Nested because its a cool GNU feature and because noone else
-   * really needs this function ... now, why can't it be inline?
-   */
-  inline char tohex (const unsigned char c)
-  {
-    return c > 9 ? c - 10 + 'A' : c + '0';
-  }
 
   if (!dest)
     {
