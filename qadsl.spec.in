@@ -42,11 +42,17 @@ Summary: Auto-login & keep-alive for Internet connections.
 %description
 Frustrated about having to "log in" to your paid Internet connection?
 
-qadsl is a small utility to login on the Telia AB ADSL service. It also
-works fine with COMHEM Cable internet and Tiscali Internet services. It
-features a keep-alive daemon with login/logout functions. The daemon
-periodically connects to the ISP to ensure you are not logged out all
-of a sudden. 
+qadsl is a small utility that automates the login process to Telia,
+COMHEM, Tiscali and other Internet Service Providers, ISPs.
+
+It features a keep-alive daemon that periodically connects to your ISP
+ensuring that your connection to the Internet are not logged out all of 
+a sudden. 
+
+qadsl works for any type of connection where your ISP has put a login 
+server in your way.
+
+qadsl - In pursuit of a free Internet!
 
 This build was configured as follows:
 @configure_input@

@@ -8,10 +8,17 @@ Package: qadsl
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: Auto-login & keep-alive for Internet connections.
- qadsl - In pursuit of a free Internet.
- .
- qadsl is a small program made to automatically login to Telia, COMHEM,
- Tiscali and other Internet Service Providers, ISPs.
- .
- qadsl works for any type of connection; *DSL, fiber, anything where
- your ISP has put a login server in your way.
+
+Frustrated about having to "log in" to your paid Internet connection?
+
+qadsl is a small utility that automates the login process to Telia,
+COMHEM, Tiscali and other Internet Service Providers, ISPs.
+
+It features a keep-alive daemon that periodically connects to your ISP
+ensuring that your connection to the Internet are not logged out all of 
+a sudden. 
+
+qadsl works for any type of connection where your ISP has put a login 
+server in your way.
+
+qadsl - In pursuit of a free Internet!
