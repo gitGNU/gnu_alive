@@ -61,9 +61,9 @@ VALUE           ({DIGIT}|{ALPHA}|{OTHER})+[;]*
                  /* printf("ARG(%s)", yylval.str); */
                  return ARG;}
 
-\"              {BEGIN(VALUE_INPUT);}
+\"              {BEGIN(VALUE_INPUT); yylval.str = NULL;}
 <VALUE_INPUT>.* {yylval.str = strdup(yytext);}
-<VALUE_INPUT>\" {BEGIN(INITIAL); return ARG;}
+<VALUE_INPUT>\" {BEGIN(INITIAL); if (!yylval.str) yylval.str = strdup(""); return ARG;}
 
 %%
 
