@@ -1,7 +1,15 @@
 2004-02-17  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
+	* lib/conf/conf.c (conf_read_file): Try using older method of
+	redirectng stdin to make qadsl build properly on, at least,
+	NetBSD. Idea from redirect.c on snippets.org.
+
 	* configure.in: We want strcasecmp() if not found we use our
 	replacement from -lost.
+
+	Check for existance of c99 or gnu99 flags to compiler iff
+	compiler==GCC. Also, remove default -O2 that autoconf insists on
+	putting in there.
 
 	* lib/Makefile.am (libost_a_SOURCES): New library for stuff not
 	on the current platform, lost. Hence the name -lost.

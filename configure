@@ -3395,6 +3395,13 @@ fi
 rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+
+    # Override autoconf default addition of -O2 and let the
+    # --enable-optimizer-flags decide whether to set it or not
+    OPTIMIZER_CFLAGS="-O2"
+    OPTIMIZER_CXXFLAGS="-O2"
+    CFLAGS=`echo ${CFLAGS} | sed 's/-O2//'`
+    CXXFLAGS=`echo ${CXXFLAGS} | sed 's/-O2//'`
 fi
 
 if test -n "$ac_tool_prefix"; then
@@ -3485,7 +3492,7 @@ if test "${enable_debug+set}" = set; then
 CFLAGS="$CFLAGS -g -DDEBUG -DYYERROR_VERBOSE"
 else
 
-CFLAGS="$CFLAGS -O2"
+CFLAGS="$CFLAGS $OPTIMIZER_CFLAGS"
 LDFLAGS="-s"
 fi;
 

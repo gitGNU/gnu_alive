@@ -7,6 +7,9 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include <stdio.h>
+#include <fcntl.h>		/* old method of redirecting stdin */
+#include <sys/stat.h>		/* old method of redirecting stdin */
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
@@ -31,7 +34,7 @@ int
 conf_read_file (param_t *parameter_list, char *file)
 {
   int    fd, stdin_fd; 
-  FILE   *fp; 
+  FILE   *fp; 			/* Might be used later when NetBSD works... */
   param_t *p;
   int result;
 
@@ -47,23 +50,40 @@ conf_read_file (param_t *parameter_list, char *file)
    if (fd == -1) 
       return -1;               /* failed to duplicate input descriptor */ 
  
+#if 0 /* Does not work on NetBSD 1.6 */
    /* use the duplicated descriptor to redirect input... */ 
    fp = fdopen (fd, "r"); 
  
    if (!fp) 
       return -2;               /* failed to open duplicated descriptor */ 
  
-   stdin = freopen (file, "r", fp); 
- 
+   stdin = freopen (file, "r", fp);
+
    if (!stdin) 
       return -3;               /* failed to redirect stream input */ 
+#else /* Revert to older method */
+   {
+     int temp_fd;
+
+     temp_fd = open (file, O_RDWR, S_IREAD);
+
+     dup2 (temp_fd, stdin_fd);
+
+     close (temp_fd);
+   }
+#endif
  
    result = yyparse ((void *)parameter_list);
 
    /* UNDO: now undo the effects of redirecting input... */ 
+#if 0 /* Does not work on NetBSD 1.6 */
    fclose(stdin); 
  
    stdin = fdopen (stdin_fd, "r"); 
+#else /* Revert to older method */
+   dup2 (fd, stdin_fd);
+   close (fd);
+#endif
  
    if (!stdin) 
       return -4;               /* failed to reestablish 'stdin' */ 
