@@ -11,8 +11,19 @@ pointers to statics into some values (setup default values). Instead
 these statics should also be strdup'ed and freed at end of
 program/daemon! 
 
-* Add Debian patches and integrate them with existing patches
-drom the FreeBSD ports collection.
+* Failover lock file support
+If PID_FILE does not exist or cannot be opened for reading/writing
+we need to find out other ways to play. Do like we did in
+config_locate(), only this time we need to be stubborn in more ways.
+
+Perhaps this will spun a libfile library to handle all file access?
+(I.e, both lock files and config files.)
+
+Best way to handle the inevitable forever-search for a file to be
+used for the lock is perhaps to not create a lock file if none can
+be created. Thus we do not allow the daemon to be started!
+
+Brilliant! :-)
 
 * Be more stubborn when login fails ... 
 Don't exit(1) at every possible juncture.

@@ -35,9 +35,9 @@ url_encode (char *dest, const char *src, unsigned int len)
   unsigned long written=0,i;
 
   inline tohex (const unsigned char c)
-  {
-    return c > 9 ? c - 10 + 'A' : c + '0';
-  }
+    {
+      return c > 9 ? c - 10 + 'A' : c + '0';
+    }
 
   if (!dest)
     {
@@ -48,26 +48,28 @@ url_encode (char *dest, const char *src, unsigned int len)
   for (i = 0; i < len; i++) 
     {
       /* Upper half of ASCII table or one of the unsafe chars? */
-      if (s[i] & 0x7F || strchr (unsafe, s[i]))
-	{
-	  if (' ' == s[i])
-	    {
-	      /* Spaces to plus */
-	      dest[written] = '+';
-	    }
-	  else
-	    {
-	      dest[written]   = '%';
-	      dest[written+1] = tohex (s [i] >> 4);
-	      dest[written+2] = tohex (s [i] & 15);
-	      written += 3;
-	    }
-	} 
+      //if (s[i] & 0x7F || strchr (unsafe, s[i]))
+      /* Simple, just trap unsafe characters */
+      if (strchr (unsafe, s[i]))
+        {
+          if (' ' == s[i])
+            {
+              /* Spaces to plus */
+              dest[written] = '+';
+            }
+          else
+            {
+              dest[written]   = '%';
+              dest[written+1] = tohex (s [i] >> 4);
+              dest[written+2] = tohex (s [i] & 15);
+              written += 3;
+            }
+        } 
       else 
-	{
-	  dest [written] = s [i];
-	  written ++;
-	}
+        {
+          dest [written] = s [i];
+          written ++;
+        }
     }
 
   return written;
@@ -109,34 +111,34 @@ open_server (char *name, short port, int verbose)
 
       sockfd = socket (PF_INET, SOCK_STREAM, 0);
       if (-1 == sockfd)
-	{
-	  ERROR("Failed to create a socket: %s\n", strerror (errno));
-	  result = -1;
-	}
+        {
+          ERROR("Failed to create a socket: %s\n", strerror (errno));
+          result = -1;
+        }
       else
-	{
-	  /* Setup address to connecto to ... */
-	  address.sin_family = PF_INET;
-	  address.sin_port   = htons (port);
-	  address.sin_addr   = *((struct in_addr *) he->h_addr);
-	  memset (&(address.sin_zero), 0, sizeof (address.sin_zero));
+        {
+          /* Setup address to connecto to ... */
+          address.sin_family = PF_INET;
+          address.sin_port   = htons (port);
+          address.sin_addr   = *((struct in_addr *) he->h_addr);
+          memset (&(address.sin_zero), 0, sizeof (address.sin_zero));
 	  
-	  /* Connect to login server */
-	  if (verbose)
-	    {
-	      LOG("Connecting to %s(0x%X))\n", name, he->h_addr);
-	    }
-	  result = connect (sockfd, (struct sockaddr *) &address, sizeof (address));
-	  if (-1 == result && verbose)
-	    {
-	      ERROR("Failed to connect to login host: %s\n\t==>%s",
-		    name, strerror (errno));
-	    }
-	  else
-	    {
-	      result = sockfd;
-	    }
-	}
+          /* Connect to login server */
+          if (verbose)
+            {
+              LOG("Connecting to %s(0x%X)\n", name, he->h_addr);
+            }
+          result = connect (sockfd, (struct sockaddr *) &address, sizeof (address));
+          if (-1 == result && verbose)
+            {
+              ERROR("Failed to connect to login host: %s\n\t==>%s",
+                    name, strerror (errno));
+            }
+          else
+            {
+              result = sockfd;
+            }
+        }
     }
 
   return result;
@@ -167,16 +169,16 @@ pre_login (config_data_t *config, int verbose)
   if (config->sockfd < 0)
     {
       ERROR ("Failed to connect to login server: %s\n",
-	     strerror (errno));
+             strerror (errno));
       return -1;
     }
 
 
   /* Register and get login page */
   sprintf (config->send_msg, PRELOGIN_MSG,
-	   config->init_page,
-	   config->login_server,
-	   config->login_server);
+           config->init_page,
+           config->login_server,
+           config->login_server);
 
 #ifdef DEBUG
   if (verbose)
@@ -186,8 +188,8 @@ pre_login (config_data_t *config, int verbose)
 #endif
 
   result = send (config->sockfd,
-		 config->send_msg,
-		 strlen (config->send_msg), 0);
+                 config->send_msg,
+                 strlen (config->send_msg), 0);
 
 
   /* Read reply */
@@ -214,9 +216,9 @@ pre_login (config_data_t *config, int verbose)
     {
 #ifdef DEBUG
       if (verbose)
-	{
-	  LOG ("Received:\n%s", config->get_msg);
-	}
+        {
+          LOG ("Received:\n%s", config->get_msg);
+        }
 #endif
       result = 0;
     }
@@ -251,14 +253,14 @@ internet_login (config_data_t *config, int verbose)
   if (config->sockfd < 0)
     {
       ERROR("Failed to connect to login server: %s\n",
-	    strerror (errno));
+            strerror (errno));
       return -1;
     }
 #if 0
   result = sprintf (login_string, LOGIN_STRING,
-		    config->username, config->password);
+                    config->username, config->password);
 #endif
-  length = strlen (config->login_string_header) 
+  length = (config->login_string_header ? strlen (config->login_string_header) : 0)
     + strlen (config->username_key) + strlen (config->username)
     + strlen (config->password_key) + strlen (config->password) 
     + strlen (config->login_string_footer) + strlen ("Plus approximately 10%");
@@ -267,34 +269,63 @@ internet_login (config_data_t *config, int verbose)
   if (!temp)
     {
       ERROR ("Failed to allocate memory: %s\n",
-	     strerror (errno));
+             strerror (errno));
       return -1;
     }
-  result = sprintf (temp, 
-		    "%s&%s=%s&%s=%s&%s",
-		    config->login_string_header,
-		    config->username_key,
-		    config->username,
-		    config->password_key,
-		    config->password,
-		    config->login_string_footer);
+
+  result = 0;
+  if (config->login_string_header)
+    result = sprintf (temp, "%s&", config->login_string_header);
+  
+  result += sprintf (&temp[result], "%s=%s&%s=%s",
+                     config->username_key,
+                     config->username,
+                     config->password_key,
+                     config->password);
+
+  if (config->login_string_footer)
+    result += sprintf (&temp[result], "&%s", config->login_string_footer);
+  
+#ifdef DEBUG
+  if (verbose)
+    {
+      LOG("Non-url-encoded login string:\n%s\n", temp);
+    }
+#endif
+
   login_string = (char *) malloc (length);
-  if (!temp)
+  if (!login_string)
     {
       free (temp);
       ERROR ("Failed to allocate memory: %s\n",
-	     strerror (errno));
+             strerror (errno));
       return -1;
     }
+#if 0 /* Maybe wrong */
   length = url_encode (login_string, temp, strlen (temp));
+#else
+  {
+    int i;
+    char c;
+    
+    length = strlen (temp);
+    for (i = 0; i <= length; i++)
+      {
+        c = temp [i];
+        if (c == ' ') c = '+';
+        login_string [i] = c;
+      }
 
+  }
+#endif
+  
   sprintf (config->send_msg, LOGIN_MSG,
-	   config->login_page,
-	   config->login_server,
-	   config->login_server,
-	   config->init_page,
-	   length,
-	   login_string);
+           config->login_page,
+           config->login_server,
+           config->login_server,
+           config->init_page,
+           length,
+           login_string);
 
   free (login_string);
   free (temp);
@@ -311,7 +342,7 @@ internet_login (config_data_t *config, int verbose)
     {
       sleep (2 * tries);
       result = send (config->sockfd, config->send_msg,
-		     strlen (config->send_msg), 0);
+                     strlen (config->send_msg), 0);
     }
   while (-1 == result && tries++ < MAX_RETRIES);
 
@@ -331,6 +362,9 @@ internet_login (config_data_t *config, int verbose)
     {
       sleep (2 * tries);
       result = read (config->sockfd, config->get_msg, sizeof (config->get_msg));
+      /* Zero terminate the read string */
+      if (result >= 0)
+        config->get_msg [result] = 0;
     }
   while (-1 == result && tries++ < MAX_RETRIES);
 
@@ -347,21 +381,9 @@ internet_login (config_data_t *config, int verbose)
     }
 #endif
 
-  if (strstr (config->get_msg, config->logged_in_string) == NULL)
-    {
-      ERROR("%s: LOGIN FAILED\n", PACKAGE_NAME);
-      result = -1;
-    }
-  else
-    {
-      LOG("%s: LOGIN SUCCESSFUL\n", PACKAGE_NAME);
-      config->logged_in = 1;
-      result = 0;
-    }
-
   close (config->sockfd);
 
-  return result;
+  return 0;
 }
 
 
@@ -382,33 +404,33 @@ internet_logout (config_data_t *config, int verbose)
       /* Open a connection to the login server */
       config->sockfd = open_server (config->login_server, config->server_port, verbose);
       if (config->sockfd < 0)
-	{
-	  perror ("Failed to connect to login server");
-	  return -1;
-	}
+        {
+          perror ("Failed to connect to login server");
+          return -1;
+        }
 
       /* Send logout request */
       sprintf (config->send_msg, 
-	       LOGOUT_MSG, 
-	       config->logout_page, config->login_server,
-	       config->init_page, config->login_server);
+               LOGOUT_MSG, 
+               config->logout_page, config->login_server,
+               config->init_page, config->login_server);
 
 #ifdef DEBUG
       if (verbose)
-	{
-	  LOG ("Sent:\n%s\n", config->send_msg);
-	}
+        {
+          LOG ("Sent:\n%s\n", config->send_msg);
+        }
 #endif
 
       result = send (config->sockfd, config->send_msg,
-		     strlen (config->send_msg), 0);
+                     strlen (config->send_msg), 0);
       
       if (-1 == result)
-	{
-	  ERROR("Send logout request: %s\n", strerror(errno));
-	  close (config->sockfd);
-	  return -1;
-	}
+        {
+          ERROR("Send logout request: %s\n", strerror(errno));
+          close (config->sockfd);
+          return -1;
+        }
 
 
       FD_ZERO (&check_sockfd);
@@ -421,32 +443,32 @@ internet_logout (config_data_t *config, int verbose)
 
       result = select (1, &check_sockfd, NULL, NULL, &c_tv);
       if (-1 == result)
-	{
-	  ERROR("%s does not respond, cannot log out!\n", config->logout_page);
-	  close (config->sockfd);
-	  return -1;
-	}
+        {
+          ERROR("%s does not respond, cannot log out!\n", config->logout_page);
+          close (config->sockfd);
+          return -1;
+        }
 
       result = read (config->sockfd, config->get_msg, sizeof (config->get_msg));
       if (-1 == result)
-	{
-	  ERROR("Read logout reply: %s\n", strerror (errno));
-	  close (config->sockfd);
-	  return -1;
-	}
+        {
+          ERROR("Read logout reply: %s\n", strerror (errno));
+          close (config->sockfd);
+          return -1;
+        }
 
 #ifdef DEBUG
       if (verbose)
-	{
-	  LOG ("Received:\n%s", config->get_msg);
-	}
+        {
+          LOG ("Received:\n%s", config->get_msg);
+        }
 #endif
 
       if (strstr (config->get_msg, config->logged_out_string) == NULL)
-	{
-	  ERROR("%s: LOGOUT FAILED\n", PACKAGE_NAME);
-	  return -1;
-	}
+        {
+          ERROR("%s: LOGOUT FAILED\n", PACKAGE_NAME);
+          return -1;
+        }
 
       LOG("%s: SUCCESSFUL LOGOUT\n", PACKAGE_NAME);
     }
@@ -473,28 +495,37 @@ log_login (config_data_t *config, int verbose)
        * longer delays between each.
        */
       for (i = 0; i < MAX_RETRIES; i++)
-	{
-	  /* Sleep for a while if it is not the first try... */
-	  sleep (5 * i);
+        {
+          /* Sleep for a while if it is not the first try... */
+          sleep (5 * i);
 
-	  if (-1 == pre_login (config, verbose))
-	    {
-	      continue;
-	    }
-
-	  if (!internet_login (config, verbose))
-	    {
-	      config->logged_in = 1;
-	      break;
-	    }
-	}
+          /* If we cannot get the login or csw pages we sleep some more */
+          if (-1 == pre_login (config, verbose))
+            {
+              ERROR("%s: Failed to bring up login page.\n", PACKAGE_NAME);
+              continue;
+            }
+          
+          /* Test if we're logged in already. */
+          if (strstr (config->get_msg, config->logged_in_string))
+            {
+              config->logged_in = 1;
+              break;
+            }
+          
+          if (!internet_login (config, verbose))
+            {
+              config->logged_in = 1;
+              break;
+            }
+        }
     }
 
   /* Tell those who want to know why we failed. */
   if (!config->logged_in)
     {
       ERROR("%s: login failed after %d retries - aborting!\n", 
-	    PACKAGE_NAME, MAX_RETRIES);
+            PACKAGE_NAME, MAX_RETRIES);
     }
 
   return config->logged_in;

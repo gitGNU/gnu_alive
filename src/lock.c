@@ -29,7 +29,7 @@
 #include "config.h"
 
 extern int errno;
-
+extern char *fallback_pid_files[];
 
 
 /**
@@ -39,12 +39,19 @@ extern int errno;
  *
  * This function is responsible for writing the @pid of the
  * auto-login daemon to the specified PID @file.
+ *
+ * If the specified @file does not exist a set of backup
+ * alternatives should be used. If neither of these are
+ * available (read-only file system?) it is OK to return error.
+ *
+ * Returns: A positive integer representing the PID, or
+ *          -1 on error.
  */
 
 int
-lock_create (char *file, pid_t pid)
+lock_create (char **file, pid_t pid)
 {
-  int fd;
+  int fd, fallback, result;
   FILE *fp;
 
 #if defined(LOCK_FCNTL)
@@ -53,18 +60,26 @@ lock_create (char *file, pid_t pid)
 #ifdef HAVE_FCNTL_F_FREESP
   struct flock tlock;
 #endif
-  fd = open(file, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
-  if (fd == -1)
+
+  fallback = 0;
+  do
     {
-      return -1;
+      fd = open (*file, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+      if (-1 == fd)
+        {
+          *file = fallback_pid_files [fallback++];
+          if (NULL == *file)
+            return -1;
+        }
     }
+  while (fd == -1);
 
 #if defined(LOCK_FCNTL)
   lock.l_type = F_WRLCK;
   lock.l_start = 0;
   lock.l_whence = SEEK_SET;
   lock.l_len = 0;
-  if (fcntl(fd, F_SETLK, &lock) == -1) 
+  if (fcntl (fd, F_SETLK, &lock) == -1) 
     {
       close(fd);
       return -1;
@@ -101,7 +116,7 @@ lock_create (char *file, pid_t pid)
     }
 #endif
   fp = fdopen(fd, "w");
-  if (fp == NULL) 
+  if (NULL == fp) 
     {
       close(fd);
       return -1;
@@ -118,63 +133,90 @@ lock_create (char *file, pid_t pid)
 }
 
 
-/*
- * Return pid of process which has got a write lock on the
- * lock file, 0 if not locked and -1 on error.
+/**
+ * lock_read - Find the pid of the daemon process.
+ * @file:      PID file.
+ *
+ * Return pid of a daemon process which has got a write lock on the
+ * lock @file.
+ *
+ * If the given @file cannot be opened, accessed, or found a set of
+ * backup alternatives is also be searched. If all these also fail
+ * the list of running processes is also searched, where the first
+ * matching process ID will be returned. (So if there are more than
+ * one matching daemon process only the first will be returned.)
+ *
+ * Returns: 0 if not locked and -1 on error, otherwise the PID.
  */
 
 pid_t
-lock_read (char *file)
+lock_read (char **file)
 {
-	int fd;
-	FILE *fp;
-	pid_t pid;
+  int fd, fallback;
+  FILE *fp;
+  pid_t pid;
 #if defined(LOCK_FCNTL)
-	struct flock lock;
+  struct flock lock;
 #endif
 
-	fd = open(file, O_RDONLY);
-	if (fd == -1) 
-	  {
-	    if (errno == ENOENT)
-	      return 0;
-	    else
-	      return -1;
-	  }
+  fallback = 0;
+  do
+    {
+      fd = open(*file, O_RDONLY);
+      if (-1 == fd) 
+        {
+          *file = fallback_pid_files [fallback++];
+          if (NULL == *file)
+            {
+               /* This makes us depend on procps and coreutils in GNU/Linux
+		* but only coreutils in GNU/Hurd. 
+		* Question is: Do we want this? 
+		* Answer:      No, do not allow daemon to start if no lockfile.
+		*/
+/*                system ("ps --no-heading -C qadsl | head -1 | cut -f 1 -d ' ' >"); */
+               
+              if (ENOENT == errno)
+                return 0;
+              else
+                return -1;
+            }
+        }
+    }
+  while (fd == -1);
 
 #if defined(LOCK_FCNTL)
-	lock.l_type = F_WRLCK;
-	lock.l_start = 0;
-	lock.l_whence = SEEK_SET;
-	lock.l_len = 0;
-	if (fcntl(fd, F_GETLK, &lock) < 0) {
-		close(fd);
-		return -1;
-	}
-	close(fd);
-	if (lock.l_type == F_UNLCK)
-		return 0;
-	return lock.l_pid;
+  lock.l_type = F_WRLCK;
+  lock.l_start = 0;
+  lock.l_whence = SEEK_SET;
+  lock.l_len = 0;
+  if (fcntl(fd, F_GETLK, &lock) < 0) {
+    close(fd);
+    return -1;
+  }
+  close(fd);
+  if (F_UNLCK == lock.l_type)
+    return 0;
+  return lock.l_pid;
 #elif defined(LOCK_FLOCK)
-	if(flock(fd, LOCK_EX | LOCK_NB) == 0) {
-		if (flock(fd, LOCK_UN) == -1)
-			return -1;
-		return 0;
-	}
+  if(flock(fd, LOCK_EX | LOCK_NB) == 0) {
+    if (flock(fd, LOCK_UN) == -1)
+      return -1;
+    return 0;
+  }
 #elif defined(LOCK_LOCKF)
-	if(lockf(fd, F_TLOCK, 0) == 0) {
-		if (lockf(fd, F_ULOCK, 0) == 0)
-			return -1;
-		return 0;
-	}
+  if(lockf(fd, F_TLOCK, 0) == 0) {
+    if (lockf(fd, F_ULOCK, 0) == 0)
+      return -1;
+    return 0;
+  }
 #endif
 
-	fp = fdopen(fd, "r");
-	fscanf(fp, "%d", &pid);
-	fclose(fp);
-	close(fd);
+  fp = fdopen(fd, "r");
+  fscanf(fp, "%d", &pid);
+  fclose(fp);
+  close(fd);
 
-	return pid;
+  return pid;
 }
 
 
@@ -190,7 +232,7 @@ lock_remove (char *file)
   if (result == -1) 
     {
       if (errno == ENOENT)
-	result = 0;
+        result = 0;
     }
 
   return result;

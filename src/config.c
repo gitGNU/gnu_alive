@@ -21,7 +21,7 @@ param_t parms [] = {
   {{"SERVER_PORT", NULL},                              NULL, PORT},
 
   /* This builds the internet_login() login_string. */
-  {{"LOGIN_STRING_HEADER", NULL},                      NULL, ""},
+  {{"LOGIN_STRING_HEADER", NULL},                      NULL, NULL},
   {{"USERNAME_KEY", NULL},                             NULL, "username"},
   {{"PASSWORD_KEY", NULL},                             NULL, "password"},
   {{"LOGIN_STRING_FOOTER", NULL},                      NULL, "submitForm=Login"},
@@ -53,6 +53,9 @@ param_t parms [] = {
 /* This is for global data. */
 static config_data_t __config_area;
 
+/* Fallback PID files, in order after PID_FILE */
+char *fallback_pid_files[] = {"/tmp/qadsl.pid", "~/qadsl.pid", NULL};
+   
 
 static char *
 config_locate (char *file)
@@ -69,38 +72,38 @@ config_locate (char *file)
       __config_area.conf_file = strdup (GLOBAL_CONF);
 
       if (strncmp ("/", USER_CONF, 1) != 0)
-	{
-	  user_home = getenv ("HOME");
-	  if (user_home)
-	    {
-	      FILE   *file;
-	      size_t  len;
-	      char   *filename, *user_conf;
+        {
+          user_home = getenv ("HOME");
+          if (user_home)
+            {
+              FILE   *file;
+              size_t  len;
+              char   *filename, *user_conf;
 	      
-	      user_conf = USER_CONF;
-	      len       = strlen (user_home) + strlen (user_conf) + 2;
-	      filename  = (char *)malloc (len);
-	      if (filename)
-		{
-		  strcpy (filename, user_home);
+              user_conf = USER_CONF;
+              len       = strlen (user_home) + strlen (user_conf) + 2;
+              filename  = (char *)malloc (len);
+              if (filename)
+                {
+                  strcpy (filename, user_home);
 		  
-		  if (strncmp ("~/", user_conf, 2) == 0)
-		    {
-		      user_conf++;
-		    }
+                  if (strncmp ("~/", user_conf, 2) == 0)
+                    {
+                      user_conf++;
+                    }
 		  
-		  strcat (filename, user_conf);
+                  strcat (filename, user_conf);
 		  
-		  /* If ~/.qadslrc exists replace __config_area.conf_file */
-		  if (NULL != (file = fopen (filename, "")))
-		    {
-		      fclose (file);
-		      free (__config_area.conf_file);
-		      __config_area.conf_file = filename;
-		    }
-		}
-	    }
-	}
+                  /* If ~/.qadslrc exists replace __config_area.conf_file */
+                  if (NULL != (file = fopen (filename, "")))
+                    {
+                      fclose (file);
+                      free (__config_area.conf_file);
+                      __config_area.conf_file = filename;
+                    }
+                }
+            }
+        }
     }
   else
     {
@@ -183,13 +186,13 @@ config_load (char *file)
   if (!__config_area.username || !__config_area.password)
     {
       if (!__config_area.username)
-	fprintf (stderr,
-		 "Failed to read your username from qADSL configuration file %s.\n",
-		 file);
+        fprintf (stderr,
+                 "Failed to read your username from qADSL configuration file %s.\n",
+                 file);
       else
-	fprintf (stderr,
-		 "Failed to read your password from qADSL configuration file %s.\n",
-		 file);
+        fprintf (stderr,
+                 "Failed to read your password from qADSL configuration file %s.\n",
+                 file);
 	
       fprintf (stderr, "You must supply at least a username and password.\n");
       return NULL;

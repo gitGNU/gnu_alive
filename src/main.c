@@ -113,7 +113,7 @@ main (int argc, char *argv[])
       exit (EXIT_FAILURE);
     }
 
-  /* Override any qadsl.conf settings or configure --with-port
+  /* Override any qadsl.conf settings or configure --with-pidfile
    * if the user specified a different PID file on the command line.
    */
   if (pid_file)
