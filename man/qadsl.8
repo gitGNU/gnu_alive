@@ -1,7 +1,7 @@
 .\" @(#)qadsl.8 1.2 17-Oct-2001 OF; from qadsl archive
 .TH qadsl 8 "17-Oct-2001"
 .SH NAME
-qadsl \- Auto login/Keep-alive software for Telia AB ADSL and COMHEM Cable internet
+qadsl \- Auto-login & keep-alive daemon for Telia AB ADSL and COMHEM Cable internet
 .SH SYNOPSIS
 .B qadsl
 [
@@ -19,10 +19,11 @@ qadsl \- Auto login/Keep-alive software for Telia AB ADSL and COMHEM Cable inter
 .SH DESCRIPTION
 .B qadsl
 is a small utility to login on the Telia AB ADSL 
-service. It also works fine with COMHEM Cable internet. 
-It has features like keep-alive daemon, login/logout 
-functions. The keep-alive daemon can be configured to either 
-login or to ping your login-server after a chosen delay in minutes. 
+service. It also works fine with COMHEM Cable internet and Tiscali
+Internet services.  It has features like keep-alive daemon, login/logout
+functions. The keep-alive daemon can be configured to either login or
+to ping your login-server after a chosen delay in minutes. 
+
 .SH OPTIONS
 .B qadsl
 options are in traditional POSIX one letter options,
@@ -37,19 +38,36 @@ Uses settings from
 .I file
 insted of default `/etc/qadsl.conf'.
 .TP
+\fB\-p \fIfile\fR
+Uses 
+.I file
+as pid/lock file insted of default `/var/run/qadsl.pid'.
+.TP
 .BR \-l
 Will try to login.
 .TP
 .BR \-o
 Will try to logout.
+.TP
+.BR \-V
+Displays version informaiton.
+.TP
+.BR \-v
+Verbose, print more information at runtime.
+
 .
+.SH SEE ALSO
+The qadsl.conf (5) man page for help with the configuration
+file.
+
 .SH REQUIREMENTS
-Telia AB ADSL service,COMHEM Cable internet service,
+Telia AB ADSL service, COMHEM Cable internet service,
 Tiscali Internet (ADSL or broadband), or similiar
 service based on Orbyte Wireless System.
 .br
 .SH AUTHORS
-Jakob "kuba" Stasilowicz <kuba@linuxsweden.nu>
+Jakob "kuba" Stasilowicz <kuba@unix.se>
+Joachim Nilsson <joachim@gnufans.org>
 .br
 .TP
 Thanks to these people for making this possible:
@@ -65,4 +83,4 @@ Thanks to Nicklas Larsson <whybill@linux.nu> for this
 manpage. 
 .br
 .SH URL
-http://kuba.unix.se
+http://savannah.gnu.org/projects/qadsl/
