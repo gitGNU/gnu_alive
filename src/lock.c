@@ -1,6 +1,6 @@
 /* lock.c - Lock file management for qADSL.
  * 
- * Copyright (C) 2003 Joachim Nilsson <joachim()gnufans!org>
+ * Copyright (C) 2003 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  * Copyright (C) 2002, 2003 Torgny Lyon <torgny()enterprise!hb!se>
  *
  * qADSL is free software; you can redistribute it and/or modify it

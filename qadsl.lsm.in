@@ -9,13 +9,13 @@ Description:	Auto-login & keep-alive for Internet connections.
 		description here if appropriate, and to delete these
 		instructions.
 Keywords:	[substitute your keywords here]
-Author: 	joachim@gnufans.org (Joachim Nilsson)
-Maintained-by:	joachim@gnufans.org (Joachim Nilsson)
+Author: 	joachim!nilsson()member!fsf!org (Joachim Nilsson)
+Maintained-by:	joachim!nilsson()member!fsf!org (Joachim Nilsson)
 Primary-site:	metlab.unc.edu pub/Linux/apps/some/directory
 		31k qadsl-@VERSION@.tar.gz
 		500  qadsl.lsm
 Alternate-site: 
-Original-site:  
+Original-site:  http://savannah.gnu.org/download/qadsl/
 Platforms:      
 Copying-policy:	GNU copyleft
 End
