@@ -16,7 +16,7 @@ NAME=qadsl
 DESC=qadsl
 ACTIVE=no
 
-[ "$ACTIVE" == "yes" ] || { echo "Please edit $0" ; exit; }
+[ "$ACTIVE" = "yes" ] || { echo "Please edit $0" ; exit; }
 
 test -f $DAEMON || exit 0
 
