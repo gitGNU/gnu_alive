@@ -21,6 +21,7 @@
 #include "config.h"
 #endif
 
+#include <alloca.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
@@ -95,15 +96,27 @@ void write_message (int level, char *fmt, ...)
 void
 write_logfile (int level, char *fmt, ...)
 {
-  char str[MAXDATASIZE]; /* XXX - What is this, a hardcoded value?! */
+  int     len;
+  char   *str;
   va_list ap;
 
+  str = alloca (MAXDATASIZE);  /* XXX - What is this, a hardcoded value?! */
   va_start (ap, fmt);
-  vsnprintf (str, MAXDATASIZE, fmt, ap);
-  str [sizeof (str) - 1] = 0;
+  len = vsnprintf (str, MAXDATASIZE, fmt, ap);
+  if (len >= 0)
+    str [len] = 0;
+  else
+    *str = 0;
   va_end (ap);
 
   openlog (PACKAGE_NAME, LOG_PID | LOG_CONS, LOG_DAEMON);
   syslog (level, str);
   closelog ();
 }
+
+/* Local Variables:
+ * mode: C;
+ * c-file-style: gnu;
+ * indent-tabs-mode: nil;
+ * End:
+ */
