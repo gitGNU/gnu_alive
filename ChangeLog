@@ -1,3 +1,26 @@
+2004-01-31  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* qadsl.spec.in: Update.
+
+	* qadsl.lsm.in: Update.
+
+	* src/config.c: Update aliases of parameter list and re-add
+	"NULL"-termination of list, libconf needed it to not traverse
+	into infinity.
+
+	* lib/conf/conf.c (conf_find_key): Fix major bug where a
+	parameter_list could be traversed into infinity w/o finding the
+	end of the list, even when the list was terminated.
+
+	* lib/conf/conf.c: First effort at making libconf reentrant.
+
+	* lib/conf/parser.y: dito
+
+	* lib/conf/tokens.lo: dito
+
+	* etc/qadsl.conf: Cleanup to comply with specifications in
+	src/config.c. Also, fix email address.
+
 2004-01-20  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* src/daemon.c (daemon_thread): Major cleanups.
