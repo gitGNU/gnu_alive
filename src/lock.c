@@ -1,6 +1,6 @@
 /* lock.c - Lock file management for qADSL.
  * 
- * Copyright (C) 2003 Joachim Nilsson <joachim!nilsson()member!fsf!org>
+ * Copyright (C) 2003, 2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  * Copyright (C) 2002, 2003 Torgny Lyon <torgny()enterprise!hb!se>
  *
  * qADSL is free software; you can redistribute it and/or modify it
@@ -223,9 +223,15 @@ lock_read (char **file)
 }
 
 
-/*
- * Unlock and remove the lockfile. Returns 0 on error, nonzero otherwise.
+/**
+ * lock_remove - Unlock and remove lockfile.
+ * @file:        PID file.
+ *
+ * Unlocks and removes the PID @file.
+ *
+ * Returns: 0 when OK, nonzero on error.
  */
+
 int
 lock_remove (char *file)
 {
