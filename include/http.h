@@ -35,7 +35,7 @@ int http_internet_logout (config_data_t *config, int verbose);
 int http_do_login        (config_data_t *config, int verbose);
 
 
-inline int 
+static inline int 
 http_test_if_logged_out (config_data_t *config)
 {
   int result = -1;
@@ -54,7 +54,7 @@ http_test_if_logged_out (config_data_t *config)
   return result;
 }
 
-inline int 
+static inline int 
 http_test_if_logged_in (config_data_t *config)
 {
   int result = -1;
