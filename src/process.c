@@ -50,9 +50,9 @@ process (config_data_t *config, op_t operation, int verbose)
         }
       if (config->daemon_start)
         {
-          result = lock_remove (config->pid_file);
-          if (result)
+          if (lock_remove (config->pid_file))
             {
+	      /* Non-fatal error, it's OK if we run the first time. */
               if (EACCES == errno)
                 {
                   fprintf (stderr, "%s: Failed to delete old PID file, %s - %s\n", 
@@ -93,6 +93,8 @@ process (config_data_t *config, op_t operation, int verbose)
         {
           printf ("%s not running.\n", PACKAGE_NAME);
         }
+
+      result = 0;
     }
 
   return result;
