@@ -90,15 +90,17 @@ char *fallback_pid_files[] = {"/tmp/alive.pid",
 /* What conf file to use:
  *   1. Command line option
  *   2. ~/.aliverc
- *   3. ~/.qadslrc,
- *   4. /etc/alive.conf
- *   5. /etc/qadsl.conf
+ *   3. ~/.qadslrc
+ *   4. GLOBAL_CONF, i.e., default value set at configure time.
+ *   5. /etc/alive.conf
+ *   6. /etc/qadsl.conf
  */
 char *possible_conf_files[] =
   {
     "~/.aliverc",
     "~/.qadslrc",
-    "/etc/alive.conf",
+    GLOBAL_CONF,
+    "/etc/alive.conf", /* XXX - Obsolete, GLOBAL_CONF is always correct? */
     "/etc/qadsl.conf",
     NULL
   };
