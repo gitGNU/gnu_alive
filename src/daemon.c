@@ -60,7 +60,7 @@ daemonize (void)
     }
 
   /* or setsid() to lose control terminal and change process group */
-  setpgrp ();
+  setpgid(0, 0);
 
   /* Prevent reacquisition of a controlling terminal */
   pid = fork ();
