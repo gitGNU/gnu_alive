@@ -52,9 +52,9 @@ process (config_data_t *config, op_t operation, int verbose)
          result = kill (running, SIGHUP);
          if (result)
            {
-             ERROR ("kill(%d, SIGHUP) failed: %s\n\
-Maybe a stale lockfile (%s) is present and the damon is not running?",
-                    running, strerror(errno),
+             ERROR ("kill(%d, SIGHUP) failed: %s\n",
+                    running, strerror(errno));
+             ERROR ("Maybe a stale lockfile (%s)?",
                     config->pid_file);
 
              LOG ("Trying to remove possibly stale lockfile (%s)...",
@@ -62,9 +62,9 @@ Maybe a stale lockfile (%s) is present and the damon is not running?",
              result = lock_remove (config->pid_file);
              if (result)
                {
-                 ERROR ("Couldn't remove possible stale lockfile (%s).\n\
-Maybe the process (%d) is running as root, but you are not?",
-                        config->pid_file,
+                 ERROR ("Couldn't remove possible stale lockfile (%s).\n",
+                        config->pid_file);
+                 ERROR ("Maybe the process (%d) is running as root, but you are not?",
                         running);
 
                  return EXIT_FAILURE;
@@ -76,36 +76,36 @@ Maybe the process (%d) is running as root, but you are not?",
            }
         }
 
-      result = http_pre_login (config, verbose);
-      if (!result)
+      /* Bring up init page - could be we're already logged in. */
+      http_pre_login (config, verbose);
+      if (!config->logged_in)
         {
-          /* Test if we're logged in already. */
-          if (http_test_if_logged_in (config))
+          /* Nope, login first. */
+          LOG ("First check, not logged in yet.");
+          result = http_internet_login (config, verbose);
+          if (result)
             {
-              /* Nope, login first. */
-              LOG ("First check, not logged in yet.");
-              result = http_internet_login (config, verbose);
-              if (result)
-                {
-                  ERROR ("To diagnose, try the options --debug --verbose");
-                }
-              else
-                {
-                  if (!http_test_if_logged_in (config))
-                    {
-                      LOG ("SUCCESSFUL LOGIN");
-                    }
-                  else
-                    {
-                      LOG ("LOGIN FAILED - To diagnose, try the options --debug --verbose");
-                    }
-                }
+              ERROR ("To diagnose, try the options --debug --verbose");
             }
           else
             {
-              LOG ("Already logged in.");
+              if (config->logged_in)
+                {
+                  LOG ("SUCCESSFUL LOGIN");
+                }
+              else
+                {
+                  LOG ("LOGIN FAILED - To diagnose, try the options --debug --verbose");
+                }
             }
         }
+      else
+        {
+          LOG ("Already logged in.");
+          result = 0;
+        }
+
+      /* Start daemon last. */
       if (config->daemon_start)
         {
           if (lock_remove (config->pid_file))
@@ -145,17 +145,28 @@ Maybe the process (%d) is running as root, but you are not?",
       LOG ("Neither login or logout selected. Reverting to query status.");
     default:
     case STATUS:
-      if (running)
+      http_pre_login (config, verbose);
+      LOG ("Current status: %s", config->logged_in ? "CONNECTED" : "DISCONNECTED");
+
+      if (running > 0)
         {
-          LOG ("login daemon running with PID = %d", running);
+          LOG ("Login daemon running with PID = %d", running);
+          result = running;
         }
       else
         {
-          LOG ("login daemon not running.");
+          LOG ("Login daemon not running.");
+          result = -1;
         }
-
-      result = 0;
+      break;
     }
 
   return result;
 }
+
+/* Local Variables:
+ * mode: C;
+ * c-file-style: gnu;
+ * indent-tabs-mode: nil;
+ * End:
+ */
