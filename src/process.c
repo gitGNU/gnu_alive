@@ -52,13 +52,10 @@ process (config_data_t *config, op_t operation, int verbose)
          result = kill (running, SIGHUP);
          if (result)
            {
-             ERROR ("kill(%d, SIGHUP) failed: %s\n",
-                    running, strerror(errno));
-             ERROR ("Maybe a stale lockfile (%s)?",
-                    config->pid_file);
+             ERROR ("kill(%d, SIGHUP) failed: %s\n", running, strerror(errno));
+             ERROR ("Maybe a stale lockfile (%s)?", config->pid_file);
 
-             LOG ("Trying to remove possibly stale lockfile (%s)...",
-                  config->pid_file);
+             LOG ("Trying to remove possibly stale lockfile (%s)...", config->pid_file);
              result = lock_remove (config->pid_file);
              if (result)
                {

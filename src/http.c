@@ -108,6 +108,33 @@ http_open_server (char *name, short port, int verbose)
   return result;
 }
 
+static int __http_poll (int fd, int seconds, int read_write)
+{
+  fd_set         fds;
+  struct timeval time;
+
+  FD_ZERO (&fds);
+  FD_SET (fd, &fds);
+
+  time.tv_sec  = seconds;
+  time.tv_usec = 0;
+
+  if (read_write)
+    return select (fd + 1, &fds, NULL, &fds, &time); /* read */
+  else
+    return select (fd + 1, NULL, &fds, &fds, &time); /* write */
+}
+
+static int http_poll_read (int fd, int seconds)
+{
+  return __http_poll (fd, seconds, 1);
+}
+
+static int http_poll_write (int fd, int seconds)
+{
+  return __http_poll (fd, seconds, 0);
+}
+
 
 /**
  * http_pre_login - Bring up Orbyte login screen.
@@ -126,7 +153,7 @@ http_open_server (char *name, short port, int verbose)
 
 static int __http_pre_login (config_data_t *config, int verbose)
 {
-  int result, tries;
+  int result;
 
   /* Clear the read string to make sure we don't rely on previous results. */
   config->get_msg [0] = 0;
@@ -161,28 +188,30 @@ static int __http_pre_login (config_data_t *config, int verbose)
     }
 
   LOG ("Waiting for reply from server...");
-  tries = 0;
-  do
+  result = http_poll_read (config->sockfd, 5);
+  if (result == -1)
     {
-      sleep (2 * tries);
-      result = read (config->sockfd, config->get_msg, MAXDATASIZE);
-    }
-  while (-1 == result && tries++ < MAX_RETRIES);
-
-  if (-1 == result)
-    {
-      ERROR("Failed to \"ping\" login server: %s", strerror (errno));
+      ERROR ("No reply from login server.");
       config->logged_in = 0;
     }
   else
     {
-      /* Zero terminate the read string */
-      config->get_msg [result] = 0;
+      result = read (config->sockfd, config->get_msg, MAXDATASIZE);
 
-      /* OK */
-      result = 0;
+      if (-1 == result)
+        {
+          ERROR("Failed to \"ping\" login server: %s", strerror (errno));
+          config->logged_in = 0;
+        }
+      else
+        {
+          /* Zero terminate the read string */
+          config->get_msg [result] = 0;
+
+          /* OK */
+          result = 0;
+        }
     }
-
   close (config->sockfd);
 
   return result;
@@ -302,15 +331,18 @@ static int __http_internet_login (config_data_t *config, int verbose)
   /* Send login string to server */
   DEBUG (config->send_msg);
 
-  tries = 0;
-  do
+  result = http_poll_write (config->sockfd, 5);
+  if (-1 == result)
     {
-      sleep (2 * tries);
-      result = send (config->sockfd, config->send_msg,
-                     strlen (config->send_msg), 0);
-    }
-  while (-1 == result && tries++ < MAX_RETRIES);
+      close (config->sockfd);
+      ERROR ("Cannot send login request to server (%s): %s",
+             config->login_server, strerror (errno));
+      config->logged_in = 0;
 
+      return -1;
+    }
+
+  result = send (config->sockfd, config->send_msg, strlen (config->send_msg), 0);
   if (-1 == result)
     {
       close (config->sockfd);
@@ -323,32 +355,34 @@ static int __http_internet_login (config_data_t *config, int verbose)
    * another way to synchronize with the server ... ?
    */
   LOG ("Waiting for reply from server...");
-  tries = 0;
-  do
+  result = http_poll_read (config->sockfd, 5);
+  if (result == -1)
     {
-      sleep (2 * tries);
-      result = read (config->sockfd, config->get_msg, MAXDATASIZE);
-    }
-  while (-1 == result && tries++ < MAX_RETRIES);
-
-  /* Make sure to close the connection as soon as we're done. */
-  close (config->sockfd);
-
-  if (-1 == result)
-    {
-      ERROR("%s(): Error reading login reply: %s", __FUNCTION__, strerror (errno));
-
-      /* Clear the read string to avoid confusion. */
-      config->get_msg [0] = 0;
+      ERROR ("No reply from login server.");
+      config->logged_in = 0;
     }
   else
     {
-      /* Zero terminate the read string. */
-      config->get_msg [result] = 0;
+      result = read (config->sockfd, config->get_msg, MAXDATASIZE);
+      if (-1 == result)
+        {
+          ERROR("%s(): Error reading login reply: %s", __FUNCTION__, strerror (errno));
 
-      /* OK - we've done our part.  The caller must now check the reply. */
-      result = 0;
+          /* Clear the read string to avoid confusion. */
+          config->get_msg [0] = 0;
+        }
+      else
+        {
+          /* Zero terminate the read string. */
+          config->get_msg [result] = 0;
+
+          /* OK - we've done our part.  The caller must now check the reply. */
+          result = 0;
+        }
     }
+
+  /* Make sure to close the connection as soon as we're done. */
+  close (config->sockfd);
 
   return result;
 }
@@ -390,8 +424,6 @@ int http_internet_login (config_data_t *config, int verbose)
 
 int __http_internet_logout (config_data_t *config, int verbose)
 {
-  fd_set check_sockfd;
-  struct timeval c_tv;
   int result;
 
   /* Clear the read string to make sure we don't rely on previous results. */
@@ -402,8 +434,7 @@ int __http_internet_logout (config_data_t *config, int verbose)
   config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
   if (config->sockfd < 0)
     {
-      ERROR("Failed to connect to login server (%s): %s",
-            config->login_server, strerror (errno));
+      ERROR("Failed to connect to login server (%s): %s", config->login_server, strerror (errno));
       config->logged_in = 0;
 
       return -1;
@@ -417,9 +448,7 @@ int __http_internet_logout (config_data_t *config, int verbose)
 
   DEBUG (config->send_msg);
 
-  result = send (config->sockfd, config->send_msg,
-                 strlen (config->send_msg), 0);
-
+  result = send (config->sockfd, config->send_msg, strlen (config->send_msg), 0);
   if (-1 == result)
     {
       close (config->sockfd);
@@ -429,15 +458,8 @@ int __http_internet_logout (config_data_t *config, int verbose)
       return -1;
     }
 
-  FD_ZERO (&check_sockfd);
-  FD_SET (config->sockfd, &check_sockfd);
-
-  c_tv.tv_sec  = 5;
-  c_tv.tv_usec = 0;
-
-  LOG ("Waiting for logout reply, %d second timeout ...", (int)c_tv.tv_sec);
-  /* XXX - Use poll() instead! */
-  result = select (1, &check_sockfd, NULL, NULL, &c_tv);
+  LOG ("Waiting for logout reply, 5 second timeout ...");
+  result = http_poll_read (config->sockfd, 5);
   if (-1 == result)
     {
       close (config->sockfd);
@@ -483,8 +505,22 @@ http_internet_logout (config_data_t *config, int verbose)
 {
   int result;
 
-  result = http_internet_logout (config, verbose);
+  result = __http_internet_logout (config, verbose);
+  http_test_if_logged_out (config);
+  if ((result && verbose) || (config->logged_in == 1))
+    {
+      LOG ("%s(): logout failed.", __FUNCTION__);
+      if (IS_DEBUG (verbose))
+        {
+          DEBUG ("%s(): Here is the reply:\n%s", __FUNCTION__, config->get_msg);
+        }
+      else
+        {
+          LOG ("%s(): Start %s with --verbose --debug to see whole reply.", __FUNCTION__, PACKAGE_NAME);
+        }
+    }
 
+  return result;
 }
 
 
