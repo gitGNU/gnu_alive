@@ -14,6 +14,9 @@ DAEMON=/usr/sbin/alive
 CONFIG=/etc/alive.conf
 NAME=alive
 DESC=alive
+
+# Change this to yes to enable the daemon when you have
+# made sure that your config file is accurate.
 ACTIVE=no
 
 [ "$ACTIVE" = "yes" ] || { echo "Please edit $0" ; exit; }
