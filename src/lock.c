@@ -66,7 +66,8 @@ lock_create (char **file, pid_t pid)
   fallback = 0;
   do
     {
-      fd = open (*file, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+      /* Open the lock file, truncate any old to zero and set permissions 644 */
+      fd = open (*file, O_WRONLY | O_CREAT | O_TRUNC, S_IREAD | S_IWRITE | S_IRGRP | S_IROTH);
       if (-1 == fd)
         {
           *file = fallback_pid_files [fallback++];
