@@ -47,10 +47,9 @@ int yyerror (char *s)
 
 #define conf_set(key,value)				\
   if (conf_set_value ((param_t *)NULL, key, value))     \
-    fprintf (stderr,					\
-	     "Error on line %d in config file, "	\
-	     "%s is not a valid identifier.\n",		\
-	     yylineno, key)
+    log ("Error on line %d in config file, "		\
+	 "%s is not a valid identifier.\n",		\
+	 yylineno, key)
  
 %}
 

@@ -1,20 +1,4 @@
 /* Hey Emacs, this is code for lex to eat, treat it as -*-C-*- code 
-ALPHA     [a-zA-Z]
-ID        {ALPHA}+
-ARG             [^=\n\r]+
-ID              {ALPHA}({ALPHA}|{DIGIT})*
-ARG             "=" .*
-
-NAME            [A-Z]+
-VALUE           [A-Za-z0-9@]+
-
-OTHER [\!\@\#\£\¤\$\%\&\/\{\(\[\)\]\}\?\+\\~\"\'\*\,\.\:]
-
-
-\"{VALUE}\"     {yylval.str = strdup(yytext);  
-                 return ARG;}
-
-
  */
 %{
 
