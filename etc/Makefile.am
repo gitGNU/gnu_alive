@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
-sysconf_DATA = qadsl.conf
+sysconf_DATA = alive.conf
 
-EXTRA_DIST = qadsl.conf
+EXTRA_DIST = alive.conf
 
 install-data-hook:
 	@list='$(sysconf_DATA)';							      \
