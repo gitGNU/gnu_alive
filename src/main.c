@@ -24,23 +24,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <netdb.h>
 #include <stdio.h>
+#include <strings.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "config.h"
+#include "getopt.h"
 #include "process.h"
 
 
-#define USAGE(name)                                                     \
-  "Usage: %s [-h] [-c file] [-lovV]\n"                                  \
-  "       -h       Print this message\n"                                \
-  "       -c file  Use settings from file instead of " GLOBAL_CONF "\n"	\
-  "       -l       Try to login\n"                                      \
-  "       -o       Try to logout\n"                                     \
-  "       -p file  Use this PID file\n"                                 \
-  "       -V       Be verbose.\n", name
+static void usage (int status);
+
+char *program_name;
+
 
 int
 main (int argc, char *argv[])
@@ -48,24 +49,38 @@ main (int argc, char *argv[])
   extern char *optarg;
   config_data_t *config;
   char *pid_file  = NULL;
-  char *progname  = argv[0];
   char *conf_file = NULL;
-  int verbose = 0;
+  int verbose = 0, result;
   op_t operation = NOP;
   char c;
 
-  /*   printf ("%s %s - http://savannah.gnu.org/projects/qadsl/\n", */
-  /* 	  PACKAGE_NAME, PACKAGE_VERSION); */
+  struct option const long_options[] =
+    {
+      {"login", no_argument, 0, 'l'},
+      {"logout", no_argument, 0, 'o'},
+      {"conf-file", required_argument, 0, 'c'},
+      {"pid-file", required_argument, 0, 'p'},
+      {"status", no_argument, 0, 's'},
+      {"version", no_argument, 0, 'V'},
+      {"verbose", no_argument, 0, 'v'},
+      {"help", no_argument, 0, 'h'},
+      {NULL, 0, NULL, 0}
+    };
 
-  /* XXX - Find out if there is an instance of qadsl running already -> pid-file/lock-file
-   *   if threre is && no option -> presume logout.
-   *   else && no option -> presume login
-   */
+  program_name = rindex (argv[0], '/');
+  if (program_name) program_name ++;
+  else              program_name = argv[0];
 
-  /* getopt() usually works on GNU and BSD systems,
-   * getopt_long() is not that common.
-   */
-  while ((c = getopt (argc, argv, "lc:ovVp:h?")) != -1)
+  while ((c = getopt_long (argc, argv,
+			   "l" 	/* login */
+			   "o"	/* logout */
+			   "c:"	/* conf-file */
+			   "p:"	/* pid-file */
+			   "s"	/* status */
+			   "v"	/* verbose */
+			   "V"	/* version */
+			   "h?", /* help */
+			   long_options, (int *)0)) != EOF)
     {
       switch (c)
         {
@@ -85,12 +100,13 @@ main (int argc, char *argv[])
           operation = STATUS;
           break;
 
-        case 'v':		/* Print version. */
-          printf ("%s version %s\n", PACKAGE_NAME, PACKAGE_VERSION);
+        case 'v':		/* Set verbosity to high */
+          verbose = 2; 		/* 2 is for client side verbosity */
           break;
 
-        case 'V':		/* Set verbosity to high */
-          verbose = 2; 		/* 2 is for client side verbosity */
+        case 'V':		/* Print version. */
+          printf ("%s version %s\n", PACKAGE_NAME, PACKAGE_VERSION);
+	  exit (EXIT_SUCCESS);
           break;
 
         case 'p':
@@ -100,19 +116,23 @@ main (int argc, char *argv[])
         case '?':
         case 'h':
         default:
-          printf (USAGE((progname)));
-          exit (EXIT_SUCCESS);
+	  usage (EXIT_SUCCESS);
           break;
         }
     }
 
   /* Read /etc/qadsl.conf or similar */
+  if (operation == NOP) 
+    {
+      usage (EXIT_FAILURE);
+    }
+
   config = config_load (conf_file);
   if (!config)
     {
       exit (EXIT_FAILURE);
     }
-
+  
   /* Override any qadsl.conf settings or configure --with-pidfile
    * if the user specified a different PID file on the command line.
    */
@@ -120,7 +140,31 @@ main (int argc, char *argv[])
     {
       config->pid_file = pid_file;
     }
-
+  
   /* Handle request */
   return process (config, operation, verbose);
+}
+
+static void
+usage (int status)
+{
+  printf ("%s - Auto-login & keep-alive for Internet connections.\n\n", 
+	  program_name);
+  printf ("Usage: %s [-h] [-c conffile] [-p pidfile] [-losvV]\n", 
+	  program_name);
+  printf ("\
+Options:\n\
+-l, --login               Try to login\n\
+-o, --logout              Try to logout\n\
+-c, --conf-file=FILE      Use settings from FILE instead of " GLOBAL_CONF "\n\
+-p, --pid-file=FILE       Use FILE to store PID\n\
+-s, --status              Display status of qadsl daemon\n\
+-v, --verbose             Display more information, on screen and in logfile\n\
+-V, --version             Display version information and exit\n\
+-h, --help                Display this help and exist\n\
+\n\
+Report bugs to <" PACKAGE_BUGREPORT ">\n\
+");
+
+  exit (status);
 }
