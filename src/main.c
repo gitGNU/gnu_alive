@@ -50,7 +50,7 @@ main (int argc, char *argv[])
   config_data_t *config;
   char *pid_file  = NULL;
   char *conf_file = NULL;
-  int verbose = 0, result;
+  int verbose = 0;
   op_t operation = NOP;
   char c;
 
@@ -72,9 +72,8 @@ main (int argc, char *argv[])
   if (program_name) 
     program_name ++;
   else
-#else
-    program_name = argv[0];
 #endif
+    program_name = argv[0];
 
   while ((c = getopt_long (argc, argv,
 			   "l" 	/* login */
