@@ -2,35 +2,44 @@
 
 * TODO List - Items listed in falling priority order - first most important
 
-* Maybe debug should imply regular verbosity?
+** Update documentation.
+
+Before next release the TeXinfo and man pages *must* be updated.
+
+** Liblockfile?
+
+Maybe move to liblockfile?
+
+
+** Maybe debug should imply regular verbosity?
 When issuing --debug on the command line that should
 perhaps imply that ALL messages be printed out? Regardless
 of weather --verbose has been given or not?
 
-* Proper ICMP ping when DAEMON_TYPE set to PING.
+** Proper ICMP ping when DAEMON_TYPE set to PING.
 
-* lib/conf/parser.y: Add YYERROR when conf_set() fails!
+** lib/conf/parser.y: Add YYERROR when conf_set() fails!
 Must not continue to read conf file on error.
 
-* Memory leaks ... 
+** Memory leaks ... 
 libconf does a lot of strdup() into the parms array. It then puts
 pointers to statics into some values (setup default values). Instead
 these statics should also be strdup'ed and freed at end of
 program/daemon! 
 
-* --enable-old-config-parser
+** --enable-old-config-parser
 We have the old conf-file parser still in src/config.c it
 could "easily" be made available as --enable-old-config-parser
 for people who cannot make new qadsl versions play nice with
 their old style conf-files.
 
-* Add some intelligent way of "probing" for the login server.
+** Add some intelligent way of "probing" for the login server.
 I.e., add a list of known login servers perhaps?
 Tiscali used to redirect all non-logged in requests through
 a port to the login server. That could've been used in this
 probe scheme ...
 
-* Read all we need from the first login page, e.g., /sd/login.
+** Read all we need from the first login page, e.g., /sd/login.
 It contains username= and password= phrases in the <input>
 statements. All we need to build correct HTTP messages is
 available at the ... of the ISP.
@@ -46,14 +55,14 @@ easy enough to implement.
 
 Alpha code in vmlinux.org CVS. /Joachim 2004-01-20
 
-* Always search for XXX for bisarre spots that need attention.
+** Always search for XXX for bisarre spots that need attention.
 This is btw the preferred way to indicate stuff like this to others...
 
-* I18N support.
+** I18N support.
 At least support Swedish with gettext, most of the time it is only
 Swedes who use qadsl anyway.
 
-* Add support for getopt_long(), strndup(), strcasecmp() et. al.
+** Add support for getopt_long(), strndup(), strcasecmp() et. al.
 If they don't exist on the platform. Put these things in lib/ and
 make them be checked for by configure. (Autoproject adds such stuff I
 think). 
@@ -61,7 +70,7 @@ think).
 Done: libost.a created for this purpose in lib/. Currently only
 strcasecmp() will be added when not available on the system.
 
-* Configure checks for sysconf and friends. Look at Zsh.
+** Configure checks for sysconf and friends. Look at Zsh.
 http://www.zsh.org/mla/workers/2000/msg03388.html
 
 
