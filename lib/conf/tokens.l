@@ -59,3 +59,10 @@ int yywrap (void)
   return 1;
 }
 
+
+static void dummy_dont_call (void)
+{
+  yyunput(0, NULL);
+  dummy_dont_call ();
+}
+
