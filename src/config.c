@@ -50,7 +50,10 @@ param_t parms [] = {
   /* Default: re-login every DAEMON_DELAY minutes. */
   {{"DEAMON_T", "DAEMON_TYPE", NULL},                  NULL, "login"},
   /* Default: relogin every 20 minutes to keep the connection alive. */
-  {{"DEAMON_D", "DAEMON_DELAY", "INTERVAL", NULL},     NULL, "20"}
+  {{"DEAMON_D", "DAEMON_DELAY", "INTERVAL", NULL},     NULL, "20"},
+
+  /* NULL terminate for libconf. */
+  {{NULL}, NULL, NULL}
 };
 
 /* This is for global data. */
@@ -138,7 +141,7 @@ config_load (char *file)
   file = config_locate (file);
 
   /* Fill in the blanks by reading the conf file */
-  if (-1 == conf_read_file (file, parms))
+  if (-1 == conf_read_file (parms, file))
     {
       fprintf (stderr, "Cannot find configuration file %s: %s\n", 
                file, strerror (errno));
@@ -158,21 +161,21 @@ config_load (char *file)
 #endif	/* DEBUG */
 
   /* Setup the rest of the default settings */
-  __config_area.login_server = conf_get_value ("SERV");
-  __config_area.init_page    = conf_get_value ("INIT_PAGE");
-  __config_area.login_page   = conf_get_value ("LOGIN_PAGE");
-  __config_area.logout_page  = conf_get_value ("LOGOUT_PAGE");
-  __config_area.pid_file     = conf_get_value ("PID_FILE");
+  __config_area.login_server = conf_get_value (parms, "SERV");
+  __config_area.init_page    = conf_get_value (parms, "INIT_PAGE");
+  __config_area.login_page   = conf_get_value (parms, "LOGIN_PAGE");
+  __config_area.logout_page  = conf_get_value (parms, "LOGOUT_PAGE");
+  __config_area.pid_file     = conf_get_value (parms, "PID_FILE");
   
-  __config_area.login_string_header = conf_get_value ("LOGIN_STRING_HEADER");
-  __config_area.username_key        = conf_get_value ("USERNAME_KEY");
-  __config_area.password_key        = conf_get_value ("PASSWORD_KEY");
-  __config_area.login_string_footer = conf_get_value ("LOGIN_STRING_FOOTER");
+  __config_area.login_string_header = conf_get_value (parms, "LOGIN_STRING_HEADER");
+  __config_area.username_key        = conf_get_value (parms, "USERNAME_KEY");
+  __config_area.password_key        = conf_get_value (parms, "PASSWORD_KEY");
+  __config_area.login_string_footer = conf_get_value (parms, "LOGIN_STRING_FOOTER");
 
-  __config_area.logged_in_string  = conf_get_value ("LOGGED_IN_STRING");
-  __config_area.logged_out_string = conf_get_value ("LOGGED_OUT_STRING");
+  __config_area.logged_in_string  = conf_get_value (parms, "LOGGED_IN_STRING");
+  __config_area.logged_out_string = conf_get_value (parms, "LOGGED_OUT_STRING");
 
-  temp = conf_get_value ("SERVER_PORT");
+  temp = conf_get_value (parms, "SERVER_PORT");
   if (temp)
     {
       __config_area.server_port = atoi (temp);
@@ -182,12 +185,12 @@ config_load (char *file)
       __config_area.server_port = atoi (PORT);
     }
 
-  __config_area.daemon_start = conf_get_bool ("DEAMON_S");
-  __config_area.daemon_type  = strcasecmp (conf_get_value ("DEAMON_S"), "login") ? 1 : 0;
-  __config_area.daemon_delay = atoi (conf_get_value ("DEAMON_D"));
+  __config_area.daemon_start = conf_get_bool (parms, "DEAMON_S");
+  __config_area.daemon_type  = strcasecmp (conf_get_value (parms, "DEAMON_S"), "login") ? 1 : 0;
+  __config_area.daemon_delay = atoi (conf_get_value (parms, "DEAMON_D"));
 
-  __config_area.username     = conf_get_value ("USER");
-  __config_area.password     = conf_get_value ("PASS");
+  __config_area.username     = conf_get_value (parms, "USER");
+  __config_area.password     = conf_get_value (parms, "PASS");
 
   if (!__config_area.username || !__config_area.password)
     {
