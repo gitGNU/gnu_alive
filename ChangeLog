@@ -1,4 +1,15 @@
-2003-07-06  Joachim Nilsson  <joachim@gnufans.org>
+2004-01-14  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* debian: Added Debian package directory.
+
+2004-01-11  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* .: Cleanups and final tests for release 1.3.0
+	  This release will be the first with the new
+	  code base - to be followed by continous new
+	  features.
+
+2003-07-06  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* qadsl: initial version.
 
