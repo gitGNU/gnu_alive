@@ -1,0 +1,14 @@
+Source: qadsl
+Section: unknown
+Priority: optional
+Maintainer: Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+Standards-Version: 3.0.1
+
+Package: qadsl
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: In pursuit of a free Internet.
+ Automatically logs in and keeps your Internet connection alive.
+ .
+ qadsl works for any type of connection; *DSL, fiber, anything where
+ your ISP has put a login server in your way.
