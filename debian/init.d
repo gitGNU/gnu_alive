@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 # GNU Alive init script
 #
 # Written by Miquel van Smoorenburg <miquels()cistron!nl>.
@@ -19,11 +19,15 @@ DESC=alive
 # made sure that your config file is accurate.
 ACTIVE=no
 
-[ "$ACTIVE" = "yes" ] || { echo "Please edit $0" ; exit; }
+# Display informative text if not active and not being stopped.
+if [ "$ACTIVE" != "yes" ]; then
+    if [ "$1" != "stop" ]; then
+        echo "Please edit $0 to activate $NAME."
+    fi
+    exit
+fi
 
 test -f $DAEMON || exit 0
-
-set -e
 
 case "$1" in
   start)
@@ -43,13 +47,13 @@ case "$1" in
 	#
 	#	If the daemon responds to changes in its config file
 	#	directly anyway, make this a do-nothing entry.
-	
+
 	echo -n "Reloading $DESC"
 	# start-stop-daemon --stop --signal 1 --quiet --pidfile \
 	#	/var/run/$NAME.pid --exec $DAEMON
         $DAEMON -l
         echo "."
-  #;;
+        ;;
   restart|force-reload)
 	#
 	#	If the "reload" option is implemented, move the "force-reload"

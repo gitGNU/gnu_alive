@@ -5,29 +5,37 @@
 # Source debconf library.
 . /usr/share/debconf/confmodule
 
+# configure or reconfigure
+MODE=$1
+# currently installed version
+OLD_VERSION=$2
+
 # Setup default values
-USERNAME=""
-PASSWORD=""
-LOGIN_SERVER="10.0.0.6"
+db_get alive/login_server
+LOGIN_SERVER=$RET
+db_get alive/username
+USERNAME=$RET
+db_get alive/password
+PASSWORD=$RET
 
 # Set title
 db_title "GNU Alive Configuration"
 
 # Pop the question...
-db_input medium alive/use_debconf_question || true
+db_input medium alive/use_debconf || true
 db_go || true
-db_get alive/use_debconf_question
-if [ "$RET" == "true" ]; then
-    if [ -f /etc/qadsl.conf ]; then
-        db_input medium alive/reuse_qadsl_conf_values_question || true
+db_get alive/use_debconf
+if [ "$RET" = "true" ]; then
+    # Make sure we only get this question once!
+    db_fget alive/reuse_qadsl_conf_values seen
+    if [ -f /etc/qadsl.conf -a "$RET" != "true" ]; then
+        db_input medium alive/reuse_qadsl_conf_values || true
         db_go || true
-        db_get alive/reuse_qadsl_conf_values_question
-        $REUSE=$RET
-        db_fget alive/reuse_qadsl_conf_values_question seen
-        if [ "$RET" == "false" -a "$REUSE" == "true" ]; then
+        db_get alive/reuse_qadsl_conf_values
+        if [ "$RET" = "true" ]; then
             # Get current settings
             . /etc/qadsl.conf
-            # User freedom sometimes sucks...
+
             if [ "$USER" != "" ]; then
                 USERNAME=$USER
             fi
@@ -36,21 +44,22 @@ if [ "$RET" == "true" ]; then
             fi
             if [ "$SERV" != "" ]; then
                 LOGIN_SERVER=$SERV
-            fi
-            if [ "$SERVER" != "" ]; then
-                LOGIN_SERVER=$SERVER
+            else
+                if [ "$SERVER" != "" ]; then
+                    LOGIN_SERVER=$SERVER
+                fi
             fi
         fi
     fi
 
-    db_set alive/login_server_question $LOGIN_SERVER
-    db_set alive/username_question $USERNAME
-    db_set alive/password_question $PASSWORD
+    db_set alive/login_server $LOGIN_SERVER
+    db_set alive/username $USERNAME
+    db_set alive/password $PASSWORD
 
     db_beginblock
-    db_input medium alive/login_server_question || true
-    db_input medium alive/username_question || true
-    db_input medium alive/password_question || true
+    db_input medium alive/login_server || true
+    db_input medium alive/username || true
+    db_input medium alive/password || true
     db_endblock
 
     db_go || true

@@ -1,8 +1,11 @@
-Template: alive/use_debconf_question
+Template: alive/use_debconf
 Type: boolean
-Descript: Let Debian handle /etc/alive.conf?
- If you answer yes then Debian will ask all necessary questions
- and setup /etc/alive.conf for you.  All your answers will be
+Default: yes
+Description: Let Debian handle /etc/alive.conf?
+ Do you want Debian to handle the Alive configuration file?
+ .
+ Answer yes and Debian will ask all necessary questions and setup
+ the file /etc/alive.conf for you.  All your answers will be
  remembered for future upgrades, so you will not be bugged again.
  .
  Answer no to this question to handle /etc/alive.conf yourself.
@@ -10,7 +13,7 @@ Descript: Let Debian handle /etc/alive.conf?
  if you answer no.
 
 
-Template: alive/reuse_qadsl_conf_values_question
+Template: alive/reuse_qadsl_conf_values
 Type: boolean
 Description: Reuse settings from old qadsl.conf in alive.conf?
  A configuration file from a previous installation was found
@@ -37,7 +40,7 @@ Description: Reuse settings from old qadsl.conf in alive.conf?
  Answer yes to let reuse old qadsl.conf settings in alive.conf.
  Answer no to create a new /etc/alive.conf with Debconf.
 
-Template: alive/template_installed_stmt
+Template: alive/template_installed
 Type: note
 Description: An alive.conf template installed!
  A template configuration file has been installed in /etc/alive.conf.
@@ -49,10 +52,10 @@ Description: An alive.conf template installed!
  disabled by default so no unintended communication to the outside
  world is attempted.
 
-Template: alive/login_server_question
+Template: alive/login_server
 Type: string
 Default: 10.0.0.1
-Description: Login server name or IP number?
+Description: Enter login server name or IP number
  Please input here the login server name or IP number.
  .
  In most cases the default IP number is sufficient, and in 
@@ -60,17 +63,17 @@ Description: Login server name or IP number?
  your ISP, Internet Service Provider, along with your
  username and password.
 
-Template: alive/username_question
+Template: alive/username
 Type: string
-Description: Your login- or username?
+Description: Enter your login- or username
  Please input your designated username.
  .
  This is information you must have from your ISP.  You cannot
  access the login server without it.
 
-Template: alive/password_question
+Template: alive/password
 Type: password
-Description: Your password?
+Description: Enter your password
  Please input your password.  It will not be displayed
  in clear text here, but might be sent in clear text over
  the Internet, depending on the server configuration.
@@ -79,8 +82,12 @@ Description: Your password?
  of your login information, or it was all on the same piece of
  paper from your ISP.  You can probably not access the login
  server without it.
+ .
+ If you are converting from an old qadsl.conf file simply press
+ enter here.  The password is also converted but not displayed
+ here.
 
-Template: alive/done_stmt
+Template: alive/done
 Type: note
 Description: All done - /etc/alive.conf created!
  A generic configuration file has been created based on your
@@ -95,10 +102,3 @@ Description: All done - /etc/alive.conf created!
  .
  When you are confident that your setup works you can go ahead
  and enable the daemon in /etc/init.d/alive.
-
-
-
-
-    
-
-
