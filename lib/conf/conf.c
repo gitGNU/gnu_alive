@@ -70,7 +70,9 @@ conf_read_file (param_t *parameter_list, char *file)
    {
      int temp_fd;
 
-     temp_fd = open (file, O_RDWR, S_IREAD);
+     temp_fd = open (file, O_RDONLY, S_IREAD);
+     if (-1 == temp_fd)
+       return -2;
 
      dup2 (temp_fd, stdin_fd);
 
