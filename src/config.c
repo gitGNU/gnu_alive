@@ -135,13 +135,15 @@ void print_parm (param_t *p)
 config_data_t *
 config_load (char *file)
 {
+  int result;
   char *temp;
 
   /* Setup default configuration */
   file = config_locate (file);
 
   /* Fill in the blanks by reading the conf file */
-  if (-1 == conf_read_file (parms, file))
+  result = conf_read_file (parms, file);
+  if (result < 0)
     {
       fprintf (stderr, "Cannot find configuration file %s: %s\n", 
                file, strerror (errno));

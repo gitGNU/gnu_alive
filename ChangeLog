@@ -1,3 +1,13 @@
+2004-02-16  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* src/config.c (config_load): Don't continue if conf_read_file() fails.
+
+	* lib/conf/tokens.l: Clean up mess when values inside "". 
+
+	* lib/conf/conf.c (strlndup): Don't overwrite last character of
+	string with NUL.
+	(conf_set_value): len decremented too much.
+
 2004-02-10  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* lib/conf/conf.c: Add unistd.h, dup() needs it.

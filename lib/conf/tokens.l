@@ -28,12 +28,13 @@ COMMENT         #.*
 delim           [ \t\n\r]
 WS              {delim}*
 DIGIT           [0-9]
-OTHER           [!\"@#гд\$%&\/\{\(\[\)\]\}?+\\~\'*,\.:]
+OTHER           [!@#гд\$%&\/\{\(\[\)\]\}?+\\~\'*,\.:]
 ALPHA           [a-zA-Z_\-]
 
 NAME            ^{WS}{ALPHA}+
 VALUE           ({DIGIT}|{ALPHA}|{OTHER})+[;]*
 
+%x VALUE_INPUT
 %option yylineno
 /* %option reentrant */
 /* %option bison-bridge */
@@ -52,13 +53,17 @@ VALUE           ({DIGIT}|{ALPHA}|{OTHER})+[;]*
 =               {/* printf(" EQU "); */
                  return EQU;}
 
-{NAME}          {yylval.str = strdup(yytext);  /* XXX - Check for NULL */
+{NAME}          {yylval.str = strdup(yytext);  /*XXX - Check for NULL */
                  /* printf("ID(%s)", yylval.str); */
                  return ID;}
 
-{VALUE}         {yylval.str = strdup(yytext);  /* XXX - Check for NULL */
+{VALUE}         {yylval.str = strdup(yytext); /* XXX - Check for NULL */
                  /* printf("ARG(%s)", yylval.str); */
                  return ARG;}
+
+\"              {BEGIN(VALUE_INPUT);}
+<VALUE_INPUT>.* {yylval.str = strdup(yytext);}
+<VALUE_INPUT>\" {BEGIN(INITIAL); return ARG;}
 
 %%
 

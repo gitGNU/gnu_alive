@@ -128,13 +128,13 @@ strlndup (char *src, size_t len)
 {
   char *dst;
 
-  dst = malloc (len);
+  dst = malloc (len + 1);
   if (!dst)
     return NULL;
 
   strncpy (dst, src, len);
 
-  dst[len - 1] = '\0';
+  dst[len] = '\0';
 
   return dst;
 }
@@ -207,12 +207,15 @@ conf_set_value (param_t *parameter_list, char *key, char *value)
 
       if (value [0] == '"' && value [len - 1] == '"')
 	{
-	  len -= 2;
+	  len -= 1;
 	  value++;
 	}
 
       str = strlndup (value, len);
 
+      /* Free the string strdup():ed by flex.
+       * XXX - Interface-wise this is not very good, flex should do it.
+       */
       free (value);
 
       parm->value = str;
