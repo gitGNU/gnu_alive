@@ -188,14 +188,16 @@ daemon_thread (config_data_t *config, int verbose)
 
       /* This stuff added for verbosity */
       if (slept > 0)		/* Awoken by SIGHUP */
-	if (config->logged_in)
-	  {
-	    LOG ("%s: Forced relogin successful!\n", PACKAGE_NAME);
-	  }
-	else
-	  {
-	    LOG ("%s: Forced relogin FAILED!\n", PACKAGE_NAME);
-	  }
+        {
+          if (config->logged_in)
+            {
+              LOG ("%s: Forced relogin successful!\n", PACKAGE_NAME);
+            }
+          else
+            {
+              LOG ("%s: Forced relogin FAILED!\n", PACKAGE_NAME);
+            }
+        }
     }
 }
 
