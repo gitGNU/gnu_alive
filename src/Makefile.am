@@ -8,4 +8,5 @@ qadsl_SOURCES = config.c  ../include/config.h  \
                 process.c ../include/process.h \
                 main.c    ../include/settings.h.in
 
-qadsl_LDADD   = $(top_builddir)/lib/libconf.a
+qadsl_LDFLAGS = -L$(top_builddir)/lib
+qadsl_LDADD   = -lconf -lost
