@@ -35,7 +35,7 @@
  */
 
 
-/* Static because no one else needs really needs this function.
+/* Static because no one else really needs this function.
  */
 static inline char tohex (const unsigned char c)
 {
