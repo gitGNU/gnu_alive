@@ -13,28 +13,6 @@ pointers to statics into some values (setup default values). Instead
 these statics should also be strdup'ed and freed at end of
 program/daemon! 
 
-* Failover lock file support
-If PID_FILE does not exist or cannot be opened for reading/writing
-we need to find out other ways to play. Do like we did in
-config_locate(), only this time we need to be stubborn in more ways.
-
-Perhaps this will spun a libfile library to handle all file access?
-(I.e, both lock files and config files.)
-
-Best way to handle the inevitable forever-search for a file to be
-used for the lock is perhaps to not create a lock file if none can
-be created. Thus we do not allow the daemon to be started!
-
-Brilliant! :-)
-
-Mostly done, needs testing. /Joachim 2004-01-20
-
-* Be more stubborn when login fails ... 
-Don't exit(1) at every possible juncture.
-Redo/cleanup the netfunc/http code some more.
-
-Mostly done. /Joachim 2004-01-20
-
 * --enable-old-config-parser
 We have the old conf-file parser still in src/config.c it
 could "easily" be made available as --enable-old-config-parser
@@ -80,12 +58,5 @@ strcasecmp() will be added when not available on the system.
 
 * Configure checks for sysconf and friends. Look at Zsh.
 http://www.zsh.org/mla/workers/2000/msg03388.html
-
-* Include Debian patches
-Just like we have a qadsl.spec file (for .rpm's) we should also
-include the debian stuff - all I ever use is debian (except at work) -
-so why not?
-
-Mostly done, needs testing by others. /Joachim 2004-01-20
 
 
