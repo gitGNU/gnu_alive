@@ -68,6 +68,15 @@ For all other multi-line comments use
     */
 
 
+TODO vs. NEWS items
+===================
+
+The top directory contains the TODO and NEWS files. Items listed in the 
+TODO are free to be fixed by anyone by submission of a patch (see below).
+When a patch has been deemed fit enough for inclusion the TODO item is
+transformed to a NEWS item for the next release.
+
+
 Submitting patches
 ==================
 
