@@ -1,3 +1,11 @@
+alive (1.4.0-2) unstable; urgency=low
+
+  * This marks the first releasable debconf based setup. We now handle the
+  transition from qadsl-->alive without a hitch. Converting global config
+  files on the fly.
+
+ -- Joachim Nilsson <joachim.nilsson@member.fsf.org>  Mon, 21 Feb 2005 22:53:13 +0100
+
 alive (1.4.0-1) unstable; urgency=low
 
   * New name of upstream release, see NEWS file and ChangeLog for details, as usual.
