@@ -88,6 +88,9 @@ to connect to on LOGIN_SERVER.
 \fB \-l, \-\-login \fR
 Login to the given LOGIN_SERVER.
 .TP
+\fB \-q, \-\-quit \fR
+Do not logout, just quit the daemon.
+.TP
 \fB \-o, \-\-logout \fR
 Try to logout, close the Internet connection.
 .TP
@@ -111,6 +114,10 @@ of their login server, your login ID and and password.
 Different providers have setup their login servers differently.
 See the sample alive.conf file included in this package for
 help on setting up Alive for your ISP.
+
+The two exit modes: quit and logout can be confusing.  The quit
+mode was added recently and it does not call the logout page it
+just quits the daemon, leaving the connection open.
 
 If you have problems connecting the flags --verbose and --debug
 are really useful tools that let you see all the interactions

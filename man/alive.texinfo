@@ -157,16 +157,17 @@ This is the output of the command @samp{@value{PACKAGE_NAME} --help}:
 
 Usage: @value{PACKAGE_NAME} [-h] [-c conffile] [-p pidfile] [-loPsvV]
 Options:
--l, --login               Try to login
--o, --logout              Try to logout
--c, --conf-file=FILE      Use settings from FILE instead of default /etc/@value{PACKAGE_NAME}.conf
--p, --pid-file=FILE       Use FILE to store PID
--P, --port=PORT           Connect to PORT on server, default is 80
--s, --status              Display status of @value{PACKAGE_NAME} daemon
--v, --verbose             Display more information, on screen and in logfile
+-l, --login               Try to login.
+-q, --quit                Quit daemon, don't logout.
+-o, --logout              Try to logout.
+-c, --conf-file=FILE      Use settings from FILE instead of default /etc/@value{PACKAGE_NAME}.conf.
+-p, --pid-file=FILE       Use FILE to store PID.
+-P, --port=PORT           Connect to PORT on server, default is 80.
+-s, --status              Display status of @value{PACKAGE_NAME} daemon.
+-v, --verbose             Display more information, on screen and in logfile.
 -d, --debug               Display even more information, huge amounts!
--V, --version             Display version information and exit
--h, --help                Display this help and exist
+-V, --version             Display version information and exit.
+-h, --help                Display this help and exist.
 
 Report bugs to <http://savannah.gnu.org/bugs/?group=@value{PACKAGE_NAME}>
 @end example
@@ -201,6 +202,11 @@ Print even more information, huge amounts.
 @item --login
 @itemx -l
 Login to the Internet connection.
+
+@item --quit
+@itemx -q
+Quit daemon, do not logout. Contrary to logout this option only
+exits the daemon leaving the connection open.
 
 @item --logout
 @itemx -o

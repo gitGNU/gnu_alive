@@ -3,7 +3,7 @@
 
 #include "config.h"
 
-enum op {LOGIN, LOGOUT, STATUS, NOP};
+enum op {LOGIN, LOGOUT, QUIT, STATUS, NOP};
 
 typedef enum op op_t;
 
