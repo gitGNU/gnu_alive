@@ -1,8 +1,8 @@
 #  build and install the .info pages
-info_TEXINFOS  = qadsl.texinfo
+info_TEXINFOS  = alive.texinfo
 qadsl_TEXINFOS = gpl.texinfo
 
 #  install the man pages
-man_MANS       = qadsl.8 qadsl.conf.5
+man_MANS       = alive.8 alive.conf.5
 
 EXTRA_DIST     = $(man_MANS)

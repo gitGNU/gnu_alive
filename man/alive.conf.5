@@ -1,0 +1,143 @@
+.\"                              hey, Emacs:   -*- nroff -*-
+.\" GNU Alive is free software; you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 2 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program; see the file COPYING.  If not, write to
+.\" the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+.\"
+.TH alive.conf 5 "13th August, 2004"
+.\" Please update the above date whenever this man page is modified.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins (default)
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+alive.conf \- GNU Alive configuration file
+.SH DESCRIPTION
+Usually found in /etc/alive.conf and contains username, password and
+login server information for your Internet connection.
+
+.SH SYNTAX
+The alive.conf syntax is extremely free form. So if you have ever
+peeked into a UNIX configuration file before, you should be right
+at home, you should not even have to read any further ...
+
+For those of you who hate configuration files, or never have seen
+one before, you should proceed directly to the examples section.
+
+To those of you who run Alive from your personal login account,
+then you can setup a private config file as \.aliverc, or supply
+different config files each time using the command line switch
+--conf-file=filename.
+
+The config file format is very simple and straight forward.  Each
+setting is made up of a NAME=VALUE pair, with optional whitespace
+around both NAME and VALUE.  For boolean settings both YES and NO
+as well as TRUE and FALSE can be used, regardless of how it is
+written: True, yES, fAlSe, etc.
+
+To make things even more simple, or confusing, most of the settings
+have name aliases.  E.g., LOGIN_SERVER can be shortened down to just
+SERVER.  The TeXinfo manual provides a full listing of all available
+settings, this man page is only here for convenience.
+
+The examples section starts off by listing the required settings
+needed to run GNU Alive.  They are, in no particular order: USERNAME,
+PASSWORD and LOGIN_SERVER.  The rest of the available settings are
+explained here.
+
+START_DAEMON, Most people want this.  It means that the keep-alive
+daemon is started and runs every INTERVAL minutes.  Default is
+enabled.
+
+DAEMON_TYPE, can be either set to LOGIN or PING.  Default is LOGIN.
+The PING feature is not a real ICMP ping, instead it works like this:
+when the daemon wakes up after a long sleep it first requests the
+page /sd/init from the server and when everything is OK the server
+redirects the daemon to an external Internet address, often the
+home page of the ISP.  However, when not logged in anymore the
+page /sd/init is the login page and here is where the DAEMON_TYPE
+setting comes in.  When the daemon wakes up and receives a login
+page from /sd/init then LOGIN does relogin, while PING only makes the
+daemon go back to sleep.  Most people want the daemon to login again
+and hence the default is set to LOGIN.
+
+DAEMON_DELAY, or INTERVAL, is how long the daemon should sleep between
+each alive check.  Default is five minutes.
+
+PORT, SERVER_PORT, is where on the login server commands should be
+sent.  This is usally port 80, the standard web server port, but
+could be something else for some ISP's.
+
+.SH EXAMPLES
+Most of the time you only need to supply a USERNAME, PASSWORD
+and LOGIN_SERVER. Like this:
+
+USERNAME     = u1234567
+.br
+PASSWORD     = pwd12345
+.br
+LOGIN_SERVER = valo1.tiscali.se
+
+However, it is a lot safer to set the LOGIN_SERVER setting to
+as a pure IP address, like this:
+
+LOGIN_SERVER = 10.0.0.6
+
+This because the name of the login server sometimes is not listed
+in the name server (DNS) of your ISP. The number 10.0.0.6 is the
+default for all Orbyte Wireless System installations.
+
+# Username
+.br
+USERNAME     = u1234567
+
+# Password
+.br
+PASSWORD     = pwd12345
+
+# Login Server, DNS name or IP number, often 10.0.0.6 or 192.168.2.1
+.br
+# Tiscali      valo1.tiscali.se
+.br
+# Telia        login1.telia.com
+.br
+# COMHEM       login1.comhem.se
+.br
+SERVER       = 10.0.0.6
+
+# Start daemon [YES/NO]?
+.br
+START_DAEMON = YES
+
+# Daemon type [LOGIN/PING]?
+.br
+DEAMON_TYPE  = LOGIN
+
+# Daemon delay in minutes.
+.br
+INTERVAL     = 20
+
+.SH SEE ALSO
+The alive (8) man page describes startup, debug mode, and general tips.
+
+.SH AUTHOR
+Joachim Nilsson
+
+.SH URL
+http://savannah.gnu.org/projects/alive/

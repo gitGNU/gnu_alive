@@ -1,5 +1,5 @@
 .\"                              hey, Emacs:   -*- nroff -*-
-.\" qadsl is free software; you can redistribute it and/or modify
+.\" GNU Alive is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
 .\" the Free Software Foundation; either version 2 of the License, or
 .\" (at your option) any later version.
@@ -13,8 +13,8 @@
 .\" along with this program; see the file COPYING.  If not, write to
 .\" the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 .\"
-.\" @(#)qadsl.8 1.2 14-Jan-2004 OF; from qadsl archive
-.TH qadsl 8 "14th January, 2004"
+.\" @(#)alive.8 1.1 13-Aug-2004 OF; from alive archive
+.TH alive 8 "13th August, 2004"
 .\" Please update the above date whenever this man page is modified.
 .\"
 .\" Some roff macros, for reference:
@@ -28,26 +28,28 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-qADSL \- Auto-login & keep-alive for Internet connections.
+GNU Alive \- Auto-login & keep-alive for Internet connections.
 
 .SH SYNOPSIS
-.B qadsl
+.B alive
 [-h] [-c conffile] [-p pidfile] [-loPsdvV]
 
 .SH DESCRIPTION
 Frustrated about having to "log in" to your paid Internet connection?
 
-.B qadsl
+.B GNU Alive
 is a small utility that automates the login process to Telia, COMHEM,
 Tiscali and other Internet Service Providers, ISPs. It features a
 keep-alive daemon that periodically connects to your ISP ensuring that
 your connection to the Internet are not logged out all of a sudden.
 
-qadsl works for any type of connection where your ISP has put a login
+Alive works for any type of connection where your ISP has put a login
 server in your way.
 
+GNU Alive was previously known as qadsl.
+
 .SH OPTIONS
-.B qadsl
+.B GNU Alive
 options are available in traditional POSIX one letter options prefixed
 with a single '\-' or the new popular \-\-long\-options style.
 
@@ -59,16 +61,16 @@ Displays a summary of the command line options.
 Use settings from
 .I file
 insted of default
-.I /etc/qadsl.conf
+.I /etc/alive.conf
 or
-.I $HOME/.qadslrc
+.I $HOME/.aliverc
 
 .TP
 \fB\-p, \-\-pid\-file=\fIfile \fR
 Use
 .I file
 as pid/lock file instead of default
-.I /var/run/qadsl.pid
+.I /var/run/alive.pid
 
 .TP
 \fB\-P, \-\-port=\fIPORT \fR
@@ -83,7 +85,7 @@ Login to the given LOGIN_SERVER.
 Try to logout, close the Internet connection.
 .TP
 \fB \-s, \-\-status \fR
-Display status of qadsl daemon.
+Display status of alive daemon.
 .TP
 \fB \-V, \-\-version \fR
 Displays version informaiton.
@@ -95,31 +97,31 @@ Verbose, print more information at runtime.
 Debug, print even more information, huge amounts.
 
 .SH USAGE
-First setup your qadsl.conf file with the information you have
+First setup your alive.conf file with the information you have
 received from your ISP. It should be at least the name (or IP)
 of their login server, your login ID and and password.
 
 Different providers have setup their login servers differently.
-See the sample qadsl.conf file included in this package for
-help on setting up qadsl for your ISP.
+See the sample alive.conf file included in this package for
+help on setting up Alive for your ISP.
 
 If you have problems connecting the flags --verbose and --debug
 are really useful tools that let you see all the interactions
-between qadsl and the login server. However, please note that
+between Alive and the login server. However, please note that
 when the login daemon has started you will not see anything more on
 your screen. Instead you have to consult the system logfiles. On a
-Debian system the file /var/log/daemon.log is where qadsl logs go.
+Debian system the file /var/log/daemon.log is where Alive logs go.
 
 .SH FILES
 .TP
-.I /etc/qadsl.conf
-Usually the location of a system wide qadsl configuration file.
+.I /etc/alive.conf
+Usually the location of a system wide Alive configuration file.
 .TP
-.I $HOME/.qadslrc
+.I $HOME/.aliverc
 User configuration file, takes precedent over any global file.
 
 .SH SEE ALSO
-The qadsl.conf (5) man page describes the componentes of the
+The alive.conf (5) man page describes the componentes of the
 configuration file.
 
 .SH REQUIREMENTS
@@ -131,7 +133,7 @@ Joachim Nilsson
 .br
 Jakob "kuba" Stasilowicz
 .TP
-Thanks to these people for making qadsl possible:
+Thanks to these people for making GNU Alive possible:
 .br
 Peter Stromberg - code
 .br
@@ -142,4 +144,4 @@ Martin Samuelsson - Initial Debian package
 Nicklas Larsson - First manpage.
 
 .SH URL
-http://savannah.gnu.org/projects/qadsl/
+http://savannah.gnu.org/projects/alive/

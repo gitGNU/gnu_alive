@@ -35,10 +35,23 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_triplet = @host@
 subdir = man
-DIST_COMMON = $(qadsl_TEXINFOS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in texinfo.tex
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in texinfo.tex
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/m4/codeset.m4 \
+	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/glibc21.m4 \
+	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intdiv0.m4 \
+	$(top_srcdir)/m4/intmax.m4 $(top_srcdir)/m4/inttypes-pri.m4 \
+	$(top_srcdir)/m4/inttypes.m4 $(top_srcdir)/m4/inttypes_h.m4 \
+	$(top_srcdir)/m4/lcmessage.m4 $(top_srcdir)/m4/lib-ld.m4 \
+	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
+	$(top_srcdir)/m4/longdouble.m4 $(top_srcdir)/m4/longlong.m4 \
+	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/po.m4 \
+	$(top_srcdir)/m4/printf-posix.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/size_max.m4 \
+	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/uintmax_t.m4 \
+	$(top_srcdir)/m4/ulonglong.m4 $(top_srcdir)/m4/wchar_t.m4 \
+	$(top_srcdir)/m4/wint_t.m4 $(top_srcdir)/m4/xsize.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -46,13 +59,13 @@ CONFIG_HEADER = $(top_builddir)/include/settings.h
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
-INFO_DEPS = $(srcdir)/qadsl.info
+INFO_DEPS = $(srcdir)/alive.info
 am__TEXINFO_TEX_DIR = $(srcdir)
-DVIS = qadsl.dvi
-PDFS = qadsl.pdf
-PSS = qadsl.ps
-HTMLS = qadsl.html
-TEXINFOS = qadsl.texinfo
+DVIS = alive.dvi
+PDFS = alive.pdf
+PSS = alive.ps
+HTMLS = alive.html
+TEXINFOS = alive.texinfo
 TEXI2DVI = texi2dvi
 TEXI2PDF = $(TEXI2DVI) --pdf --batch
 MAKEINFOHTML = $(MAKEINFO) --html
@@ -65,6 +78,7 @@ NROFF = nroff
 MANS = $(man_MANS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
+ALLOCA = @ALLOCA@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
@@ -72,12 +86,15 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+BUILD_INCLUDED_LIBINTL = @BUILD_INCLUDED_LIBINTL@
+CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
+DATADIRNAME = @DATADIRNAME@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 ECHO_C = @ECHO_C@
@@ -85,19 +102,38 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+GENCAT = @GENCAT@
+GLIBC21 = @GLIBC21@
+GMSGFMT = @GMSGFMT@
+HAVE_ASPRINTF = @HAVE_ASPRINTF@
+HAVE_POSIX_PRINTF = @HAVE_POSIX_PRINTF@
+HAVE_SNPRINTF = @HAVE_SNPRINTF@
+HAVE_WPRINTF = @HAVE_WPRINTF@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+INSTOBJEXT = @INSTOBJEXT@
+INTLBISON = @INTLBISON@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
+INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
 ISODATE = @ISODATE@
 LDFLAGS = @LDFLAGS@
 LEX = @LEX@
 LEXLIB = @LEXLIB@
 LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
+LIBICONV = @LIBICONV@
+LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LTLIBICONV = @LTLIBICONV@
+LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
+MSGMERGE = @MSGMERGE@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -106,11 +142,15 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+POSUB = @POSUB@
 RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+XGETTEXT = @XGETTEXT@
 YACC = @YACC@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_RANLIB = @ac_ct_RANLIB@
@@ -150,11 +190,11 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 
 #  build and install the .info pages
-info_TEXINFOS = qadsl.texinfo
+info_TEXINFOS = alive.texinfo
 qadsl_TEXINFOS = gpl.texinfo
 
 #  install the man pages
-man_MANS = qadsl.8 qadsl.conf.5
+man_MANS = alive.8 alive.conf.5
 EXTRA_DIST = $(man_MANS)
 all: all-am
 
@@ -230,10 +270,10 @@ $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	 -o $@ $<
 	if test ! -d $@ && test -d $(@:.html=); then \
 	  mv $(@:.html=) $@; else :; fi
-$(srcdir)/qadsl.info: qadsl.texinfo $(qadsl_TEXINFOS)
-qadsl.dvi: qadsl.texinfo $(qadsl_TEXINFOS)
-qadsl.pdf: qadsl.texinfo $(qadsl_TEXINFOS)
-qadsl.html: qadsl.texinfo $(qadsl_TEXINFOS)
+$(srcdir)/alive.info: alive.texinfo 
+alive.dvi: alive.texinfo 
+alive.pdf: alive.texinfo 
+alive.html: alive.texinfo 
 .dvi.ps:
 	$(DVIPS) -o $@ $<
 
@@ -275,10 +315,10 @@ dist-info: $(INFO_DEPS)
 	done
 
 mostlyclean-aminfo:
-	-rm -rf qadsl.aux qadsl.cp qadsl.cps qadsl.fn qadsl.fns qadsl.ky qadsl.kys \
-	  qadsl.log qadsl.pg qadsl.pgs qadsl.tmp qadsl.toc qadsl.tp \
-	  qadsl.tps qadsl.vr qadsl.vrs qadsl.dvi qadsl.pdf qadsl.ps \
-	  qadsl.html
+	-rm -rf alive.aux alive.cp alive.cps alive.fn alive.fns alive.ky alive.kys \
+	  alive.log alive.pg alive.pgs alive.tmp alive.toc alive.tp \
+	  alive.tps alive.vr alive.vrs alive.dvi alive.pdf alive.ps \
+	  alive.html
 
 maintainer-clean-aminfo:
 	@list='$(INFO_DEPS)'; for i in $$list; do \

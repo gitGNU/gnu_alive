@@ -1,14 +1,14 @@
 \input texinfo @c -*-texinfo-*-
 @c This file uses the @command command introduced in Texinfo 4.0.
 @c %**start of header
-@setfilename qadsl.info
-@settitle qadsl: Auto-login & keep-alive for Internet connections.
+@setfilename alive.info
+@settitle GNU Alive: Auto-login & keep-alive for Internet connections.
 @finalout
 @setchapternewpage odd
 @c %**end of header
 
-@set PACKAGE_NAME qadsl
-@set PACKAGE_VERSION 1.3.2
+@set PACKAGE_NAME alive
+@set PACKAGE_VERSION 1.3.4
 
 @c All the nodes can be updated using the EMACS command
 @c texinfo-every-node-update, which is normally bound to C-c C-u C-e.
@@ -22,7 +22,8 @@ keep-alive daemon for Internet connections.
 
 @value{PACKAGE_NAME} is based on qadsl 1.2.1 by Jakob Stasilowicz,
 @url{http://kuba.unix.se}.  It was completely rewritten by Joachim
-Nilsson for version 1.3.0.
+Nilsson for version 1.3.0 and had its named changed in version 1.3.4
+when it was dubbed a GNU pacakge.
 
 @value{PACKAGE_NAME} is free to share and change under the conditions
 stipulated in the GNU General Public License.  For details and
@@ -33,7 +34,7 @@ examples see @ref{Copying}.
 @c All the menus can be updated with the EMACS command
 @c texinfo-all-menus-update, which is normally bound to C-c C-u C-a.
 @menu
-* Introduction::                Introduction and history of qadsl.
+* Introduction::                Introduction and history of qadsl/alive.
 * Sample::                      Sample output from @value{PACKAGE_NAME}.
 * Invoking @value{PACKAGE_NAME}::              How to run @value{PACKAGE_NAME}.
 * Setting Up::                  Basic setup instructions.
@@ -69,8 +70,7 @@ In fact, @value{PACKAGE_NAME} does not necessarily have to be used as
 Internet connection keeper, it can be used for any type of Internet
 based login service.
 
-Release 1.3.2 is the last release under the name qadsl, subsequent
-releases will be called GNU Alive.
+GNU Alive was previously known as qadsl.
 
 @section Copyrights & License
 Copyright (C) 2001 Jakob Stasilowicz@*
@@ -298,21 +298,24 @@ parameters.
 @itemx USERNAME
 Your login username.
 
-No default value, must be set by you.
+Default: None, must be set by you.
 
 @item PASS
 @itemx PASSWORD
 Your login password.
 
-No default value, must be set by you.
+Default: None, must be set by you.
 
 @item SERV
 @itemx SERVER
 @itemx LOGIN_SERVER
 Name, IP number or URL to YOUR ISP login server, e.g.,
-valo1.tiscali.se
+valo1.tiscali.se, login1.telia.com, login1.comhem.se.
 
-No default value, must be set by you.
+The IP number is often 10.0.0.6 or 192.168.2.1 and could be a safe
+bet to fall back on if the DNS fails to resolve the above names.
+
+Default: 10.0.0.6
 
 @item PORT
 @itemx SERVER_PORT
@@ -321,7 +324,7 @@ Port to connect to on login server.  This is usually set to be port
 To find out what your @value{PACKAGE_NAME} binary was built with read the --help
 option for the port setting.
 
-Default: Probably 80
+Default: Depends on how @value{PACKAGE_NAME} was built, but probably 80
 
 @item  DEAMON_S
 @itemx DEAMON_START
@@ -340,6 +343,17 @@ Daemon type, PING or LOGIN.  This determines weather the keep-alive
 daemon should just ``ping'' or do a complete login when the connection
 is down.  Should be left in the default setting, unless very special
 circumstances exist.
+
+The PING value needs some explanation.  Every time the alive daemon
+wakes up it always sends out an HTTP request for the page ``/sd/init''
+from the login server.  If still logged in the server responds by
+redirecting to an Internet page, probably the ISP's home page.
+However, if not logged in /sd/init is the actual login page and thus
+the alive daemon consults this config setting: ``Should I login or
+not?''.  If set to PING the daemon does @emph{not} login and goes back
+to sleep.  The ``ping'' feature is thus not a true ICMP ping but a
+try-to-access-the-Internet-type-of-ping.
+
 
 Default: LOGIN
 
