@@ -18,6 +18,38 @@
 #include <sys/types.h>
 #endif
 
+/* AIX requires this to be the first thing in the file.  */
+#ifndef __GNUC__
+# if HAVE_ALLOCA_H
+#  include <alloca.h>
+# else
+#  ifdef _AIX
+#pragma alloca
+#  else
+#   ifndef alloca /* predefined by HP cc +Olibcalls */
+char *alloca ();
+#   endif
+#  endif
+# endif
+#endif
+
+
+#ifndef _
+/* This is for other GNU distributions with internationalized messages.
+   When compiling libc, the _ macro is predefined.  */
+# ifdef HAVE_LIBINTL_H
+#  include <libintl.h>
+#  define _(msgid)      gettext (msgid)
+# else
+#  define _(msgid)      (msgid)
+# endif
+#endif
+
+
+/* This is not the result of the configure script, but it's
+ * something that almost all of the GNU Alive sources need
+ * to know about -- and we have a name clash anyway...
+ */
 struct config_data
 {
   char *username;
