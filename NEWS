@@ -2,6 +2,16 @@
 
 * v1.3.2 to v1.3.3
 
+** -v now is verbose, and -V is version
+To more adhere to the style of GNU command line options the
+short options for verbose and version, -V and -v respectively,
+have been switched. We apologise for the confusion this might
+create.
+
+** Better logs in system log (daemon.log in debian)
+When issuing -V (--verbose) to qadsl that switch should propagete
+to the daemon as well.
+
 ** -l generate SIGHUP on already started deamon
 
 ** SIGHUP to kill current delay and force relogin
@@ -9,6 +19,17 @@
 ** Cleaned up http.c
 The name space in http.c has been updated from the old code. It has
 been changed to http_server_init(), http_server_login() etc.
+
+** More information in logfiles
+The calls to syslog() have been made more verbose so that they
+say "successful" and "FAILED" to mark the login status. Also,
+when given -V (verbose) that switch now propagates to the daemon
+so that the logfiles are really swamped with information.
+
+** --long-options implemented
+To support long options getopt_long() and getopt() has been made
+a part of the qadsl source tree. This because long options are
+not available on at least NetBSD.
 
 
 * v1.3.1 to v1.3.2
