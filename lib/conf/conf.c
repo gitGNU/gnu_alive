@@ -131,12 +131,10 @@ conf_set_value (char *key, char *value)
       if (value [0] == '"' && value [len - 1] == '"')
 	{
 	  len -= 2;
-	  str = copy_string (++value, len);
+	  value++;
 	}
-      else
-	{
-	  str = copy_string (value, len);
-	}
+
+      str = copy_string (value, len);
 
       free (value);
 
