@@ -1,6 +1,6 @@
 sysconf_DATA = qadsl.conf
 
-install-data-hook:									      \
+install-data-hook:
 	@list='$(sysconf_DATA)';							      \
 	for p in $$list; do								      \
 		dest=`echo $$p | sed -e s/.dist//`;					      \
