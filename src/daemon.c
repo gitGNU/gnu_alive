@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "config.h"
 #include "conf.h"
 
 
@@ -85,7 +86,9 @@ daemonize (void)
 
   /* Close all open files */
   for (fd = 0; fd < sysconf(_SC_OPEN_MAX); fd++)  /* XXX - Add configure check */
-    close (fd);
+    {
+      close (fd);
+    }
 
   /* Move current directory off mounted file system */
   chdir ("/");
@@ -100,7 +103,7 @@ static void
 daemon_sighandler (int signal)
 {
   write_log ("%s[%d]: Got signal(%d), quiting!\n", 
-	     PACKAGE_NAME, getpid (), signal);
+             PACKAGE_NAME, getpid (), signal);
 
   exit (0);
 }
@@ -118,42 +121,60 @@ daemon_sighandler (int signal)
 void
 daemon_thread (config_data_t *config)
 {
+  int result;
+  unsigned int timeout = 60 * config->daemon_delay;
   pid_t mypid = getpid ();
 
   write_log ("qADSL daemon started, pid: %d\n", mypid);
 
   (void) signal (SIGTERM, daemon_sighandler);
-  if (-1 == lock_create (PID_FILE, mypid))
-  {
-    write_log ("Cannot write PID(%d) to file, %s - %s\n",
-	       (int)mypid, PID_FILE, strerror (errno));
-  }
+  result = lock_create (&config->pid_file, mypid);
+  if (result)
+    {
+      /* If we cannot create the logfile we do not allow the
+       * daemon to start since there is no way (other than ps)
+       * to communicate the PID to the outside world.
+       */
+      write_log ("Cannot write PID(%d) to file, %s - %s\n"
+		 "Aborting daemon - cannot communicate PID to outside world.\n",
+                 (int)mypid, config->pid_file, strerror (errno));
+      /* Bye bye */
+      return;
+    }
 
   while (1)
     {
+      /* Close all connections before going to sleep. */
       close (config->sockfd);
 
-      sleep (60 * config->daemon_delay);
+      /* Now, sleep before we reconnect and check status. */
+      sleep (timeout);
 
       config->sockfd = open_server (config->login_server, config->server_port, 0);
       if (-1 == config->sockfd)
-	{
-	  write_log ("Failed to contact server.");
-	  continue;
-	}
+        {
+          write_log ("Failed to contact server.");
+          continue;
+        }
       
-      /* The "ping" daemon only sends /sd/init */
-      if (-1 == pre_login (config))
-	{
-	  write_log ("Failed to bring up login page.");
-	  continue;
-	}
+      /* The "ping" daemon only reads /sd/init */
+      result = pre_login (config, 0);
+      if (result)
+        {
+          write_log ("%s: Failed to bring up login page.\n", PACKAGE_NAME);
+          continue;
+        }
+      /* Test if we're logged in already. */
+      if (strstr (config->get_msg, config->logged_in_string))
+        {
+          config->logged_in = 1;
+        }
       
       /* The login daemon also tries to login. */
-      if (config->daemon_type)
-	{
-	  log_login (config, 0);
-	}
+      if (config->daemon_type && !(config->logged_in))
+        {
+          log_login (config, 0);
+        }
     }
 }
 
