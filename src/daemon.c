@@ -113,13 +113,13 @@ daemon_sighandler (int signal)
   /* We quit on everything but HUP */
   if (SIGHUP != signal)
     {
-      write_log ("Got signal(%d), quitting!\n", signal);
+      write_logfile (LOG_INFO, "Got signal(%d), quitting.", signal);
 
       exit (0);
     }
   else
     {
-      write_log ("Got signal(%d), forcing relogin!\n", signal);
+      write_logfile (LOG_INFO, "Got signal(%d), forcing relogin.", signal);
     }
 }
 
@@ -129,8 +129,12 @@ daemon_sighandler (int signal)
  * autologin_daemon - This is what keeps us going
  * 
  * This thread function is the one responsible for keeping the
- * connection open. This function is called when a properly
+ * connection open.  This function is called when a properly
  * daemonized thread is started.
+ *
+ * XXX - Add nifty feature to log "Periodic status report: qadsl is CONNECTED"
+ * and "NOT CONNECTED".  This message should be logged every 60 minutes and
+ * could easily be made up from a multiple of the DELAY.
  */
 
 void
@@ -150,22 +154,23 @@ daemon_thread (config_data_t *config, int verbose)
        * daemon to start since there is no way (other than ps)
        * to communicate the PID to the outside world.
        */
-      write_log ("Cannot write PID(%d) to file, %s - %s\n"
-                 "Aborting daemon - cannot communicate PID to outside world.\n",
-                 (int)mypid, config->pid_file, strerror (errno));
+      ERROR ("Cannot write PID(%d) to file, %s: %s",
+             (int)mypid, config->pid_file, strerror (errno));
+      ERROR ("Aborting daemon - cannot communicate PID to outside world.");
+
       /* Bye bye */
       return;
     }
   else
     {
-      write_log ("Keep-alive daemon started, pid: %d\n", mypid);
+      write_logfile (LOG_INFO, "Keep-alive daemon started, pid: %d", mypid);
     }
 
   while (1)
     {
       if (latched_logged_in != config->logged_in)
         {
-          write_log ("Login %s\n", config->logged_in ? "successful." : "FAILED!");
+          write_logfile (LOG_INFO, "Login %s", config->logged_in ? "successful." : "FAILED!");
         }
       latched_logged_in = config->logged_in;
 
@@ -176,7 +181,7 @@ daemon_thread (config_data_t *config, int verbose)
       result = http_pre_login (config, verbose);
       if (result)
         {
-          LOG ("Failed to bring up login page.\n");
+          LOG ("Failed to bring up login page.");
           continue;
         }
 
@@ -190,20 +195,16 @@ daemon_thread (config_data_t *config, int verbose)
         }
 
       /* This stuff added for verbosity */
-      if (slept > 0)		/* Awoken by SIGHUP */
+      if (slept > 0)            /* Awoken by SIGHUP */
         {
           if (config->logged_in)
             {
-              write_log ("Forced relogin successful!\n");
+              write_logfile (LOG_INFO, "Forced relogin successful.");
             }
           else
             {
-              write_log ("Forced relogin FAILED!\n");
+              write_logfile (LOG_INFO, "Forced relogin FAILED!");
             }
         }
     }
 }
-
-
- 
-

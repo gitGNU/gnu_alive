@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "log.h"
 #include "getopt.h"
 #include "process.h"
 
@@ -50,7 +51,7 @@ main (int argc, char *argv[])
   config_data_t *config;
   char *pid_file  = NULL;
   char *conf_file = NULL;
-  int verbose = 0;
+  int verbose = MSG_NONE;
   op_t operation = NOP;
   char c;
 
@@ -63,6 +64,7 @@ main (int argc, char *argv[])
       {"status", no_argument, 0, 's'},
       {"version", no_argument, 0, 'V'},
       {"verbose", no_argument, 0, 'v'},
+      {"debug", no_argument, 0, 'd'},
       {"help", no_argument, 0, 'h'},
       {NULL, 0, NULL, 0}
     };
@@ -76,41 +78,46 @@ main (int argc, char *argv[])
     program_name = argv[0];
 
   while ((c = getopt_long (argc, argv,
-			   "l" 	/* login */
-			   "o"	/* logout */
-			   "c:"	/* conf-file */
-			   "p:"	/* pid-file */
-			   "s"	/* status */
-			   "v"	/* verbose */
-			   "V"	/* version */
-			   "h?", /* help */
-			   long_options, (int *)0)) != EOF)
+                           "l"  /* login */
+                           "o"  /* logout */
+                           "c:" /* conf-file */
+                           "p:" /* pid-file */
+                           "s"  /* status */
+                           "v"  /* verbose */
+                           "V"  /* version */
+                           "d"  /* debug */
+                           "h?", /* help */
+                           long_options, (int *)0)) != EOF)
     {
       switch (c)
         {
-        case 'l':		/* Login */
+        case 'l':               /* Login */
           operation = LOGIN;
           break;
 
-        case 'c':		/* Use this config file */
+        case 'c':               /* Use this config file */
           conf_file = optarg;
           break;
 
-        case 'o':		/* Logout */
+        case 'o':               /* Logout */
           operation = LOGOUT;
           break;
 
-        case 's':		/* Show qADSL status */
+        case 's':               /* Show qADSL status */
           operation = STATUS;
           break;
 
-        case 'v':		/* Set verbosity to high */
-          verbose = 2; 		/* 2 is for client side verbosity */
+          /* XXX - Maybe debug should imply regular verbosity? */
+        case 'd':               /* Debug log level */
+          verbose |= MSG_DEBUG;
+
+        case 'v':               /* Verbose log level */
+          verbose |= MSG_LOG;
           break;
 
-        case 'V':		/* Print version. */
+        case 'V':               /* Print version. */
           printf ("%s version %s\n", PACKAGE_NAME, PACKAGE_VERSION);
-	  exit (EXIT_SUCCESS);
+          exit (EXIT_SUCCESS);
           break;
 
         case 'p':
@@ -120,7 +127,7 @@ main (int argc, char *argv[])
         case '?':
         case 'h':
         default:
-	  usage (EXIT_SUCCESS);
+          usage (EXIT_SUCCESS);
           break;
         }
     }
@@ -131,12 +138,12 @@ main (int argc, char *argv[])
       usage (EXIT_FAILURE);
     }
 
-  config = config_load (conf_file);
+  config = config_load (conf_file, verbose);
   if (!config)
     {
       exit (EXIT_FAILURE);
     }
-  
+
   /* Override any qadsl.conf settings or configure --with-pidfile
    * if the user specified a different PID file on the command line.
    */
@@ -144,7 +151,7 @@ main (int argc, char *argv[])
     {
       config->pid_file = pid_file;
     }
-  
+
   /* Handle request */
   return process (config, operation, verbose);
 }
@@ -153,9 +160,9 @@ static void
 usage (int status)
 {
   printf ("%s - Auto-login & keep-alive for Internet connections.\n\n", 
-	  program_name);
+          program_name);
   printf ("Usage: %s [-h] [-c conffile] [-p pidfile] [-losvV]\n", 
-	  program_name);
+          program_name);
   printf ("\
 Options:\n\
 -l, --login               Try to login\n\

@@ -2,15 +2,30 @@
 
 * v1.3.2 to v1.3.3
 
+** --long-options implemented
+To support long options getopt_long() and getopt() has been made
+a part of the qadsl source tree.  This because long options are
+not available on all platforms, at least not NetBSD.
+
 ** -v now is verbose, and -V is version
 To more adhere to the style of GNU command line options the
 short options for verbose and version, -V and -v respectively,
 have been switched.  We apologise for the confusion this might
 create.
 
-** Better logs in system log (daemon.log in debian)
-When issuing -V (--verbose) to qadsl that switch should propagete
-to the daemon as well.
+** Vastly improved logging (/var/log/daemon.log in Debian)
+All calls to syslog() have been made more informative and clear.  Now
+they actually denote "SUCCESSFUL" and "FAILED" to mark the login
+status.  Also, when given -V (--verbose) that switch now propagates
+properly to the daemon.
+
+To swamp the logfiles even further another switch has been added, 
+--debug, that replaces the need to rebuild from source using
+--enable-debug to configure.  This switch adds a ridiculous amount of
+data to the logfiles and will improve the way people can debug their
+connection setups.
+
+Also, all state changes are now noticed by the daemon in the logfile.
 
 ** Forced relogin on already running daemon
 As suggested by Oden Eriksson <oden!eriksson()kvikkjokk!net> qadsl
@@ -18,32 +33,15 @@ now sends SIGHUP to an already started deamon when the client is
 started with --login. This forces the daemon to cancel its current
 delay and relogin. 
 
-Forced relogins are noticed explicitly in the logfile.
+Forced relogins are noted explicitly in the logfile.
 
 ** Cleaned up http.c
-The name space in http.c has been updated even further from the old
+The name-space in http.c has been updated even further from the old
 code.  It has been changed to http_server_init(), http_server_login()
 etc.
 
 Alot of the code has also seen face lifts and general simplificaions
 and some long overdue documentation.
-
-** More information in logfiles
-The calls to syslog() have been made more verbose so that they say
-"successful" and "FAILED" to mark the login status.  Also, when given
--V (verbose) that switch now propagates to the daemon so that the
-logfiles are really swamped with information.  
-
-To swamp the logfiles even further qadsl needs to be rebuilt with the
---enable-debug flag.  This is recommended for people who do not seem
-to get their connection to the login server working properly.
-
-Also, all state changes are now noticed by the daemon in the logfile.
-
-** --long-options implemented
-To support long options getopt_long() and getopt() has been made
-a part of the qadsl source tree.  This because long options are
-not available on all platforms, at least not NetBSD.
 
 ** Socket leak fix
 Mandrake RPM maintainer, Oden Eriksson <oden!eriksson()kvikkjokk!net>,
@@ -56,7 +54,7 @@ on error detection.
 
 ** Ugly bug in .conf file parser
 A really ugly bug in the .conf file parser made it impossible
-to parse the new style format.
+to parse the new style .conf file format.
 
 ** Supported architectures
 The list of supported arhitectures and dsitributions has grown.

@@ -1,4 +1,4 @@
-/* config.c - Interfaces with libconf and handles all program setup. 
+/* config.c - Interfaces with libconf and handles all program setup.
  *
  * Copyright (C) 2003, 2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  *
@@ -11,7 +11,7 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -28,10 +28,11 @@
 #include <strings.h>
 
 #include "conf.h"
+#include "log.h"
 
 
 /* Default values are for a standard Orbyte Wireless server.
- * Basically you only need to supply your username and a password 
+ * Basically you only need to supply your username and a password
  * in the qadsl.conf file.
  */
 param_t parms [] = {
@@ -78,7 +79,7 @@ static config_data_t __config_area;
 
 /* Fallback PID files, in order after PID_FILE */
 char *fallback_pid_files[] = {"/tmp/qadsl.pid", "~/qadsl.pid", NULL};
-   
+
 
 static char *
 config_locate (char *file)
@@ -87,7 +88,7 @@ config_locate (char *file)
 
   /* What conf file to use:
    *   ~/.qadslrc,
-   *   /etc/qadsl.conf or something 
+   *   /etc/qadsl.conf or something
    *   from the command line?
    */
   if (!file)
@@ -102,21 +103,21 @@ config_locate (char *file)
               FILE   *file;
               size_t  len;
               char   *filename, *user_conf;
-	      
+
               user_conf = USER_CONF;
               len       = strlen (user_home) + strlen (user_conf) + 2;
               filename  = (char *)malloc (len);
               if (filename)
                 {
                   strcpy (filename, user_home);
-		  
+
                   if (strncmp ("~/", user_conf, 2) == 0)
                     {
                       user_conf++;
                     }
-		  
+
                   strcat (filename, user_conf);
-		  
+
                   /* If ~/.qadslrc exists replace __config_area.conf_file */
                   if (NULL != (file = fopen (filename, "")))
                     {
@@ -141,16 +142,16 @@ config_locate (char *file)
   return __config_area.conf_file;
 }
 
-void print_parm (param_t *p)
+void print_parm (param_t *p, int verbose)
 {
   if (!p)
     return;
 
-  printf ("%s = %s\n", p->names[0], p->value);
+  DEBUG ("%s = %s", p->names[0], p->value);
 }
 
 config_data_t *
-config_load (char *file)
+config_load (char *file, int verbose)
 {
   int result;
   char *temp;
@@ -162,22 +163,21 @@ config_load (char *file)
   result = conf_read_file (parms, file);
   if (result < 0)
     {
-      fprintf (stderr, "Cannot find configuration file %s: %s\n", 
-               file, strerror (errno));
+      ERROR ("Cannot find configuration file %s: %s\n",
+             file, strerror (errno));
       return NULL;
     }
 
-#ifdef DEBUG
+  if (IS_DEBUG(verbose))
   {
     int i;
 
-    printf ("Read configuration:\n");  
+    DEBUG ("Read configuration:");
     for (i = 0; i < (sizeof (parms) / sizeof (parms[0])); i++)
       {
-	print_parm (&parms[i]);
+        print_parm (&parms[i], verbose);
       }
   }
-#endif	/* DEBUG */
 
   /* Setup the rest of the default settings */
   __config_area.login_server = conf_get_value (parms, "SERV");
@@ -185,7 +185,7 @@ config_load (char *file)
   __config_area.login_page   = conf_get_value (parms, "LOGIN_PAGE");
   __config_area.logout_page  = conf_get_value (parms, "LOGOUT_PAGE");
   __config_area.pid_file     = conf_get_value (parms, "PID_FILE");
-  
+
   __config_area.login_string_header = conf_get_value (parms, "LOGIN_STRING_HEADER");
   __config_area.username_key        = conf_get_value (parms, "USERNAME_KEY");
   __config_area.password_key        = conf_get_value (parms, "PASSWORD_KEY");
@@ -205,7 +205,7 @@ config_load (char *file)
     }
 
   __config_area.daemon_start = conf_get_bool (parms, "DEAMON_S");
-  
+
   temp = conf_get_value (parms, "DEAMON_T");
   if (!temp)
     {
@@ -226,22 +226,22 @@ config_load (char *file)
     {
       __config_area.daemon_delay = atoi (temp);
     }
-  
+
   __config_area.username     = conf_get_value (parms, "USER");
   __config_area.password     = conf_get_value (parms, "PASS");
 
   if (!__config_area.username || !__config_area.password)
     {
       if (!__config_area.username)
-        fprintf (stderr,
-                 "Failed to read your username from qADSL configuration file %s.\n",
-                 file);
+        {
+          ERROR ("Failed to read username from configuration file %s.\n", file);
+        }
       else
-        fprintf (stderr,
-                 "Failed to read your password from qADSL configuration file %s.\n",
-                 file);
-	
-      fprintf (stderr, "You must supply at least a username and password.\n");
+        {
+          ERROR ("Failed to read password from configuration file %s.\n", file);
+        }
+
+      ERROR ("You must supply at least a username and password.\n");
       return NULL;
     }
 

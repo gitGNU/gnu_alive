@@ -11,37 +11,99 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 #include <syslog.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <time.h>
 
-#include "config.h"
+/* Just an empty string that is not on the stack */
+static char *empty_string = "";
+
+
+void write_message (int level, char *fmt, ...)
+{
+  time_t current_time;
+  char *time_string;
+  int mypid;
+  va_list  ap;
+
+  mypid = getpid ();
+  time (&current_time);
+  time_string = ctime (&current_time);
+
+  if (!time_string)
+    time_string = empty_string;
+  else
+    time_string [strlen(time_string) - 1] = 0;
+
+  /* XXX - Temporarily removing the timestamp on console stuff. */
+  time_string = empty_string;   /* XXX */
+
+  va_start (ap, fmt);
+  switch (level)
+    {
+    case LOG_DEBUG:
+      printf ("%s DBG %s[%d]: ", time_string, PACKAGE_NAME, mypid);
+      vprintf (fmt, ap);
+      printf ("\n");
+      break;
+
+    case LOG_INFO:
+      printf ("%s INF %s[%d]: ", time_string, PACKAGE_NAME, mypid);
+      vprintf (fmt, ap);
+      printf ("\n");
+      break;
+
+    default:
+    case LOG_ERR:
+      fprintf (stderr, "%s ERR %s[%d]: ", time_string, PACKAGE_NAME, mypid);
+      vfprintf (stderr, fmt, ap);
+      fprintf (stderr, "\n");
+      break;
+    }
+  va_end (ap);
+}
 
 
 /**
- * write_log: Write a log message to the syslog.
- * @str: Log message
+ * write_logfile: Write a log message to the syslog.
+ * @level:        Importance of message,
+ * @fmt:          Log message.
+ *
+ * This function is used solely by the login daemon to communicate
+ * status, error conditions and for debugging when setting up or
+ * when problems arise.
+ *
+ * The @level can be any of [LOG_ERR, LOG_INFO, LOG_DEBUG].
+ *
+ * Note: This function is wrapped by macros in <log.h>
  */
 
 void
-write_log (char *fmt, ...)
+write_logfile (int level, char *fmt, ...)
 {
   char str[MAXDATASIZE]; /* XXX - What is this, a hardcoded value?! */
   va_list ap;
 
   va_start (ap, fmt);
-  vsnprintf (str, 80, fmt, ap);
-  str[sizeof (str)-1] = '\0';
+  vsnprintf (str, MAXDATASIZE, fmt, ap);
+  str [sizeof (str) - 1] = 0;
   va_end (ap);
 
   openlog (PACKAGE_NAME, LOG_PID | LOG_CONS, LOG_DAEMON);
-  syslog (LOG_INFO, str);
+  syslog (level, str);
   closelog ();
 }

@@ -11,7 +11,7 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -27,7 +27,7 @@
 #include "conf.h"
 #include "config.h"
 
-#ifdef DEBUG
+#ifdef YYDEBUG
 #define log(args...) fprintf (stderr, args);
 #else
 #define log(args...)
@@ -41,8 +41,8 @@ extern int yylex (void);
 #define YYPARSE_PARAM list
  */
 
-#if 0 /* Not yet reentrant ... 
-       * reverting in the meantime for the sake of cygwin port 
+#if 0 /* Not yet reentrant ...
+       * reverting in the meantime for the sake of cygwin port
        */
 extern int yyget_lineno (void);
 #define yylineno      yyget_lineno ()
@@ -68,11 +68,11 @@ int yyerror (char *s)
     log ("Error on line %d in config file, "		\
 	 "%s is not a valid identifier.\n",		\
 	 yylineno, key)
- 
+
 %}
 
 /* %pure-parser */
-%union 
+%union
 {
 	char *str;
 }
@@ -95,6 +95,5 @@ tuple  : ID EQU ARG             {log ("\nBison(ID:%s)(ARG:%s)", $1, $3);
        | ID ARG                 {log ("%s(%s)\n", $1, $2);
                                  conf_set ($1, $2);}
        ;
- 
-%%
 
+%%

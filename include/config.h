@@ -17,7 +17,7 @@
 #define _INCLUDE_HPUX_SOURCE
 #include <sys/types.h>
 #endif
-                                                                                               
+
 struct config_data
 {
   char *username;
@@ -64,6 +64,6 @@ struct config_data
 
 typedef struct config_data config_data_t;
 
-config_data_t *config_load (char *file);
+config_data_t *config_load (char *file, int verbose);
 
-#endif	/* __CONFIG_H__ */
+#endif  /* __CONFIG_H__ */

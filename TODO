@@ -2,6 +2,11 @@
 
 * TODO List - Items listed in falling priority order - first most important
 
+* Maybe debug should imply regular verbosity?
+When issuing --debug on the command line that should
+perhaps imply that ALL messages be printed out? Regardless
+of weather --verbose has been given or not?
+
 * Proper ICMP ping when DAEMON_TYPE set to PING.
 
 * lib/conf/parser.y: Add YYERROR when conf_set() fails!

@@ -11,7 +11,7 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -35,29 +35,45 @@
 #include "log.h"
 
 
-int 
+int
 process (config_data_t *config, op_t operation, int verbose)
 {
   int   result  = 0;
   pid_t running = lock_read (&config->pid_file);
-  
+
   switch (operation)
     {
       /* Login, and perhaps start the autologin daemon... */
     case LOGIN:
       if (running)
         {
-	 /* Force the daemon to wake up earlier and relogin. */
-	 result = kill (running, SIGHUP);
-	 if (result)
-	   {
-	     perror (PACKAGE_NAME ": Kicked but missed the login daemon.\n" PACKAGE_NAME ": Maybe a stale lockfile is present and the damon is not running?\n" PACKAGE_NAME ": Or maybe the process is running as root, but you are not?\n" PACKAGE_NAME);
-	     return EXIT_FAILURE;
-	   }
-	 else
-	   {
-	     return EXIT_SUCCESS;
-	   }
+         /* Force the daemon to wake up earlier and relogin. */
+          LOG ("Already running on pid %d, forcing relogin.", running);
+         result = kill (running, SIGHUP);
+         if (result)
+           {
+             ERROR ("kill(%d, SIGHUP) failed: %s\n\
+Maybe a stale lockfile (%s) is present and the damon is not running?",
+                    running, strerror(errno),
+                    config->pid_file);
+
+             LOG ("Trying to remove possibly stale lockfile (%s)...",
+                  config->pid_file);
+             result = lock_remove (config->pid_file);
+             if (result)
+               {
+                 ERROR ("Couldn't remove possible stale lockfile (%s).\n\
+Maybe the process (%d) is running as root, but you are not?",
+                        config->pid_file,
+                        running);
+
+                 return EXIT_FAILURE;
+               }
+           }
+         else
+           {
+             return EXIT_SUCCESS;
+           }
         }
 
       result = http_pre_login (config, verbose);
@@ -67,25 +83,45 @@ process (config_data_t *config, op_t operation, int verbose)
           if (http_test_if_logged_in (config))
             {
               /* Nope, login first. */
+              LOG ("First check, not logged in yet.");
               result = http_internet_login (config, verbose);
+              if (result)
+                {
+                  ERROR ("To diagnose, try the options --debug --verbose");
+                }
+              else
+                {
+                  if (!http_test_if_logged_in (config))
+                    {
+                      LOG ("SUCCESSFUL LOGIN");
+                    }
+                  else
+                    {
+                      LOG ("LOGIN FAILED - To diagnose, try the options --debug --verbose");
+                    }
+                }
+            }
+          else
+            {
+              LOG ("Already logged in.");
             }
         }
       if (config->daemon_start)
         {
           if (lock_remove (config->pid_file))
             {
-	      /* Non-fatal error, it's OK if we run the first time. */
+              /* Non-fatal error, it's OK if we run the first time. */
               if (EACCES == errno)
                 {
-                  fprintf (stderr, "%s: Failed to delete old PID file, %s - %s\n", 
-			   PACKAGE_NAME, config->pid_file, strerror (errno));
+                  ERROR ("Failed to delete old PID file, %s - %s",
+                         config->pid_file, strerror (errno));
                 }
             }
-          
+
           /* Always try to fork off the daemon. */
           if (daemonize () == 0)
             {
-              daemon_thread (config, verbose ? LOG_FILE : LOG_NONE);
+              daemon_thread (config, verbose | MSG_FILE);
             }
         }
       break;
@@ -94,28 +130,28 @@ process (config_data_t *config, op_t operation, int verbose)
     case LOGOUT:
       if (!running)
         {
-          fprintf (stderr, "No active session found, will logout anyway.\n");
+          ERROR ("No active session found, will logout anyway.");
         }
       else
         {
-	  /* Send SIGTERM to gracefully let the daemon process .. exit. */
-	  kill (running, SIGTERM);
+          /* Send SIGTERM to gracefully let the daemon process .. exit. */
+          kill (running, SIGTERM);
           lock_remove (config->pid_file);
         }
       result = http_internet_logout (config, verbose);
       break;
 
     case NOP:
-      printf ("Neither login or logout selected. Reverting to query status.\n");
+      LOG ("Neither login or logout selected. Reverting to query status.");
     default:
     case STATUS:
       if (running)
         {
-          printf ("%s running with PID = %d\n", PACKAGE_NAME, running);
-        } 
+          LOG ("login daemon running with PID = %d", running);
+        }
       else
         {
-          printf ("%s not running.\n", PACKAGE_NAME);
+          LOG ("login daemon not running.");
         }
 
       result = 0;

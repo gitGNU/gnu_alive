@@ -1,26 +1,50 @@
+/* log.h - Handles all communication with the outside world.
+ */
 #ifndef __LOG_H__
 #define __LOG_H__
 
-#include <stdio.h>
+#include <syslog.h>
 
-enum {LOG_NONE = 0, LOG_FILE, LOG_CONSOLE};
+#define MSG_NONE     0
+#define MSG_LOG      1
+#define MSG_FILE     2
+#define MSG_DEBUG    4
 
-void write_log (char *fmt, ...);
+#define IS_DEBUG(v) (MSG_DEBUG & (v))
 
-#define LOG(args...)				\
-  if (verbose == 2)				\
-    printf (args);				\
-  else if (verbose == 1)			\
-    write_log (args);				\
-  else						\
+void write_message (int level, char *fmt, ...);
+void write_logfile (int level, char *fmt, ...);
+
+#define DEBUG(args...)                             \
+  if (MSG_DEBUG & verbose)                         \
+    {                                              \
+      if (MSG_FILE & verbose)                      \
+        write_logfile (LOG_DEBUG, args);           \
+      else                                         \
+        write_message (LOG_DEBUG, args);           \
+    }                                              \
+  else                                             \
     {}
 
-#define ERROR(args...)				\
-  if (verbose == 2)				\
-    fprintf (stderr, args);			\
-  else if (verbose == 1)			\
-    write_log (args);				\
-  else						\
+#define LOG(args...)                               \
+  if (MSG_LOG & verbose)                           \
+    {                                              \
+      if (MSG_FILE & verbose)                      \
+        write_logfile (LOG_INFO, args);            \
+      else                                         \
+        write_message (LOG_INFO, args);            \
+    }                                              \
+  else                                             \
     {}
 
-#endif /* __LOG_H__ */
+/* We always want the errors to creep up, regardless
+ * of the verbosity level. Only figure out if it
+ * goes to the logfile or stderr.
+ */
+#define ERROR(args...)                             \
+  if (MSG_FILE == verbose)                         \
+    write_logfile (LOG_ERR, args);                 \
+  else                                             \
+    write_message (LOG_ERR, args);
+
+#endif /* __MSG_H__ */
