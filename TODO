@@ -77,7 +77,8 @@ If they don't exist on the platform. Put these things in lib/ and
 make them be checked for by configure. (Autoproject adds such stuff I
 think). 
 
-See fetchmail package for cut-n-paste.
+Done: libost.a created for this purpose in lib/. Currently only
+strcasecmp() will be added when not available on the system.
 
 * Configure checks for sysconf and friends. Look at Zsh.
 http://www.zsh.org/mla/workers/2000/msg03388.html
