@@ -5,31 +5,51 @@
 ** -v now is verbose, and -V is version
 To more adhere to the style of GNU command line options the
 short options for verbose and version, -V and -v respectively,
-have been switched. We apologise for the confusion this might
+have been switched.  We apologise for the confusion this might
 create.
 
 ** Better logs in system log (daemon.log in debian)
 When issuing -V (--verbose) to qadsl that switch should propagete
 to the daemon as well.
 
-** -l generate SIGHUP on already started deamon
+** Forced relogin on already running daemon
+As suggested by Oden Eriksson <oden!eriksson()kvikkjokk!net> qadsl
+now sends SIGHUP to an already started deamon when the client is
+started with --login. This forces the daemon to cancel its current
+delay and relogin. 
 
-** SIGHUP to kill current delay and force relogin
+Forced relogins are noticed explicitly in the logfile.
 
 ** Cleaned up http.c
-The name space in http.c has been updated from the old code. It has
-been changed to http_server_init(), http_server_login() etc.
+The name space in http.c has been updated even further from the old
+code.  It has been changed to http_server_init(), http_server_login()
+etc.
+
+Alot of the code has also seen face lifts and general simplificaions
+and some long overdue documentation.
 
 ** More information in logfiles
-The calls to syslog() have been made more verbose so that they
-say "successful" and "FAILED" to mark the login status. Also,
-when given -V (verbose) that switch now propagates to the daemon
-so that the logfiles are really swamped with information.
+The calls to syslog() have been made more verbose so that they say
+"successful" and "FAILED" to mark the login status.  Also, when given
+-V (verbose) that switch now propagates to the daemon so that the
+logfiles are really swamped with information.  
+
+To swamp the logfiles even further qadsl needs to be rebuilt with the
+--enable-debug flag.  This is recommended for people who do not seem
+to get their connection to the login server working properly.
+
+Also, all state changes are now noticed by the daemon in the logfile.
 
 ** --long-options implemented
 To support long options getopt_long() and getopt() has been made
-a part of the qadsl source tree. This because long options are
-not available on at least NetBSD.
+a part of the qadsl source tree.  This because long options are
+not available on all platforms, at least not NetBSD.
+
+** Socket leak fix
+Mandrake RPM maintainer, Oden Eriksson <oden!eriksson()kvikkjokk!net>,
+reported too many open sockets from a long running qadsl process.
+Turned out to be a socket leak that occurred when bailing out early
+on error detection.
 
 
 * v1.3.1 to v1.3.2
@@ -57,11 +77,11 @@ being missing from the distribution.
 
 ** NetBSD fixes
 All qadsl releases from 1.3.1 onwards should now build properly on
-NetBSD. Courtesy of jakov.
+NetBSD.  Courtesy of jakov.
 
 ** GNU/Hurd fixes
 All qadsl releases from 1.3.1 onwards should now build properly on
-GNU/Hurd. Thanks to Gürkan Sengün <gurkan()linuks!mine!nu> for
+GNU/Hurd.  Thanks to Gürkan Sengün <gurkan()linuks!mine!nu> for
 providing a testing machine, http://hurd.she.kicks-ass.org:8084/
 
 * v1.2.1 to v1.3.0
@@ -72,16 +92,30 @@ next big step - extension - qadsl is going places.
 
 ** .conf file parser in CFG
 Bison and Flex has been called upon to do their magic on the .conf 
-file format. This has enabled a much more free and extensible file
+file format.  This has enabled a much more free and extensible file
 format.
 
 ** http handling improved
-State management has been improved to be more fault tolerant. As well
+State management has been improved to be more fault tolerant.  As well
 as also being cleaned up immensely.
 
 This means more stability, no more sudden logouts just because your
-ISP temporarily disabled logins. We now patiently wait for the login
+ISP temporarily disabled logins.  We now patiently wait for the login
 server (or your network card or whatever) to be reactivated.
 
+** Debian patches included
+Just like we have a qadsl.spec file (for .rpm's) we also include the
+Debian scripts to build .deb files.
 
+Mostly done, needs testing by others.  /Joachim 2004-01-20
 
+** Failover lock file support
+If PID_FILE does not exist or cannot be opened for reading/writing
+we need to find out other ways to play.  
+
+Mostly done, needs testing.  /Joachim 2004-01-20
+
+** More stubborn when login fails ... 
+qadsl does not exit(1) at every possible juncture anymore.
+
+Mostly done.  /Joachim 2004-01-20
