@@ -45,7 +45,7 @@ http_open_server (char *name, short port, int verbose)
   he = gethostbyname (name);
   if (he == NULL)
     {
-      ERROR("Cannot find login host: %s\n", name);
+      ERROR("Cannot find (DNS) login server: %s\n", name);
       result = -1;
     }
   else
@@ -70,12 +70,12 @@ http_open_server (char *name, short port, int verbose)
           /* Connect to login server */
           if (verbose)
             {
-              LOG("Connecting to %s(0x%X)\n", name, (int)he->h_addr);
+              LOG("Connecting to login server: %s(0x%X)\n", name, (int)he->h_addr);
             }
           result = connect (sockfd, (struct sockaddr *) &address, sizeof (address));
           if (-1 == result && verbose)
             {
-              ERROR("Failed to connect to login host: %s\n\t==>%s",
+              ERROR("Failed to connect to login server (%s): %s\n",
                     name, strerror (errno));
             }
           else
@@ -112,8 +112,8 @@ http_pre_login (config_data_t *config, int verbose)
   config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
   if (config->sockfd < 0)
     {
-      ERROR ("Failed to connect to login server: %s\n",
-             strerror (errno));
+      ERROR ("Failed to connect to login server (%s): %s\n",
+             config->login_server, strerror (errno));
       return -1;
     }
 
@@ -196,8 +196,8 @@ http_internet_login (config_data_t *config, int verbose)
   config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
   if (config->sockfd < 0)
     {
-      ERROR("Failed to connect to login server: %s\n",
-            strerror (errno));
+      ERROR("Failed to connect to login server (%s): %s\n",
+            config->login_server, strerror (errno));
       return -1;
     }
 #if 0
@@ -212,8 +212,8 @@ http_internet_login (config_data_t *config, int verbose)
   temp = (char *) malloc (length);
   if (!temp)
     {
-      ERROR ("Failed to allocate memory: %s\n",
-             strerror (errno));
+      ERROR ("Failed to allocate memory (%d bytes): %s\n",
+             length, strerror (errno));
       return -1;
     }
 
@@ -241,8 +241,8 @@ http_internet_login (config_data_t *config, int verbose)
   if (!login_string)
     {
       free (temp);
-      ERROR ("Failed to allocate memory: %s\n",
-             strerror (errno));
+      ERROR ("Failed to allocate memory (%d bytes): %s\n",
+             length, strerror (errno));
       return -1;
     }
 
@@ -288,7 +288,8 @@ http_internet_login (config_data_t *config, int verbose)
 
   if (-1 == result)
     {
-      ERROR("Send login request: %s\n", strerror(errno));
+      ERROR("Send login request to login server (%s): %s\n", 
+	    config->login_server, strerror(errno));
       close (config->sockfd);
       return -1;
     }
@@ -347,7 +348,8 @@ http_internet_logout (config_data_t *config, int verbose)
       config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
       if (config->sockfd < 0)
         {
-          perror ("Failed to connect to login server");
+          ERROR("Failed to connect to login server (%s): %s\n",
+		config->login_server, strerror (errno));
           return -1;
         }
 
@@ -369,7 +371,7 @@ http_internet_logout (config_data_t *config, int verbose)
       
       if (-1 == result)
         {
-          ERROR("Send logout request: %s\n", strerror(errno));
+          ERROR("Logout request failed: %s\n", strerror(errno));
           close (config->sockfd);
           return -1;
         }
