@@ -2,12 +2,12 @@
  *
  * Copyright (C) 2003, 2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  *
- * qADSL is free software; you can redistribute it and/or modify it
+ * GNU Alive is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * qADSL is distributed in the hope that it will be useful, but
+ * GNU Alive is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -21,6 +21,7 @@
 #include "config.h"
 #endif
 
+#include <assert.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -77,61 +78,133 @@ param_t parms [] = {
 /* This is for global data. */
 static config_data_t __config_area;
 
-/* Fallback PID files, in order after PID_FILE */
-char *fallback_pid_files[] = {"/tmp/qadsl.pid", "~/qadsl.pid", NULL};
+/* Fallback PID files, in order after PID_FILE
+ * Check in reverse order.
+ */
+char *fallback_pid_files[] = {"/tmp/alive.pid",
+                              "~/alive.pid",
+                              "/tmp/qadsl.pid",
+                              "~/qadsl.pid",
+                              NULL};
 
+/* What conf file to use:
+ *   ~/.qadslrc,
+ *   /etc/qadsl.conf
+ *   ~/.aliverc
+ *   /etc/alive.conf
+ *   from the command line?
+ */
+char *possible_conf_files[] = {"~/.qadslrc",
+                               "/etc/qadsl.conf",
+                               "~/.aliverc",
+                               "/etc/alive.conf",
+                               NULL};
 
-static char *
-config_locate (char *file)
+/**
+ * does_file_exist - Answers the question if the file exists.
+ * @file: File to look for.
+ *
+ * Returns: Numerical one (1) if @file exists, otherwise zero (0).
+ */
+
+static int does_file_exist (char *file)
 {
-  char *user_home;
+  FILE *fp;
+  int result = 0;
 
-  /* What conf file to use:
-   *   ~/.qadslrc,
-   *   /etc/qadsl.conf or something
-   *   from the command line?
-   */
-  if (!file)
+  fp = fopen (file, "r");
+  if (NULL != fp)
     {
-      __config_area.conf_file = strdup (GLOBAL_CONF);
+      fclose (fp);
+      result = 1;
+    }
 
-      if (strncmp ("/", USER_CONF, 1) != 0)
+  return result;
+}
+
+
+/**
+ * tilde_expand - Expands ~/ to /home/$LOGNAME/.
+ * @file: File path to expand.
+ *
+ * This method simply replaces the ~/ in a @file path,
+ * but only if the first char is ~.  If not the method
+ * returns a strdup()'ed @file string.
+ *
+ * Returns: NULL only when memory is exhausted, otherwise it
+ *          returns a malloc'ed tilde expanded file name.
+ */
+
+static char *tilde_expand (char *file, int verbose)
+{
+  char *new_file;
+  char *user_home = getenv("HOME");
+
+  assert (NULL != file);
+  assert (NULL != user_home);
+
+  if ('~' != file[0])
+    {
+      /* Not a tilde directory... pretend it was. */
+      return strdup (file);
+    }
+
+  new_file = (char *)malloc (strlen (user_home) +
+                             strlen (file));
+  if (!new_file)
+    {
+      ERROR ("Failed allocating space for file name");
+      return NULL;
+    }
+
+  strcpy (new_file, user_home);
+  strcat (new_file, &file[1]);
+
+  return new_file;
+}
+
+/**
+ * config_locate - Returns name of conf file to use.
+ * @file: Command line specified conf file, or NULL if none.
+ *
+ * This method returns the name of the conf file to use.  It achieves
+ * this by first inspecting the input file, and if that is invalid
+ * moves on to try and find the highest prioritized file.
+ *
+ * Returns: The name of the config file to use.
+ */
+
+static char *config_locate (char *file, int verbose)
+{
+  if (file)
+    {
+      if (does_file_exist(file))
         {
-          user_home = getenv ("HOME");
-          if (user_home)
-            {
-              FILE   *file;
-              size_t  len;
-              char   *filename, *user_conf;
-
-              user_conf = USER_CONF;
-              len       = strlen (user_home) + strlen (user_conf) + 2;
-              filename  = (char *)malloc (len);
-              if (filename)
-                {
-                  strcpy (filename, user_home);
-
-                  if (strncmp ("~/", user_conf, 2) == 0)
-                    {
-                      user_conf++;
-                    }
-
-                  strcat (filename, user_conf);
-
-                  /* If ~/.qadslrc exists replace __config_area.conf_file */
-                  if (NULL != (file = fopen (filename, "")))
-                    {
-                      fclose (file);
-                      free (__config_area.conf_file);
-                      __config_area.conf_file = filename;
-                    }
-                }
-            }
+          __config_area.conf_file = strdup (file);
+        }
+      else
+        {
+          ERROR("Requested CONF file: \"%s\" does not exist.", file);
+          file = NULL;
         }
     }
-  else
+
+  /* If no file was specified or @file didn't exist... */
+  if (!file)
     {
-      __config_area.conf_file = strdup (file);
+      int i;
+
+      for (i = 0; possible_conf_files [i]; i++)
+        {
+          file = tilde_expand (possible_conf_files[i], verbose);
+          DEBUG("Looking for CONF file: %s", file)
+          if (does_file_exist (file))
+            {
+              __config_area.conf_file = file;
+              break;
+            }
+          free (file);
+        }
     }
 
   if (!__config_area.conf_file)
@@ -139,13 +212,27 @@ config_locate (char *file)
       return NULL;
     }
 
+  /* Old config file? */
+  if (strstr (file, "qadsl"))
+    {
+      char *pos, *temp = strdup (file);
+      pos = strstr (temp, "qadsl");
+      memcpy (pos, "alive", 5);
+
+      ERROR("Old conf file: %s, rename it to %s.", file, temp);
+      free (temp);
+    }
+  else
+    {
+      DEBUG("Using %s for configuration data.", file);
+    }
+
   return __config_area.conf_file;
 }
 
 void print_parm (param_t *p, int verbose)
 {
-  if (!p)
-    return;
+  if (!p) return;
 
   DEBUG ("%s = %s", p->names[0], p->value);
 }
@@ -157,13 +244,18 @@ config_load (char *file, int verbose)
   char *temp;
 
   /* Setup default configuration */
-  file = config_locate (file);
+  file = config_locate (file, verbose);
+  if (!file)
+    {
+      ERROR("Cannot find any config file, please create one.\n");
+      return NULL;
+    }
 
   /* Fill in the blanks by reading the conf file */
   result = conf_read_file (parms, file);
   if (result < 0)
     {
-      ERROR ("Cannot find configuration file %s: %s\n",
+      ERROR (_("Cannot find configuration file %s: %s\n"),
              file, strerror (errno));
       return NULL;
     }
@@ -172,7 +264,7 @@ config_load (char *file, int verbose)
   {
     int i;
 
-    DEBUG ("Read configuration:");
+    DEBUG (_("Read configuration:"));
     for (i = 0; i < (sizeof (parms) / sizeof (parms[0])); i++)
       {
         print_parm (&parms[i], verbose);
@@ -234,14 +326,14 @@ config_load (char *file, int verbose)
     {
       if (!__config_area.username)
         {
-          ERROR ("Failed to read username from configuration file %s.\n", file);
+          ERROR (_("Failed to read username from configuration file %s.\n"), file);
         }
       else
         {
-          ERROR ("Failed to read password from configuration file %s.\n", file);
+          ERROR (_("Failed to read password from configuration file %s.\n"), file);
         }
 
-      ERROR ("You must supply at least a username and password.\n");
+      ERROR (_("You must supply at least a username and password.\n"));
       return NULL;
     }
 

@@ -1,14 +1,14 @@
-/* lock.c - Lock file management for qADSL.
+/* lock.c - Lock file management for GNU Alive.
  *
  * Copyright (C) 2003, 2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  * Copyright (C) 2002, 2003 Torgny Lyon <torgny()enterprise!hb!se>
  *
- * qADSL is free software; you can redistribute it and/or modify it
+ * GNU Alive is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * qADSL is distributed in the hope that it will be useful, but
+ * GNU Alive is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -30,6 +30,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 
+#include "log.h"
+
 extern int errno;
 extern char *fallback_pid_files[];
 
@@ -50,8 +52,7 @@ extern char *fallback_pid_files[];
  *          -1 on error.
  */
 
-int
-lock_create (char **file, pid_t pid)
+int lock_create (char **file, pid_t pid)
 {
   int fd, fallback;
   FILE *fp;
@@ -152,8 +153,7 @@ lock_create (char **file, pid_t pid)
  * Returns: 0 if not locked and -1 on error, otherwise the PID.
  */
 
-pid_t
-lock_read (char **file)
+pid_t lock_read (char **file, int verbose)
 {
   int fd, fallback;
   FILE *fp;
@@ -165,6 +165,8 @@ lock_read (char **file)
   fallback = 0;
   do
     {
+      DEBUG("Looking for PID file: %s.", *file);
+
       fd = open(*file, O_RDONLY);
       if (-1 == fd)
         {
@@ -172,12 +174,13 @@ lock_read (char **file)
           if (NULL == *file)
             {
                /* This makes us depend on procps and coreutils in GNU/Linux
-		* but only coreutils in GNU/Hurd.
-		* Question is: Do we want this?
-		* Answer:      No, do not allow daemon to start if no lockfile.
-		*/
+                * but only coreutils in GNU/Hurd.
+                * Question is: Do we want this?
+                * Answer:      No, do not allow daemon to start if no lockfile.
+                */
 /*                system ("ps --no-heading -C qadsl | head -1 | cut -f 1 -d ' ' >"); */
 
+              DEBUG("Cannot find any PID file, daemon not running.");
               if (ENOENT == errno)
                 return 0;
               else
@@ -218,6 +221,18 @@ lock_read (char **file)
   fscanf(fp, "%d", &pid);
   fclose(fp);
   close(fd);
+
+  /* Old version running?
+   * XXX - Maybe prompt user to upgrade/restart/reload daemon?
+   */
+  if (strstr (*file, "qadsl"))
+    {
+      ERROR("Old qadsl version running: %s, with PID = %d", *file, pid);
+    }
+  else
+    {
+      DEBUG("Found PID file %s with PID = %d", *file, pid);
+    }
 
   return pid;
 }
