@@ -110,12 +110,19 @@ daemonize (void)
 static void
 daemon_sighandler (int signal)
 {
-  write_log ("%s[%d]: Got signal(%d), quiting!\n", 
-             PACKAGE_NAME, getpid (), signal);
-
   /* We quit on everything but HUP */
   if (SIGHUP != signal)
-    exit (0);
+    {
+      write_log ("%s[%d]: Got signal(%d), quitting!\n", 
+		 PACKAGE_NAME, getpid (), signal);
+
+      exit (0);
+    }
+  else
+    {
+      write_log ("%s[%d]: Got signal(%d), forcing relogin!\n", 
+		 PACKAGE_NAME, getpid (), signal);
+    }
 }
 
 
@@ -129,13 +136,16 @@ daemon_sighandler (int signal)
  */
 
 void
-daemon_thread (config_data_t *config)
+daemon_thread (config_data_t *config, int verbose)
 {
-  int result;
+  int result, slept;
   unsigned int timeout = 60 * config->daemon_delay;
   pid_t mypid = getpid ();
 
-  write_log ("qADSL daemon started, pid: %d\n", mypid);
+  write_log ("%s: Login %s. Keep-alive daemon started, pid: %d\n", 
+	     PACKAGE_NAME,
+	     config->logged_in ? "successful" : "FAILED",
+	     mypid);
 
   (void) signal (SIGTERM, daemon_sighandler);
   (void) signal (SIGHUP, daemon_sighandler);
@@ -147,9 +157,9 @@ daemon_thread (config_data_t *config)
        * daemon to start since there is no way (other than ps)
        * to communicate the PID to the outside world.
        */
-      write_log ("Cannot write PID(%d) to file, %s - %s\n"
+      write_log ("%s[%d]: Cannot write PID(%d) to file, %s - %s\n"
 		 "Aborting daemon - cannot communicate PID to outside world.\n",
-                 (int)mypid, config->pid_file, strerror (errno));
+                 PACKAGE_NAME, (int)mypid, (int)mypid, config->pid_file, strerror (errno));
       /* Bye bye */
       return;
     }
@@ -160,10 +170,10 @@ daemon_thread (config_data_t *config)
       close (config->sockfd);
 
       /* Now, sleep before we reconnect and check status. */
-      sleep (timeout);
+      slept = sleep (timeout);
 
       /* The "ping" daemon only reads /sd/init */
-      result = http_pre_login (config, 0);
+      result = http_pre_login (config, verbose);
       if (result)
         {
           write_log ("%s: Failed to bring up login page.\n", PACKAGE_NAME);
@@ -178,8 +188,18 @@ daemon_thread (config_data_t *config)
       /* The login daemon also tries to login. */
       if (config->daemon_type && !(config->logged_in))
         {
-          http_log_login (config, 0);
+          http_log_login (config, verbose);
         }
+
+      if (slept > 0)		/* Awoken by SIGHUP */
+	if (config->logged_in)
+	  {
+	    write_log ("%s: Forced relogin successful!\n", PACKAGE_NAME);
+	  }
+	else
+	  {
+	    write_log ("%s: Forced relogin FAILED!\n", PACKAGE_NAME);
+	  }
     }
 }
 
