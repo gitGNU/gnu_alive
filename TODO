@@ -25,9 +25,17 @@ be created. Thus we do not allow the daemon to be started!
 
 Brilliant! :-)
 
+Mostly done, needs testing. /Joachim 2004-01-20
+
 * Be more stubborn when login fails ... 
 Don't exit(1) at every possible juncture.
-Redo/cleanup the netfunc code some more.
+Redo/cleanup the netfunc/http code some more.
+
+Mostly done. /Joachim 2004-01-20
+
+* Cleanup http.c
+The name space in http.c is the old code. Should look better if
+changed to http_server_init(), http_server_login() etc.
 
 * Add some intelligent way of "probing" for the login server.
 I.e., add a list of known login servers perhaps?
@@ -49,21 +57,27 @@ This is basically a very simplified HTML parser that only
 looks for and parses <input ...> statements. Should be 
 easy enough to implement.
 
+Alpha code in vmlinux.org CVS. /Joachim 2004-01-20
+
 * Always search for XXX for bisarre spots that need attention.
 This is btw the preferred way to indicate stuff like this to others...
 
 * I18N support.
+At least support Swedish with gettext, most of the time it is only
+Swedes who use qadsl anyway.
 
 * Add support for getopt_long() and strndup()
 If they don't exist on the platform. Put these things in lib/ and
-make them be checked for by configure.
+make them be checked for by configure. (Autoproject adds such stuff I think).
 
 * Configure checks for sysconf and friends. Look at Zsh.
 http://www.zsh.org/mla/workers/2000/msg03388.html
 
 * Include Debian patches
-Just like we have a qadsl.spec file we should also include the
-debian stuff - all I ever use is debian (except from work) -
+Just like we have a qadsl.spec file (for .rpm's) we should also
+include the debian stuff - all I ever use is debian (except at work) -
 so why not?
+
+Mostly done, needs testing by others. /Joachim 2004-01-20
 
 
