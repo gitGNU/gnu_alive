@@ -1,6 +1,6 @@
-sbin_PROGRAMS = qadsl
+sbin_PROGRAMS = alive
 
-qadsl_SOURCES = config.c  ../include/config.h  \
+alive_SOURCES = config.c  ../include/config.h  \
                 daemon.c  ../include/daemon.h  \
                 http.c    ../include/http.h    \
                 lock.c    ../include/lock.h    \
@@ -8,5 +8,5 @@ qadsl_SOURCES = config.c  ../include/config.h  \
                 process.c ../include/process.h \
                 main.c    ../include/settings.h.in
 
-qadsl_LDFLAGS = -L$(top_builddir)/lib
-qadsl_LDADD   = -lconf -lost
+alive_LDFLAGS = -L$(top_builddir)/lib
+alive_LDADD   = -lconf -lost @LIBINTL@ @ALLOCA@
