@@ -20,7 +20,7 @@ typedef enum {false = 0, true = 1} bool;
 struct parameter
 {
   /* Possible names for a tuple.
-   * Primary name is first in the list, 
+   * Primary name is first in the list,
    * followed by any and all aliases.
    */
   char *names[10];    /* XXX - Hard limits are never good... */

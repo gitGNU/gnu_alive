@@ -5,7 +5,7 @@
 
 
 int   lock_create (char **file, pid_t pid);
-pid_t lock_read   (char **file);
+pid_t lock_read   (char **file, int verbose);
 int   lock_remove (char *file);
 
 
