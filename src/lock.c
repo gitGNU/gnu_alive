@@ -1,7 +1,7 @@
 /* lock.c - Lock file management for qADSL.
  * 
  * Copyright (C) 2003 Joachim Nilsson <joachim()gnufans!org>
- * Copyright (C) 2002,03 Torgny Lyon <torgny()enterprise!hb!se>
+ * Copyright (C) 2002, 2003 Torgny Lyon <torgny()enterprise!hb!se>
  *
  * qADSL is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ extern char *fallback_pid_files[];
  * auto-login daemon to the specified PID @file.
  *
  * If the specified @file does not exist a set of backup
- * alternatives should be used. If neither of these are
+ * alternatives should be used. If neither of these is
  * available (read-only file system?) it is OK to return error.
  *
  * Returns: A positive integer representing the PID, or
