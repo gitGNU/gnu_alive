@@ -7,12 +7,14 @@
 @setchapternewpage odd
 @c %**end of header
 
-@set VERSION 0.1.0
+@set VERSION 1.3.0
 
 @ifinfo
-This file documents the @command{qadsl} command which Auto-login & keep-alive for Internet connections.
+This file documents the @command{qadsl} utility. An auto-login &
+keep-alive daemon for Internet connections.
 
-Copyright (C) 2003 Joachim Nilsson
+Copyright (C) 2001 Jakob ``kuba'' Stasilowicz @email{kuba@@unix.se}
+Copyright (C) 2003 Joachim Nilsson @email{joachim.nilsson@@member.fsf.org}
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -38,7 +40,7 @@ by the Foundation.
 
 @titlepage
 @title qadsl
-@subtitle Auto-login & keep-alive for Internet connections.
+@subtitle Auto-login & keep-alive daemon for Internet connections.
 @subtitle for qadsl Version @value{VERSION}
 @author by Joachim Nilsson
 
@@ -66,7 +68,8 @@ by the Foundation.
 @node Top, Instructions, (dir), (dir)
 
 @ifinfo
-This file documents the @command{qadsl} command to Auto-login & keep-alive for Internet connections..
+This file documents the @command{qadsl} utility. An auto-login &
+keep-alive daemon for Internet connections.
 @end ifinfo
 
 @c All the menus can be updated with the EMACS command
@@ -76,7 +79,7 @@ This file documents the @command{qadsl} command to Auto-login & keep-alive for I
 * Copying::                     How you can copy and share @command{qadsl}.
 * Overview::                    Preliminary information.
 * Sample::                      Sample output from @command{qadsl}.
-* Invoking qadsl::             How to run @command{qadsl}.
+* Invoking qadsl::              How to run @command{qadsl}.
 * Problems::                    Reporting bugs.
 * Concept Index::               Index of concepts.
 @end menu
@@ -102,12 +105,15 @@ professional experience.)
 @cindex greetings
 @cindex overview
 
-The GNU @command{qadsl} program produces a familiar, friendly greeting.
+GNU @command{qadsl} produces the familiar, UNIX traditional, complete
+lack of output when everything works.
+
 It allows nonprogrammers to use a classic computer science tool which
 would otherwise be unavailable to them.  Because it is protected by the
 GNU General Public License, users are free to share and change it.
 
-GNU @command{qadsl} was written by Joachim Nilsson.
+GNU @command{qadsl} was written by Joachim Nilsson. Its predecessor,
+qadsl was written by Jakob Stasilowicz.
 
 @node Sample, Invoking qadsl, Overview, Top
 @chapter Sample Output
@@ -124,14 +130,17 @@ hello, world!
 This is the output of the command @samp{qadsl --help}:
 
 @example
-Usage: qadsl [OPTION...] [FILE...]
+Usage: qadsl [OPTION...]
 Auto-login & keep-alive for Internet connections.
 
-  -i, --interactive          Prompt for confirmation
   -v, --verbose              Print more information
   -?, --help                 Give this help list
       --usage                Give a short usage message
   -V, --version              Print program version
+  -l, --login                Login to the Internet
+  -o, --logout               Logout the connection
+  -p, --pid-file=file        Use file instead of /var/run/qadsl.pid
+  -c, --conf-file=file       Use file instead of /etc/qadsl.conf
 
 Report bugs to <joachim@@gnufans.org>.
 @end example
@@ -155,10 +164,6 @@ qadsl @var{option} @dots{}
 
 @c Formatting copied from the Texinfo 4.0 manual.
 @table @code
-@item --interactive
-@itemx -i
-Prompt for confirmation.
-
 @item --verbose
 @itemx -v
 Print more information.
@@ -175,6 +180,22 @@ Briefly list the options.
 @itemx -V
 Print the version number of @command{qadsl} on the standard output
 and then exit successfully.
+
+@item --login
+@itemx -l
+Login to the Internet connection.
+
+@item --logout
+@itemx -o
+Logout from the Internet connection.
+
+@item --pid-file file
+@itemx -p file
+Use file as lock file instead of the default /var/run/qadsl.pid
+
+@item --conf-file file
+@itemx -c file
+Use file as configuration file instead of the default /etc/qadsl.conf
 @end table
 
 @node Problems, Concept Index, Invoking qadsl, Top
@@ -182,15 +203,18 @@ and then exit successfully.
 @cindex bugs
 @cindex problems
 
-If you find a bug in @command{qadsl}, please send electronic mail to
-@email{joachim@@gnufans.org}.  Include the version number, which you can find by
-running @w{@samp{qadsl --version}}.  Also include in your message the
+If you find a bug in @command{qadsl}, please report it using the
+Savannah bug report tool at http://savannah.nongnu.org/bugs/?group=qadsl
+
+Include the version number, which you can find by running 
+@w{@samp{qadsl --version}}.  Also include in your message the
 output that the program produced and the output you expected.@refill
 
 If you have other questions, comments or suggestions about
-@command{qadsl}, contact the author via electronic mail to
-@email{joachim@@gnufans.org}.  The author will try to help you out, although he
-may not have time to fix your problems.
+@command{qadsl}, use the mailing lists listed on the qadsl project
+page on Savannah, http://savannah.gnu.org/projects/qadsl/.  The author
+will try to help you out, although he may not have time to fix your
+problems.
 
 @node Concept Index,  , Problems, Top
 @unnumbered Concept Index
