@@ -4476,7 +4476,7 @@ _ACEOF
 
 
 
-                                                                                ac_config_files="$ac_config_files Makefile qadsl.lsm qadsl.spec lib/Makefile lib/conf/Makefile src/Makefile etc/Makefile man/Makefile"
+                                                                      ac_config_files="$ac_config_files Makefile qadsl.lsm qadsl.spec lib/Makefile src/Makefile etc/Makefile man/Makefile"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -5030,7 +5030,6 @@ do
   "qadsl.lsm" ) CONFIG_FILES="$CONFIG_FILES qadsl.lsm" ;;
   "qadsl.spec" ) CONFIG_FILES="$CONFIG_FILES qadsl.spec" ;;
   "lib/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
-  "lib/conf/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/conf/Makefile" ;;
   "src/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
   "etc/Makefile" ) CONFIG_FILES="$CONFIG_FILES etc/Makefile" ;;
   "man/Makefile" ) CONFIG_FILES="$CONFIG_FILES man/Makefile" ;;
