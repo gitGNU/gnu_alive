@@ -77,7 +77,7 @@ http_open_server (char *name, short port, int verbose)
   else
     {
       /* Setup a socket */
-      LOG("%s=0x%X\n", he->h_name, he->h_addr);
+      LOG ("%s=0x%X\n", he->h_name, (int)he->h_addr);
 
       sockfd = socket (PF_INET, SOCK_STREAM, 0);
       if (-1 == sockfd)
@@ -377,7 +377,7 @@ http_internet_logout (config_data_t *config, int verbose)
     }
 
   /* Are we logged in? */
-  if (http_logged_in_already (config))
+  if (!http_test_if_logged_in (config))
     {
       /* Open a connection to the login server */
       config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
@@ -488,7 +488,7 @@ http_do_login (config_data_t *config, int verbose)
   /* If we fail to do the hokey pokey */
   if (result || http_test_if_logged_in (config))
     {
-      LOG (__FUNCTION__ "(): failed first login attempt.\n");
+      LOG ("%s(): failed first login attempt.\n", __FUNCTION__);
 
       /* Login failed, or status unknown. */
       config->logged_in = 0;
@@ -499,14 +499,14 @@ http_do_login (config_data_t *config, int verbose)
       for (try = 1; try < MAX_RETRIES && result; try++)
         {
           /* Sleep for a while if it is not the first try... */
-          LOG (__FUNCTION__ "(): waiting a while before retrying...\n");
-          sleep (5 * i);
+          LOG ("%s(): waiting a while before retrying...\n", __FUNCTION__);
+          sleep (5 * try);
 
           /* If we cannot get the login or csw pages we sleep some more */
           result = http_pre_login (config, verbose);
           if (result)
             {
-              ERROR (__FUNCTION__ "(): failed to bring up login page.\n");
+              ERROR ("%s(): failed to bring up login page.\n", __FUNCTION__);
             }
           else
             {
@@ -526,25 +526,29 @@ http_do_login (config_data_t *config, int verbose)
                   /* For the logfile -- tell status. */
                   if (result)
                     {
-                      LOG (__FUNCTION__ "(): failed to send login (attempt #%d).\n", try + 1);
+                      LOG ("%s(): failed to send login (attempt #%d).\n", 
+                           __FUNCTION__, try + 1);
                     }
                   else
                     {
                       result = http_internet_login (config, verbose);
                       if (result)
                         {
-                          LOG (__FUNCTION__ "(): login sent successfully but the reply was unexpected.\n");
+                          LOG ("%s(): login sent successfully but the reply was unexpected.\n",
+                               __FUNCTION__);
 #ifdef DEBUG
-                          LOG (__FUNCTION__ "(): Here is the reply:\n");
+                          LOG ("%s(): Here is the reply:\n", __FUNCTION__);
                           LOG (config->get_msg);
 #else
-                          LOG (__FUNCTION__ "(): To spare your logfile the actual reply is only visible in debug version.\n");
-                          LOG (__FUNCTION__ "(): Rebuild with --enable-debug option to configure script.\n");
+                          LOG ("%s(): To spare your logfile the actual reply is only visible in debug version.\n",
+                               __FUNCTION__);
+                          LOG ("%s(): Rebuild with --enable-debug option to configure script.\n",
+                               __FUNCTION__);
 #endif
                         }
                       else
                         {
-                          LOG (__FUNCTION__ "(): OK!\n");
+                          LOG ("%s(): OK!\n", __FUNCTION__);
                         }
                     }
                 }
@@ -557,8 +561,8 @@ http_do_login (config_data_t *config, int verbose)
    */
   if (result)
     {
-      ERROR (__FUNCTION__ "(): failed %d retries - backing off for a while.\n",
-             MAX_RETRIES);
+      ERROR ("%s(): failed %d retries - backing off for a while.\n",
+             __FUNCTION__, MAX_RETRIES);
     }
 
   return config->logged_in;
