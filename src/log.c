@@ -19,6 +19,7 @@ write_log (char *fmt, ...)
 
   va_start (ap, fmt);
   vsnprintf (str, 80, fmt, ap);
+  str[sizeof (str)-1] = '\0';
   va_end (ap);
 
   openlog (PACKAGE_NAME, LOG_PID | LOG_CONS, LOG_DAEMON);
