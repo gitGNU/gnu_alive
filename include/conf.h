@@ -35,10 +35,10 @@ struct parameter
 typedef struct parameter param_t;
 
 
-int   conf_read_file (char *file, param_t *parameters);
-int   conf_set_value (char *key, char *value);
-char *conf_get_value (char *key);
-bool  conf_get_bool  (char *key);
+int conf_read_file (param_t *parameter_list, char *file);
+int   conf_set_value (param_t *parameter_list, char *key, char *value);
+char *conf_get_value (param_t *parameter_list, char *key);
+bool  conf_get_bool  (param_t *parameter_list, char *key);
 
 
 #endif /* __CONF_H__ */

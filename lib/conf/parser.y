@@ -5,10 +5,15 @@
 #include "conf.h"
 #include "config.h"
 
+extern int yylex (void);
+extern int yyget_lineno (void);
 
-extern int yylineno;
-
-extern int yylex(void);
+/* Defines needed for a pure reentrant parser/lexer.
+   These are dsiabled for now due to failure to realize.
+   #define YYLEX_PARAM   foo
+ */
+#define YYPARSE_PARAM list
+#define yylineno      yyget_lineno ()
 
 int yyerror (char *s)
 {
@@ -18,14 +23,15 @@ int yyerror (char *s)
 }
 
 #define conf_set(key,value)				\
-   if (conf_set_value (key, value))			\
-     fprintf (stderr,					\
-	      "Error on line %d in config file, "	\
-	      "%s is not a valid identifier.\n",	\
-	      yylineno, key)
-
+  if (conf_set_value ((param_t *)list, key, value))	\
+    fprintf (stderr,					\
+	     "Error on line %d in config file, "	\
+	     "%s is not a valid identifier.\n",		\
+	     yylineno, key)
+ 
 %}
 
+/* %pure-parser */
 %union 
 {
 	char *str;

@@ -9,36 +9,63 @@
 
 #include "conf.h"
 
-extern int yyparse (void);
+extern int yyparse (void *arg);
 
-static param_t *parms;
 
+/**
+ * conf_read_file - Reads a .conf file and tries to set parameters in the given list. 
+ * @parameter_list:
+ * @file:
+ *
+ * Reads a .conf file and tries to set parameters in the given list. 
+ *
+ * Returns:
+ */
 
 int
-conf_read_file (char *file, param_t *parameters)
+conf_read_file (param_t *parameter_list, char *file)
 {
+  int    fd, stdin_fd; 
+  FILE   *fp; 
   param_t *p;
   int result;
   extern FILE *yyin;
 
-  /* Setup the table of valid keys */
-  parms = parameters;
-  if (!parms)
+  if (!parameter_list)
     {
       errno = EINVAL;		/* Bogus parameter */
       return -1;
     }
 
-  yyin = fopen (file, "r");
-  if (!yyin)
-    {
-      return -1;
-    }
+   stdin_fd = fileno(stdin);   /*save descriptor for 'stdin' */ 
+   fd       = dup(stdin_fd); 
+ 
+   if (fd == -1) 
+      return -1;               /* failed to duplicate input descriptor */ 
+ 
+   /* use the duplicated descriptor to redirect input... */ 
+   fp = fdopen (fd, "r"); 
+ 
+   if (!fp) 
+      return -2;               /* failed to open duplicated descriptor */ 
+ 
+   stdin = freopen (file, "r", fp); 
+ 
+   if (!stdin) 
+      return -3;               /* failed to redirect stream input */ 
+ 
+   result = yyparse ((void *)parameter_list);
 
-  result = yyparse ();
-
+   /* UNDO: now undo the effects of redirecting input... */ 
+   fclose(stdin); 
+ 
+   stdin = fdopen(stdin_fd, "r"); 
+ 
+   if (!stdin) 
+      return -4;               /* failed to reestablish 'stdin' */ 
+ 
   /* Setup defaults */
-  p = parms;
+  p = parameter_list;
   while (p->names[0])
     {
       if (!p->value)
@@ -52,10 +79,21 @@ conf_read_file (char *file, param_t *parameters)
 }
 
 
+/**
+ * conf_find_key - Finds a matching key in the given parameter list.
+ * @parameter_list: List of parameters.
+ * @key:            The key to be located
+ *
+ * Tries to find a matching @key in the given @paramter_list. If
+ * unsuccessful it returns NULL.
+ *
+ * Returns: Pointer to the located key, or NULL on failure.
+ */
+
 static param_t *
-conf_find_key (char *key)
+conf_find_key (param_t *parameter_list, char *key)
 {
-  param_t *parm = parms;
+  param_t *parm = parameter_list;
   char **keys;
 
   if (!parm)
@@ -64,7 +102,8 @@ conf_find_key (char *key)
       return NULL;
     }
 
-  while (parm)
+  /* A list is either NULL terminated or the names list is empty. */
+  while (parm && parm->names && parm->names[0])
     {
       keys = parm->names;
       while (*keys)
@@ -83,7 +122,8 @@ conf_find_key (char *key)
 
 
 /* Our very own strndup(), this should go into a compatibility lib. */
-static char *copy_string (char *src, size_t len)
+static char *
+copy_string (char *src, size_t len)
 {
   char *dst;
 
@@ -98,11 +138,12 @@ static char *copy_string (char *src, size_t len)
   return dst;
 }
 
+
 /* XXX - what if the key doesn't exist?
  * XXX - signal for bogus config file?
  */
 int
-conf_set_value (char *key, char *value)
+conf_set_value (param_t *parameter_list, char *key, char *value)
 {
   int result;
   param_t *parm;
@@ -116,7 +157,7 @@ conf_set_value (char *key, char *value)
       return -1;
     }
   
-  parm = conf_find_key (key);
+  parm = conf_find_key (parameter_list, key);
   if (parm)
     {
       int len = strlen (value);
@@ -165,12 +206,12 @@ conf_set_value (char *key, char *value)
  */
 
 char *
-conf_get_value (char *key)
+conf_get_value (param_t *parameter_list, char *key)
 {
   param_t *parm;
   char *result = NULL;
 
-  parm = conf_find_key (key);
+  parm = conf_find_key (parameter_list, key);
   if (parm)
     {
       result = parm->value;
@@ -192,12 +233,12 @@ conf_get_value (char *key)
  */
 
 bool
-conf_get_bool (char *key)
+conf_get_bool (param_t *parameter_list, char *key)
 {
   bool result = false;
   char *value = NULL;
 
-  value = conf_get_value (key);
+  value = conf_get_value (parameter_list, key);
   if (!value)
     {
       result = FALSE;
