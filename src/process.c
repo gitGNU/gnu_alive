@@ -1,4 +1,20 @@
-/* process.c - Processes operations for qADSL
+/* process.c - Processes operations for qADSL.
+ *
+ * Copyright (c) 2003,2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
+ *
+ * qADSL is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ *
+ * qADSL is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
 #include <errno.h>
@@ -44,15 +60,10 @@ process (config_data_t *config, op_t operation, int verbose)
       if (!result)
         {
           /* Test if we're logged in already. */
-          if (!strstr (config->get_msg, config->logged_in_string))
+          if (http_test_if_logged_in (config))
             {
               /* Nope, login first. */
               result = http_internet_login (config, verbose);
-            }
-          
-          if (!result)
-            {
-              config->logged_in = 1;
             }
         }
       if (config->daemon_start)
