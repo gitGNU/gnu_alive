@@ -5,6 +5,10 @@
 /* Include configure settings */
 #include "settings.h"
 
+#ifdef HAVE_FEATURES_H
+#include <features.h>
+#endif
+
 /* Taken in part from zsh.h */
 #ifdef __hpux
 // pull in off_t
