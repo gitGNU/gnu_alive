@@ -1,3 +1,9 @@
+2004-02-09  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* lib/conf/conf.c (strlndup): Renamed copy_string() to strlndup().
+
+	(strlncpy): New (still unused) function to replace dangerous strcpy().
+
 2004-01-31  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* qadsl.spec.in: Update.
