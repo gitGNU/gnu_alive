@@ -1,5 +1,37 @@
                                                             -*-outline-*-
 
+* v1.3.3 to v1.3.4
+
+** GNU Alive 
+
+The qadsl to GNU Alive transition was made.  New location of homepage
+and downloads are on the gnu.org server, or any of its mirrors.
+
+** FreeBSD build fixes
+
+The sneak introduction of alloca() broke the build on several
+non-GNU-LibC systems.  This has been fixed properly and tested on
+FreeBSD Alpha.
+
+** Initial translation effort
+
+The groundwork for I18n using GNU Gettext has been laid out.
+Thus far only Swedish and C/English is supported. Other translations
+are welcome.
+
+Add your language to po/LINGUAS and run "msginit --locale=???" from
+the po directory to generate ???.po, then translate it and run it by
+your translation team, usually <???@li.org>.
+
+** Old config files and PID files reused
+
+Even though the project has been renamed to GNU Alive and the
+configuraion and PID (lock) files also have been renamed the
+program is still backwards compatible.  The qadsl.conf and
+.qadslrc are detected first, then alive.conf et. al.  The same
+goes for the lock files.
+
+
 * v1.3.2 to v1.3.3
 
 ** Bugfix: config.c

@@ -2,25 +2,33 @@
 
 * TODO List - Items listed in falling priority order - first most important
 
-** GNU Alive
+** Check in new GNU Alive files in CVS
 
-Recently qadsl was dubbed a GNU package under the new name Alive.
-For this kick in several issues must be taken care of:
+Translations, file renames etc.
 
-   1. for file in *; do s/qadsl/Alive/g <$file >$file.new
-   2. Savannah maintainters to move us to new structure.
-   3. Update web pages that after 2) now sit at gnu.org/software/alive
+** debian/* files must be updated...
+
+** Test on FreeBSD et. al.
+
+** Release 1.3.4
+
+** Rename cofig.c?
+Config.c and its header file config.h clashes with autoconf meaning
+of config.h and does perhaps not need to be called config.c at all?
+Maybe: configuration.{c|h} or settings.c or options.c?
 
 ** Update documentation.
-
 The texinfo documentation works well with the info reader but the
 PDF, PS and HTML outputs are really ugly.  We need to add more @ifinfo
 and such to separate the output.
 
-** Liblockfile?
-
+** liblockfile?
 Maybe move to liblockfile?
+... or steal good stuff?
 
+** libdotconf?
+Maybe move to libdotconf?
+... or steal good stuff?
 
 ** Maybe debug should imply regular verbosity?
 When issuing --debug on the command line that should
@@ -28,6 +36,9 @@ perhaps imply that ALL messages be printed out? Regardless
 of weather --verbose has been given or not?
 
 ** Proper ICMP ping when DAEMON_TYPE set to PING.
+Maybe add a new option to DAEMON_TYPE, the old PING option
+should not be changed.  New option could be ICMP_PING which
+should do just that, a proper ICMP ping.
 
 ** lib/conf/parser.y: Add YYERROR when conf_set() fails!
 Must not continue to read conf file on error.
@@ -64,14 +75,10 @@ This is basically a very simplified HTML parser that only
 looks for and parses <input ...> statements. Should be 
 easy enough to implement.
 
-Alpha code in vmlinux.org CVS. /Joachim 2004-01-20
+Alpha code in vmlinux:~/> CVS. /Joachim 2004-01-20
 
 ** Always search for XXX for bisarre spots that need attention.
 This is btw the preferred way to indicate stuff like this to others...
-
-** I18N support.
-At least support Swedish with gettext, most of the time it is only
-Swedes who use qadsl anyway.
 
 ** Add support for getopt_long(), strndup(), strcasecmp() et. al.
 If they don't exist on the platform. Put these things in lib/ and

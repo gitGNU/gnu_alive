@@ -1,3 +1,60 @@
+2004-08-27  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* intl/: New subdir.
+
+	* po/: New subdir, full of translations.
+
+	* m4/: New subdir, handy macros.
+
+	* autogen.sh: New file and handy helper.
+
+	* lib/xmalloc.c: New file. Drop in replacement for
+	xmalloc() et. al.
+
+	* src/alloca.c: New file.  Drop-in replacement for
+	alloca() for non-GNU systems.
+
+2004-08-13  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* HACKING: Updated wrt the name change.
+
+	* README: Dito.
+
+	* TODO: Moved some to NEWS and added details on existing
+	ones, as well as added a some completely new.
+
+	* NEWS: Updated with name change, I18n and FreeBSD fixes.
+
+	* man/Makefile.am: s/qadsl/alive/g
+
+	* man/qadsl.texinfo: Renamed to alive.texinfo
+
+	* man/qadsl.8: Renamed to alive.8
+
+	* man/qadsl.conf.5: Renamed to alive.conf.5
+
+2004-08-08  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* include/gettext.h: New file for smooth handling of I18N.
+
+	* src/Makefile.am: Renamed executable from qadsl to alive.
+
+	* configure.in: Renamed to configure.ac
+
+	* qadsl.lsm.in: Renamed to alive.lsm.in
+
+	* qadsl.spec.in: Renamed to alive.spec.in
+
+	* etc/qadsl.conf: Renamed to alive.conf
+
+2004-08-08  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* ABOUT-NLS: New file.
+	* Makefile.am (SUBDIRS): Add intl,
+	(ACLOCAL_AMFLAGS): New variable.
+	(EXTRA_DIST): Add config.rpath.
+	* configure.in (AC_OUTPUT): Add intl/Makefile,
+
 2004-03-08  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* NEWS: Cleanup.
