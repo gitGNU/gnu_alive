@@ -1,5 +1,13 @@
 2004-02-17  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
+	* src/process.c (process): Call kill() directly instead of
+	unecessary wrapper functions.
+
+	* configure.in: Up version number after todays 1.3.2 release,
+	new intermediate version is 1.3.3-pre1.
+
+	* src/daemon.c (daemon_kill): Remove stupid wrapper fn.
+
 	* include/config.h: Beginnings of support for HP-UX.
 
 	* lib/conf/conf.c (conf_read_file): Try using older method of

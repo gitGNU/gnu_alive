@@ -26,11 +26,9 @@ process (config_data_t *config, op_t operation, int verbose)
     case LOGIN:
       if (running)
         {
-          fprintf (stderr, 
-                   "qADSL already running on pid %d - logout the current "
-		   "session first.\n",
-		   running);
-          return EXIT_FAILURE;
+	  /* Force the daemon to wake up earlier and relogin. */
+	  kill (running, SIGHUP);
+          return EXIT_SUCCESS;
         }
 
       result = pre_login (config, verbose);
@@ -76,14 +74,16 @@ process (config_data_t *config, op_t operation, int verbose)
         }
       else
         {
-          daemon_kill (running);
+	  /* Send SIGTERM to gracefully let the daemon process .. exit. */
+	  kill (running, SIGTERM);
           lock_remove (config->pid_file);
         }
       result = internet_logout (config, verbose);
       break;
 
-    default:
     case NOP:
+      printf ("Neither login or logout selected. Reverting to query status.\n");
+    default:
     case STATUS:
       if (running)
         {

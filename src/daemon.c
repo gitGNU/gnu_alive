@@ -113,7 +113,9 @@ daemon_sighandler (int signal)
   write_log ("%s[%d]: Got signal(%d), quiting!\n", 
              PACKAGE_NAME, getpid (), signal);
 
-  exit (0);
+  /* We quit on everything but HUP */
+  if (SIGHUP != signal)
+    exit (0);
 }
 
 
@@ -136,6 +138,8 @@ daemon_thread (config_data_t *config)
   write_log ("qADSL daemon started, pid: %d\n", mypid);
 
   (void) signal (SIGTERM, daemon_sighandler);
+  (void) signal (SIGHUP, daemon_sighandler);
+
   result = lock_create (&config->pid_file, mypid);
   if (result)
     {
@@ -186,22 +190,6 @@ daemon_thread (config_data_t *config)
     }
 }
 
-
-/**
- * daemon_kill - Terminates the login daemon.
- * @pid: Process ID to kill.
- *
- * This function sends SIGTERM to gracefully let the
- * login daemon process .. exit.
- *
- * Returns: The result of kill().
- */
-
-int
-daemon_kill (pid_t pid)
-{
-  return kill (pid, SIGTERM);
-}
 
  
 
