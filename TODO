@@ -2,10 +2,6 @@
 
 * TODO List - Items listed in falling priority order - first most important
 
-* -l generate SIGHUP on already started deamon
-
-* SIGHUP to kill current delay and force relogin
-
 * lib/conf/parser.y: Add YYERROR when conf_set() fails!
 Must not continue to read conf file on error.
 
@@ -42,10 +38,6 @@ We have the old conf-file parser still in src/config.c it
 could "easily" be made available as --enable-old-config-parser
 for people who cannot make new qadsl versions play nice with
 their old style conf-files.
-
-* Cleanup http.c
-The name space in http.c is the old code. Should look better if
-changed to http_server_init(), http_server_login() etc.
 
 * Add some intelligent way of "probing" for the login server.
 I.e., add a list of known login servers perhaps?

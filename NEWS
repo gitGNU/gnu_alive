@@ -1,4 +1,16 @@
                                                             -*-outline-*-
+
+* v1.3.2 to v1.3.3
+
+** -l generate SIGHUP on already started deamon
+
+** SIGHUP to kill current delay and force relogin
+
+** Cleaned up http.c
+The name space in http.c has been updated from the old code. It has
+been changed to http_server_init(), http_server_login() etc.
+
+
 * v1.3.1 to v1.3.2
 
 ** Ugly bug in .conf file parser
