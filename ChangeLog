@@ -1,3 +1,19 @@
+2005-02-21  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* src/main.c: New command line switch -q, --quit.  Exits daemon
+	without logging out.
+
+	* etc/alive.conf: Change defaults so that the user is forced to
+	setup before starting.
+
+	* debian/*: More changes for new debconf enabled setup.
+
+2004-10-23  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* configure.ac: Add AM_MAINTAINER_MODE to fix accidental remake
+	of all the *.in files for people building to source.  This has
+	been a long standing problem for many.
+
 2004-08-29  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* configure.ac: A name change constitutes quite a big
@@ -56,7 +72,7 @@
 2004-08-08  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* ABOUT-NLS: New file.
-	* Makefile.am (SUBDIRS): Add intl,
+	* Makefile.am (SUBDIRS): Add intl and po,
 	(ACLOCAL_AMFLAGS): New variable.
 	(EXTRA_DIST): Add config.rpath.
 	* configure.in (AC_OUTPUT): Add intl/Makefile,
