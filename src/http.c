@@ -52,7 +52,7 @@ http_open_server (char *name, short port, int verbose)
   else
     {
       /* Setup a socket */
-      LOG("%s=0x%X\n", he->name, he->h_addr);
+      LOG("%s=0x%X\n", he->h_name, he->h_addr);
 
       sockfd = socket (PF_INET, SOCK_STREAM, 0);
       if (-1 == sockfd)
