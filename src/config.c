@@ -40,7 +40,7 @@ param_t parms [] = {
   {{"PASS", "PASSWORD", NULL},                         NULL, NULL},
   {{"SERV", "SERVER", "LOGIN_SERVER", NULL},           NULL, "10.0.0.6"},
   /* Default HTTP connection port, usually port 80 */
-  {{"SERVER_PORT", NULL},                              NULL, PORT},
+  {{"SERVER_PORT", "PORT", NULL},                      NULL, PORT},
 
   /* This builds the internet_login() login_string. */
   {{"LOGIN_STRING_HEADER", "LOGIN_DATA_HEADER", NULL}, NULL, NULL},
@@ -209,11 +209,11 @@ config_load (char *file, int verbose)
   temp = conf_get_value (parms, "DEAMON_T");
   if (!temp)
     {
-      __config_area.daemon_type  = 1;
+      __config_area.daemon_type  = 1; /* Always default to daemon mode. */
     }
   else
     {
-      __config_area.daemon_type  = strcasecmp (temp, "login") ? 1 : 0;
+      __config_area.daemon_type  = (strncasecmp (temp, "login", 5) == 0) ? 1 : 0;
     }
 
   temp = conf_get_value (parms, "DEAMON_D");
@@ -247,3 +247,10 @@ config_load (char *file, int verbose)
 
   return &__config_area;
 }
+
+/* Local Variables:
+ * mode: C;
+ * c-file-style: gnu;
+ * indent-tabs-mode: nil;
+ * End:
+ */
