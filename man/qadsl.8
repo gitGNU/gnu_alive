@@ -1,0 +1,68 @@
+.\" @(#)qadsl.8 1.2 17-Oct-2001 OF; from qadsl archive
+.TH qadsl 8 "17-Oct-2001"
+.SH NAME
+qadsl \- Auto login/Keep-alive software for Telia AB ADSL and COMHEM Cable internet
+.SH SYNOPSIS
+.B qadsl
+[
+.B \-h
+]
+[
+.BI \-c " file"
+]
+[
+.B \-l
+]
+[
+.B \-o
+]
+.SH DESCRIPTION
+.B qadsl
+is a small utility to login on the Telia AB ADSL 
+service. It also works fine with COMHEM Cable internet. 
+It has features like keep-alive daemon, login/logout 
+functions. The keep-alive daemon can be configured to either 
+login or to ping your login-server after a chosen delay in minutes. 
+.SH OPTIONS
+.B qadsl
+options are in traditional POSIX one letter options,
+POSIX style options start with a
+single '\-'.
+.TP
+.BR \-h
+Will print some help.
+.TP
+\fB\-c \fIfile\fR
+Uses settings from
+.I file
+insted of default `/etc/qadsl.conf'.
+.TP
+.BR \-l
+Will try to login.
+.TP
+.BR \-o
+Will try to logout.
+.
+.SH REQUIREMENTS
+Telia AB ADSL service,COMHEM Cable internet service,
+Tiscali Internet (ADSL or broadband), or similiar
+service based on Orbyte Wireless System.
+.br
+.SH AUTHORS
+Jakob "kuba" Stasilowicz <kuba@linuxsweden.nu>
+.br
+.TP
+Thanks to these people for making this possible:
+.br
+Peter Stromberg - code
+.br
+Kenth Garlov - code
+.br
+.br
+.br
+
+Thanks to Nicklas Larsson <whybill@linux.nu> for this 
+manpage. 
+.br
+.SH URL
+http://kuba.unix.se

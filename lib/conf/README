@@ -1,0 +1,54 @@
+Small config file parser                                           qADSL
+========================================================================
+
+Introduction
+
+		A small .conf file parser combined with some homebrewed
+		"database" functions.
+
+Description
+
+		This directory contains a small but very competent LALR
+		based config file parser. Its grammar is simple and fits
+		well with todays "common look" of configuration files.
+		
+		Example:
+
+			# This is a .conf file
+			#
+			# <--- Comment char, like Bourne shell
+
+			# Empty lines are ignored like white space.
+
+			# A parameter and its argument
+			PARAM = VALUE
+
+			# Another parameter ...
+			set PARAM VALUE
+
+			# And another ...
+			PARAM VALUE
+
+			# Case does not matter ...
+			PaRaM = VaLuE
+
+		There are of course hazards in these configuration files.
+		Questions like: "Where does the value begin and the name
+		of the parameter end?". The answer is simple, it is up
+		to the constructor of the config file format to see to
+		it that no ambiguities exist.
+
+		Bad example:
+
+			# Config file for XXX
+			#
+			#  Description of XXX and its config file
+
+			# Erroneous paramater name. Value becomes "name value".
+			Parameter name value
+			Set Parameter name value
+
+
+			
+
+

@@ -1,0 +1,32 @@
+AUTHORS
+=========================================================================
+
+Code:
+	Jakob "Kuba" Stasilowicz <kuba()unix!se>
+		Wrote most of the code for releases up to 1.2.1
+	Peter Strömberg <wilfried()openbsd!org>
+		Contributed networking code.
+	Kenth Garlöv <kenth!garlov()polaris!se>
+		Contributed networking code.
+
+	Joachim Nilsson <joachim()gnufans!org>
+		Rewrote and restructured most of the code for
+		releases 1.3.0 and later.
+
+Ideas and inspiration:
+	Other similar ADSL login packages, such as ciclogin 0.4.1 by
+	Torgny Lyon <torgny@enterprise.hb.se>. The license is
+	extremely liberal: <http://enterprise.hb.se/~torgny/code.html>
+
+	  "Ciclogin is completely free. This means that you can do exaclty
+	   what you want with it. That includes modifying it, redistributing
+	   it, selling it, take credit for it and whatnot. However, i do not
+	   take any responsibility for any damage done by my code."
+
+Documentation:
+	Nicklas Larsson <whybill()linux!nu> for versions up to 1.2.1
+	Joachim Nilsson <joachim()gnufans!org> for 1.3.0 and later.
+	
+Debianization:
+	Martin Samuelsson <cos()lysator!liu!se>
+

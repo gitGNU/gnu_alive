@@ -1,0 +1,56 @@
+qADSL - An auto-login & keep-alive program for Internet connections
+========================================================================
+
+qADSL is an auto-login/connection-keep-alive daemon for various
+WAN/LAN/ADSL connections provided by several (Swedish) ISPs.
+To mention a few: Telia ADSL, COMHEM, Tiscali. All of which are
+based on the commercial product "Orbyte Wireless System" from the
+Swedish company Åkerströms nowire AB - see <http://www.nowire.se>
+
+Copyright (c) 2001 Jakob "kuba" Stasilowicz <kuba()unix!se>
+Copyright (c) 2003 Joachim Nilsson <joachim()vmlinux!org>
+
+qADSL is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+qADSL is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ 	qadsl - Auto-login & keep-alive for Internet connections.
+
+
+
+  Copyright (C) 2003 Joachim Nilsson
+
+  qadsl is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+Comments are welcome.
+
+	- Joachim Nilsson <joachim@gnufans.org>
+
+
+---[ Abbreviations
+
+Below is a listing of the popular abbreviations used in the documentation
+for this project. 
+
+ISP	Internet Service Provider

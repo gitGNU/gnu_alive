@@ -1,0 +1,9 @@
+Credits to the following people
+=========================================================================
+
+  First and foremost a big kudos to the creator,
+  Jakob "Kuba" Stasilowicz <kuba@unix.se>.
+
+  Felix von Leitner, <http://www.fefe.de>, provided
+  the basis for the new url_encode() function.
+
