@@ -27,9 +27,9 @@ param_t parms [] = {
   {{"LOGIN_STRING_FOOTER", NULL},                      NULL, "submitForm=Login"},
 
   /* Subtext to look for as result of a successful login */
-  {{"LOGGED_IN_STRING", NULL},                         NULL, "newPane()"},
+  {{"LOGGED_IN_STRING", NULL},                         NULL, "/sd/create_session_window"}, /* "newPane()" */
   /* Subtext to look for as result of a successful logout */
-  {{"LOGGED_OUT_STRING", NULL},                        NULL, "avslutat"},
+  {{"LOGGED_OUT_STRING", NULL},                        NULL, "Login again"}, /* "avslutat" */
 
   /* Pre login page */
   {{"INIT_PAGE", "INIT", NULL},                        NULL, "/sd/init"},
