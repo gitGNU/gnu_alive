@@ -324,31 +324,40 @@ http_internet_login (config_data_t *config, int verbose)
     {
       sleep (2 * tries);
       result = read (config->sockfd, config->get_msg, sizeof (config->get_msg));
-      /* Zero terminate the read string */
-      if (result >= 0)
-	{
-	  config->get_msg [result] = 0;
-	}
     }
   while (-1 == result && tries++ < MAX_RETRIES);
 
-  if (-1 == result)
-    {
-      close (config->sockfd);
-      ERROR("Read login reply: %s\n", strerror (errno));
-
-      return -1;
-    }
-#ifdef DEBUG
-  if (verbose)
-    {
-      LOG ("Received:\n%s", config->get_msg);
-    }
-#endif
-
+  /* Make sure to close the connection as soon as we're done. */
   close (config->sockfd);
 
-  return 0;
+  if (-1 == result)
+    {
+      ERROR("%s(): Error reading login reply: %s\n", 
+            __FUNCTION__, strerror (errno));
+
+      /* Zero terminate the read string */
+      config->get_msg [0] = 0;
+    }
+  else
+    {
+      /* Zero terminate the read string */
+      config->get_msg [result] = 0;
+
+      /* Return the interpreted result of the login */
+      result = http_test_if_logged_in (config);
+      if (result && verbose)
+        {
+          LOG ("%s(): login sent successfully but the reply was unexpected.\n", __FUNCTION__);
+#ifdef DEBUG
+          LOG ("%s(): Here is the reply: %s\n", __FUNCTION__, config->get_msg);
+#else
+          LOG ("%s(): To spare your logfile the actual reply is only visible in debug version.\n", __FUNCTION__);
+          LOG ("%s(): Rebuild with --enable-debug option to configure script.\n", __FUNCTION__);
+#endif
+        }
+    }
+
+  return result;
 }
 
 
@@ -486,7 +495,7 @@ http_do_login (config_data_t *config, int verbose)
    */
   result = http_internet_login (config, verbose);
   /* If we fail to do the hokey pokey */
-  if (result || http_test_if_logged_in (config))
+  if (result)
     {
       LOG ("%s(): failed first login attempt.\n", __FUNCTION__);
 
@@ -531,25 +540,7 @@ http_do_login (config_data_t *config, int verbose)
                     }
                   else
                     {
-                      result = http_internet_login (config, verbose);
-                      if (result)
-                        {
-                          LOG ("%s(): login sent successfully but the reply was unexpected.\n",
-                               __FUNCTION__);
-#ifdef DEBUG
-                          LOG ("%s(): Here is the reply:\n", __FUNCTION__);
-                          LOG (config->get_msg);
-#else
-                          LOG ("%s(): To spare your logfile the actual reply is only visible in debug version.\n",
-                               __FUNCTION__);
-                          LOG ("%s(): Rebuild with --enable-debug option to configure script.\n",
-                               __FUNCTION__);
-#endif
-                        }
-                      else
-                        {
-                          LOG ("%s(): OK!\n", __FUNCTION__);
-                        }
+                      LOG ("%s(): OK!\n", __FUNCTION__);
                     }
                 }
             }
