@@ -12,7 +12,7 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -25,8 +25,8 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdio.h>
-#include <fcntl.h>		/* old method of redirecting stdin */
-#include <sys/stat.h>		/* old method of redirecting stdin */
+#include <fcntl.h>              /* old method of redirecting stdin */
+#include <sys/stat.h>           /* old method of redirecting stdin */
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
@@ -43,11 +43,11 @@ extern int yyparse (void);
 param_t *__current_list;
 
 /**
- * conf_read_file - Reads a .conf file and tries to set parameters in the given list. 
+ * conf_read_file - Reads a .conf file and tries to set parameters in the given list.
  * @parameter_list:
  * @file:
  *
- * Reads a .conf file and tries to set parameters in the given list. 
+ * Reads a .conf file and tries to set parameters in the given list.
  *
  * Returns:
  */
@@ -55,77 +55,77 @@ param_t *__current_list;
 int
 conf_read_file (param_t *parameter_list, char *file)
 {
-  int    fd, stdin_fd; 
-  FILE   *fp; 			/* Might be used later when NetBSD works... */
+  int    fd, stdin_fd;
+  FILE   *fp;                   /* Might be used later when NetBSD works... */
   param_t *p;
   int result;
 
   if (!parameter_list)
     {
-      errno = EINVAL;		/* Bogus parameter */
+      errno = EINVAL;           /* Bogus parameter */
       return -1;
     }
 
-   stdin_fd = fileno (stdin);   /* save descriptor for 'stdin' */ 
-   fd       = dup (stdin_fd); 
- 
-   if (fd == -1) 
-      return -1;               /* failed to duplicate input descriptor */ 
- 
+  stdin_fd = fileno (stdin);   /* save descriptor for 'stdin' */
+  fd       = dup (stdin_fd);
+
+  if (fd == -1)
+    return -1;               /* failed to duplicate input descriptor */
+
 #if 0 /* Does not work on NetBSD 1.6 */
-   /* use the duplicated descriptor to redirect input... */ 
-   fp = fdopen (fd, "r"); 
- 
-   if (!fp) 
-      return -2;               /* failed to open duplicated descriptor */ 
- 
-   stdin = freopen (file, "r", fp);
+  /* use the duplicated descriptor to redirect input... */
+  fp = fdopen (fd, "r");
 
-   if (!stdin) 
-      return -3;               /* failed to redirect stream input */ 
+  if (!fp)
+    return -2;               /* failed to open duplicated descriptor */
+
+  stdin = freopen (file, "r", fp);
+
+  if (!stdin)
+    return -3;               /* failed to redirect stream input */
 #else /* Revert to older method */
-   {
-     int temp_fd;
+  {
+    int temp_fd;
 
-     temp_fd = open (file, O_RDONLY, S_IREAD);
-     if (-1 == temp_fd)
-       return -2;
+    temp_fd = open (file, O_RDONLY, S_IREAD);
+    if (-1 == temp_fd)
+      return -2;
 
-     dup2 (temp_fd, stdin_fd);
+    dup2 (temp_fd, stdin_fd);
 
-     close (temp_fd);
-   }
+    close (temp_fd);
+  }
 #endif
 
 #if 0 /* Does not work with yacc, revert while we wait
-       * for libconf to become reentrant. */ 
-   result = yyparse ((void *)parameter_list);
+       * for libconf to become reentrant. */
+  result = yyparse ((void *)parameter_list);
 #else
-   __current_list = parameter_list;
-   result = yyparse ();
+  __current_list = parameter_list;
+  result = yyparse ();
 #endif
 
-   /* UNDO: now undo the effects of redirecting input... */ 
+  /* UNDO: now undo the effects of redirecting input... */
 #if 0 /* Does not work on NetBSD 1.6 */
-   fclose(stdin); 
- 
-   stdin = fdopen (stdin_fd, "r"); 
+  fclose(stdin);
+
+  stdin = fdopen (stdin_fd, "r");
 #else /* Revert to older method */
-   dup2 (fd, stdin_fd);
-   close (fd);
+  dup2 (fd, stdin_fd);
+  close (fd);
 #endif
- 
-   if (!stdin) 
-      return -4;               /* failed to reestablish 'stdin' */ 
- 
+
+  if (!stdin)
+    return -4;               /* failed to reestablish 'stdin' */
+
   /* Setup defaults */
   p = parameter_list;
   while (p->names[0])
     {
       if (!p->value)
-	{
-	  p->value = p->default_value;
-	}
+        {
+          p->value = p->default_value;
+        }
       p++;
     }
 
@@ -161,12 +161,12 @@ conf_find_key (param_t *parameter_list, char *key)
     {
       keys = parm->names;
       while (*keys)
-	{
-	  if (strcasecmp (key, *keys) == 0)
-	    return parm;
+        {
+          if (strcasecmp (key, *keys) == 0)
+            return parm;
 
-	  keys ++;
-	}
+          keys ++;
+        }
 
       parm ++;
     }
@@ -181,7 +181,7 @@ strlndup (char *src, size_t len)
 {
   char *dst;
 
-  if (!src)			/* Cannot copy non-existing string. */
+  if (!src)                     /* Cannot copy non-existing string. */
     return NULL;
 
   dst = malloc (len + 1);
@@ -202,7 +202,7 @@ strlndup (char *src, size_t len)
  * @src: Source string.
  * @len: maximum number of char's to copy.
  *
- * XXX - Relies on dst being valid 
+ * XXX - Relies on dst being valid
  * Makes sure to NUL terminate dst when done.
  */
 
@@ -222,7 +222,7 @@ strlncpy (char *dst, char *src, size_t len)
 }
 
 
-/* TODO: Implement strlncat() or setup proper aliases for 
+/* TODO: Implement strlncat() or setup proper aliases for
  * OpenBSD's strlcpy() strlcat() if configure does not find
  * support for them or libsafe <--- Lucent contribution.
  */
@@ -242,8 +242,8 @@ conf_set_value (param_t *parameter_list, char *key, char *value)
   if (!key || !value)
     {
       fprintf (stderr,
-	       "Failed to allocate memory for configuration values: %s\n",
-	       strerror (errno));
+               "Failed to allocate memory for configuration values: %s\n",
+               strerror (errno));
       return -1;
     }
 
@@ -264,13 +264,13 @@ conf_set_value (param_t *parameter_list, char *key, char *value)
        * "value";  len=9
        */
       if (len > 0 && value [len - 1] == ';')
-	len --;
+        len --;
 
       if (len > 1 && value [0] == '"' && value [len - 1] == '"')
-	{
-	  len -= 1;
-	  value++;
-	}
+        {
+          len -= 1;
+          value++;
+        }
 
       str = strlndup (value, len);
 
@@ -344,13 +344,13 @@ conf_get_bool (param_t *parameter_list, char *key)
   else
     {
       if (strcasecmp (value, "TRUE") == 0)
-	result = true;
+        result = true;
       else if (strcasecmp (value, "YES") == 0)
-	result = true;
+        result = true;
       else if (strcasecmp (value, "ON") == 0)
-	result = true;
+        result = true;
       else
-	result = false;
+        result = false;
     }
 
   return result;
@@ -385,45 +385,45 @@ conf_read (conf_data_t *config)
   while ((fgets (input, sizeof (input), fd)) != NULL)
     {
       if ((p = strchr (input, '\n')))
-	*p = '\0';
+        *p = '\0';
 
       if ((strncmp ("SERV=", input, 5)) == 0)
-	{
-	  strcpy (serv, input + 5);
-	  host_sw = 1;
-	}
+        {
+          strcpy (serv, input + 5);
+          host_sw = 1;
+        }
 
       if ((strncmp ("USER=", input, 5)) == 0)
-	{
-	  strcpy (tmp, input + 5);
-	  url_encode (user, tmp, strlen (tmp));
-	  user_sw = 1;
-	}
+        {
+          strcpy (tmp, input + 5);
+          url_encode (user, tmp, strlen (tmp));
+          user_sw = 1;
+        }
 
       if ((strncmp ("PASS=", input, 5)) == 0)
-	{
-	  strcpy (tmp, input + 5);
-	  url_encode (pass, tmp, strlen (tmp));
-	  pass_sw = 1;
-	}
+        {
+          strcpy (tmp, input + 5);
+          url_encode (pass, tmp, strlen (tmp));
+          pass_sw = 1;
+        }
 
       if ((strncmp ("DEAMON_S=", input, 9)) == 0)
-	{
-	  strcpy (deamon_s, input + 9);
-	  dea_s_sw = 1;
-	}
+        {
+          strcpy (deamon_s, input + 9);
+          dea_s_sw = 1;
+        }
 
       if ((strncmp ("DEAMON_T=", input, 9)) == 0)
-	{
-	  strcpy (deamon_t, input + 9);
-	  dea_t_sw = 1;
-	}
+        {
+          strcpy (deamon_t, input + 9);
+          dea_t_sw = 1;
+        }
 
       if ((strncmp ("DEAMON_D=", input, 9)) == 0)
-	{
-	  strcpy (deamon_d, input + 9);
-	  dea_d_sw = 1;
-	}
+        {
+          strcpy (deamon_d, input + 9);
+          dea_d_sw = 1;
+        }
 
     }
 
@@ -433,36 +433,43 @@ conf_read (conf_data_t *config)
       printf ("Error found in: %s\n", conf);
 
       if (!user_sw)
-	{
-	  fprintf (stderr, "\tCould not find username!\n");
-	  exit (1);
-	}
+        {
+          fprintf (stderr, "\tCould not find username!\n");
+          exit (1);
+        }
       if (!pass_sw)
-	{
-	  fprintf (stderr, "\tCould not find password!\n");
-	  exit (1);
-	}
+        {
+          fprintf (stderr, "\tCould not find password!\n");
+          exit (1);
+        }
       if (!host_sw)
-	{
-	  fprintf (stderr, "\tCould not find login server!\n");
-	  exit (1);
-	}
+        {
+          fprintf (stderr, "\tCould not find login server!\n");
+          exit (1);
+        }
       if (!dea_s_sw)
-	{
-	  fprintf (stderr, "\tCould not find deamon startup choice!\n");
-	  exit (1);
-	}
+        {
+          fprintf (stderr, "\tCould not find deamon startup choice!\n");
+          exit (1);
+        }
       if (!dea_t_sw)
-	{
-	  fprintf (stderr, "\tCould not find deamon type (LOGIN/PING)!\n");
-	  exit (1);
-	}
+        {
+          fprintf (stderr, "\tCould not find deamon type (LOGIN/PING)!\n");
+          exit (1);
+        }
       if (!dea_d_sw)
-	{
-	  fprintf (stderr, "\tCould not find deamon delay!\n");
-	  exit (1);
-	}
+        {
+          fprintf (stderr, "\tCould not find deamon delay!\n");
+          exit (1);
+        }
 
     }
 }
-#endif 
+#endif
+
+/* Local Variables:
+ * mode: C;
+ * c-file-style: gnu;
+ * indent-tabs-mode: nil;
+ * End:
+ */
