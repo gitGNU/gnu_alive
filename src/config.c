@@ -47,7 +47,7 @@ param_t parms [] = {
   {{"DEAMON_T", "DAEMON_TYPE", NULL},                  NULL, "login"},
   /* Default: relogin every 20 minutes to keep the connection alive. */
   {{"DEAMON_D", "DAEMON_DELAY", "INTERVAL", NULL},     NULL, "20"},
-  NULL
+  {{NULL}}
 };
 
 /* This is for global data. */
@@ -129,7 +129,6 @@ void print_parm (param_t *p)
 config_data_t *
 config_load (char *file)
 {
-  int i;
   char *temp;
 
   /* Setup default configuration */
