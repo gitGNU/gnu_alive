@@ -4,14 +4,19 @@ AUTHORS
 Code:
 	Jakob "Kuba" Stasilowicz <kuba()unix!se>
 		Wrote most of the code for releases up to 1.2.1
+
 	Peter Strömberg <wilfried()openbsd!org>
 		Contributed networking code.
+
 	Kenth Garlöv <kenth!garlov()polaris!se>
 		Contributed networking code.
 
 	Joachim Nilsson <joachim()gnufans!org>
 		Rewrote and restructured most of the code for
 		releases 1.3.0 and later.
+
+	Jakob Eriksson <jakob()vmlinux!org>
+		Misc. patches.
 
 Ideas and inspiration:
 	Other similar ADSL login packages, such as ciclogin 0.4.1 by
