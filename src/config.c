@@ -17,18 +17,35 @@ param_t parms [] = {
   {{"USER", "USERNAME", NULL},                         NULL, NULL},
   {{"PASS", "PASSWORD", NULL},                         NULL, NULL},
   {{"SERV", "SERVER", "LOGIN_SERVER", NULL},           NULL, "10.0.0.6"},
+  /* Default HTTP connection port, usually port 80 */
   {{"SERVER_PORT", NULL},                              NULL, PORT},
-  {{"PRE_LOGIN_DATA", NULL},                           NULL, ""},
+
+  /* This builds the internet_login() login_string. */
+  {{"LOGIN_STRING_HEADER", NULL},                      NULL, ""},
   {{"USERNAME_KEY", NULL},                             NULL, "username"},
   {{"PASSWORD_KEY", NULL},                             NULL, "password"},
-  {{"POST_LOGIN_DATA", NULL},                          NULL, "submitForm=Logga in"},
-  {{"LOGOUT_DATA", NULL},                              NULL, "avslutat"},
-  {{"INIT_PAGE", NULL},                                NULL, "/sd/init"},
-  {{"LOGIN_PAGE", NULL},                               NULL, "/sd/login"},
-  {{"LOGOUT_PAGE", NULL},                              NULL, "/sd/logout"},
+  {{"LOGIN_STRING_FOOTER", NULL},                      NULL, "submitForm=Login"},
+
+  /* Subtext to look for as result of a successful login */
+  {{"LOGGED_IN_STRING", NULL},                         NULL, "newPane()"},
+  /* Subtext to look for as result of a successful logout */
+  {{"LOGGED_OUT_STRING", NULL},                        NULL, "avslutat"},
+
+  /* Pre login page */
+  {{"INIT_PAGE", "INIT", NULL},                        NULL, "/sd/init"},
+  /* Login form */
+  {{"LOGIN_PAGE", "LOGIN", NULL},                      NULL, "/sd/login"},
+  /* Logout page */
+  {{"LOGOUT_PAGE", "LOGOUT", NULL},                    NULL, "/sd/logout"},
+
+  /* Lock file */
   {{"PID_FILE", NULL},                                 NULL, PID_FILE},
+
+  /* Default: start the keep-alive daemon */
   {{"DEAMON_S", "DAEMON_START", "START_DAEMON", NULL}, NULL, "true"},
+  /* Default: re-login every DAEMON_DELAY minutes. */
   {{"DEAMON_T", "DAEMON_TYPE", NULL},                  NULL, "login"},
+  /* Default: relogin every 20 minutes to keep the connection alive. */
   {{"DEAMON_D", "DAEMON_DELAY", "INTERVAL", NULL},     NULL, "20"},
   NULL
 };
@@ -138,6 +155,14 @@ config_load (char *file)
   __config_area.logout_page  = conf_get_value ("LOGOUT_PAGE");
   __config_area.pid_file     = conf_get_value ("PID_FILE");
   
+  __config_area.login_string_header = conf_get_value ("LOGIN_STRING_HEADER");
+  __config_area.username_key        = conf_get_value ("USERNAME_KEY");
+  __config_area.password_key        = conf_get_value ("PASSWORD_KEY");
+  __config_area.login_string_footer = conf_get_value ("LOGIN_STRING_FOOTER");
+
+  __config_area.logged_in_string  = conf_get_value ("LOGGED_IN_STRING");
+  __config_area.logged_out_string = conf_get_value ("LOGGED_OUT_STRING");
+
   temp = conf_get_value ("SERVER_PORT");
   if (temp)
     {
