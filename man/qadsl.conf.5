@@ -13,7 +13,7 @@
 .\" along with this program; see the file COPYING.  If not, write to
 .\" the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 .\"
-.TH QADSL 1 "1st January, 2004"
+.TH qadsl.conf 5 "14th January, 2004"
 .\" Please update the above date whenever this man page is modified.
 .\"
 .\" Some roff macros, for reference:
@@ -36,16 +36,18 @@ connection.
 .SH SYNTAX
 The qadsl.conf syntax is extremely free form. So if you have ever
 peeked into a UNIX configuration file before, you should be right
-at home, you should even not have to read any further ...
+at home, you should not even have to read any further ...
 
-For those of you who hate configuration files or never have seen
+For those of you who hate configuration files, or never have seen
 one before, you should proceed directly to the examples section.
 
 For most of the time you only need to supply a USERNAME, PASSWORD
 and LOGIN_SERVER. Like this:
 
-USERNAME     = 123456@tiscali
-PASSWORD     = zw2d4a
+USERNAME     = u1234567
+.br
+PASSWORD     = pwd12345
+.br
 LOGIN_SERVER = valo1.tiscali.se
 
 However, most of the time the LOGIN_SERVER setting should be given
@@ -54,7 +56,40 @@ as a pure IP address, like this:
 LOGIN_SERVER = 10.0.0.6
 
 This because the name of the login server sometimes is not listed
-in the name server (DNS) of your ISP.
+in the name server (DNS) of your ISP. The number 10.0.0.6 is the
+default for all Orbyte Wireless System installations.
+
+.SH EXAMPLES
+# Username
+.br
+USERNAME     = u1234567
+
+# Password
+.br
+PASSWORD     = pwd12345
+
+# Login Server, DNS name or IP number
+.br
+# Tiscali      valo1.tiscali.se
+.br
+# Telia        login1.telia.com
+.br
+# COMHEM       ????
+.br
+SERVER       = 10.0.0.6
+
+# Start daemon [YES/NO]?
+.br
+START_DAEMON = YES
+
+# Daemon type [LOGIN/PING]?
+.br
+DEAMON_TYPE  = LOGIN
+
+# Daemon delay in minutes.
+.br
+INTERVAL     = 20
+
 
 .SH AUTHOR
 Joachim Nilsson <joachim!nilsson()member!fsf!org>

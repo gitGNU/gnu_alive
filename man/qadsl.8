@@ -1,7 +1,35 @@
-.\" @(#)qadsl.8 1.2 17-Oct-2001 OF; from qadsl archive
-.TH qadsl 8 "17-Oct-2001"
+.\"                              hey, Emacs:   -*- nroff -*-
+.\" qadsl is free software; you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 2 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program; see the file COPYING.  If not, write to
+.\" the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+.\"
+.\" @(#)qadsl.8 1.2 14-Jan-2004 OF; from qadsl archive
+.TH qadsl 8 "14th January, 2004"
+.\" Please update the above date whenever this man page is modified.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins (default)
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
 .SH NAME
-qadsl \- Auto-login & keep-alive daemon for Telia AB ADSL and COMHEM Cable internet
+qADSL \- In pursuit of a free Internet!
+
 .SH SYNOPSIS
 .B qadsl
 [
@@ -16,38 +44,44 @@ qadsl \- Auto-login & keep-alive daemon for Telia AB ADSL and COMHEM Cable inter
 [
 .B \-o
 ]
+
 .SH DESCRIPTION
 .B qadsl
-is a small utility to login on the Telia AB ADSL 
-service. It also works fine with COMHEM Cable internet and Tiscali
-Internet services.  It has features like keep-alive daemon, login/logout
-functions. The keep-alive daemon can be configured to either login or
-to ping your login-server after a chosen delay in minutes. 
+is a small utility to login to and keep ADSL/Internet services alive.
+Currently the Telia AB ADSL service, COMHEM Cable internet and Tiscali
+Internet services are known to work well with qadsl. It has features
+like keep-alive daemon and login/logout functions. The keep-alive
+daemon can be configured to either login or to ping your login-server
+after a chosen delay in minutes. 
 
 .SH OPTIONS
 .B qadsl
-options are in traditional POSIX one letter options,
-POSIX style options start with a
+options are in traditional POSIX one letter options prefixed with a
 single '\-'.
+
 .TP
 .BR \-h
-Will print some help.
+Displays a summary of the command line options.
 .TP
 \fB\-c \fIfile\fR
-Uses settings from
+Use settings from
 .I file
-insted of default `/etc/qadsl.conf'.
+insted of default
+.I /etc/qadsl.conf
+
 .TP
 \fB\-p \fIfile\fR
-Uses 
+Use
 .I file
-as pid/lock file insted of default `/var/run/qadsl.pid'.
+as pid/lock file instead of default
+.I /var/run/qadsl.pid
+
 .TP
 .BR \-l
-Will try to login.
+Login to the given LOGIN_SERVER.
 .TP
 .BR \-o
-Will try to logout.
+Try to logout, close the Internet connection.
 .TP
 .BR \-V
 Displays version informaiton.
@@ -55,20 +89,18 @@ Displays version informaiton.
 .BR \-v
 Verbose, print more information at runtime.
 
-.
 .SH SEE ALSO
-The qadsl.conf (5) man page for help with the configuration
-file.
+The qadsl.conf (5) man page describes the componentes of the
+configuration file.
 
 .SH REQUIREMENTS
-Telia AB ADSL service, COMHEM Cable internet service,
-Tiscali Internet (ADSL or broadband), or similiar
-service based on Orbyte Wireless System.
-.br
+Telia AB ADSL service, COMHEM Cable internet service, Tiscali Internet
+(ADSL or broadband), or similiar service based on Orbyte Wireless System.
+
 .SH AUTHORS
-Jakob "kuba" Stasilowicz <kuba()unix!se>
 Joachim Nilsson <joachim!nilsson()member!fsf!org>
 .br
+Jakob "kuba" Stasilowicz
 .TP
 Thanks to these people for making qadsl possible:
 .br
@@ -76,11 +108,9 @@ Peter Stromberg - code
 .br
 Kenth Garlov - code
 .br
+Martin Samuelsson - Initial Debian package
 .br
-.br
+Nicklas Larsson - First manpage.
 
-Thanks to Nicklas Larsson <whybill()linux!nu> for this 
-manpage. 
-.br
 .SH URL
 http://savannah.gnu.org/projects/qadsl/
