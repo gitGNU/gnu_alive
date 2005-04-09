@@ -78,8 +78,7 @@ static pid_t FLOCK_GET_FALLBACK(int fd)
 
   fp = fdopen(fd, "r");
   fscanf(fp, "%d", &pid);
-  fclose(fp);
-  close(fd); /* XXX but we closed the fp ?! */
+  fclose(fp); /* XXX is fd closed now too? can we remove this line and let lock_read() close instead? */
 
   return pid;
 }
