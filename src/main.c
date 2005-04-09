@@ -39,23 +39,18 @@ static const char *program_name;
 static void usage (int status);
 
 
-#ifndef HAVE_RINDEX
 const char *get_program_name (const char *progname)
 {
-  return progname;
-}
-#else
-const char *get_program_name (const char *progname)
-{
+#ifdef HAVE_RINDEX
   char *clean_name;
 
   clean_name = rindex (progname, '/');
   if (clean_name)
     return clean_name + 1;
+#endif
 
   return progname;
 }
-#endif
 
 
 
