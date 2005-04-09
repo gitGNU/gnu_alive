@@ -278,7 +278,7 @@ static int __http_internet_login (config_data_t *config, int verbose)
     + strlen (config->password_key) + strlen (config->password)
     + strlen (config->login_string_footer) + strlen ("Plus approximately 10%");
 
-  temp = (char *) alloca (length);
+  temp = alloca (length);
   if (!temp)
     {
       close (config->sockfd);
@@ -302,7 +302,7 @@ static int __http_internet_login (config_data_t *config, int verbose)
 
   DEBUG (_("Login string: %s"), temp);
 
-  login_string = (char *) alloca (length);
+  login_string = alloca (length);
   if (!login_string)
     {
       close (config->sockfd);
