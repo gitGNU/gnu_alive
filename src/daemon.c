@@ -46,6 +46,30 @@
  *          zero indicates that the child is executing.
  */
 
+/* Ignore if background tty attempts write. */
+static void ignore_tty_background_write(void)
+{
+#ifdef SIGTTOU
+  signal (SIGTTOU, SIG_IGN);
+#endif
+}
+
+/* Ignore if background tty attempts read. */
+static void ignore_tty_background_read(void)
+{
+#ifdef SIGTTIN
+  signal (SIGTTIN, SIG_IGN);
+#endif
+}
+
+/* Ignore any keyboard generated stop signal signals. */
+static void ignore_keyboard_stop(void)
+{
+#ifdef SIGTSTP
+  signal (SIGTSTP, SIG_IGN);
+#endif
+}
+
 int
 daemonize (void)
 {
@@ -73,19 +97,9 @@ daemonize (void)
   /* If parent is NOT init. */
   if (1 != getppid ())
     {
-#ifdef SIGTTOU
-      /* Ignore if background tty attempts write. */
-      signal (SIGTTOU, SIG_IGN);
-#endif
-#ifdef SIGTTIN
-      /* Ignore if background tty attempts read. */
-      signal (SIGTTIN, SIG_IGN);
-#endif
-
-#ifdef SIGTSTP
-      /* Ignore any keyboard generated stop signal signals. */
-      signal (SIGTSTP, SIG_IGN);
-#endif
+      ignore_tty_background_write();
+      ignore_tty_background_read();
+      ignore_keyboard_stop();
       /* Become session leader and group process leader
        * with no controlling terminal
        */
