@@ -59,27 +59,85 @@ extern char *fallback_pid_files[];
  * Virtualize away flock differences detected by autoconf
  */
 
-#if defined(LOCK_FCNTL)
-static int FLOCK(int fd)
+#if defined(LOCK_FCNTL) || defined(HAVE_FCNTL_F_FREESP)
+static struct flock init_lock()
 {
   struct flock lock;
+
   lock.l_whence = SEEK_SET;
   lock.l_start = 0;
   lock.l_len = 0;
   lock.l_type = F_WRLCK;
+}
+#endif
+
+static pid_t FLOCK_GET_FALLBACK(int fd)
+{
+  FILE *fp;
+  pid_t pid;
+
+  fp = fdopen(fd, "r");
+  fscanf(fp, "%d", &pid);
+  fclose(fp);
+  close(fd); /* XXX but we closed the fp ?! */
+
+  return pid;
+}
+
+#if defined(LOCK_FCNTL)
+static int _FLOCK(int fd)
+{
+  struct flock lock = init_lock();
 
   return fcntl (fd, F_SETLK, &lock);
 }
+
+static pid_t FLOCK_GET(int fd)
+{
+  struct flock lock = init_lock();
+
+  if (fcntl(fd, F_GETLK, &lock) < 0)
+    return -1;
+  if (F_UNLCK == lock.l_type)
+    return 0;
+  return lock.l_pid;
+}
 #elif defined(LOCK_LOCKF)
-static int FLOCK(fd)
+static int _FLOCK(fd)
 {
   lseek(fd, 0, SEEK_SET);
   return lockf (fd, F_TLOCK, 0);
 }
+
+static pid_t FLOCK_GET(int fd)
+{
+  if (!flock(fd, LOCK_EX | LOCK_NB))
+    {
+      if (flock(fd, LOCK_UN) == -1)
+        return -1;
+      return 0;
+    }
+
+  return FLOCK_GET_FALLBACK(fd);
+}
 #elif defined(LOCK_FLOCK)
-#define FLOCK(fd) flock (fd, LOCK_EX | LOCK_NB)
+#define _FLOCK(fd) flock (fd, LOCK_EX | LOCK_NB)
+
+static pid_t FLOCK_GET(int fd)
+{
+  if (!lockf(fd, F_TLOCK, 0))
+    {
+      if (!lockf(fd, F_ULOCK, 0))
+        return -1;
+      return 0;
+    }
+
+  return FLOCK_GET_FALLBACK(fd);
+}
+
 #else
-#define FLOCK(fd) (0)
+#define _FLOCK(fd) (0)
+#define FLOCK_GET(fd) FLOCK_GET_FALLBACK(fd)
 #endif
 
 
@@ -98,6 +156,11 @@ static int FREESP(int fd)
 #define FREESP(fd) ftruncate (fd, (off_t) 0)
 #endif
 
+
+static int FLOCK(int fd)
+{
+  return _FLOCK(fd) || FREESP(fd);
+}
 
 int lock_create (char **file, pid_t pid)
 {
@@ -118,7 +181,7 @@ int lock_create (char **file, pid_t pid)
     }
   while (-1 == fd);
 
-  if (FLOCK(fd) || FREESP(fd))
+  if (FLOCK(fd))
     {
       close (fd);
       return -1;
@@ -161,11 +224,7 @@ int lock_create (char **file, pid_t pid)
 pid_t lock_read (char **file, int verbose)
 {
   int fd, fallback;
-  FILE *fp;
   pid_t pid;
-#if defined(LOCK_FCNTL)
-  struct flock lock;
-#endif
 
   fallback = 0;
   do
@@ -195,36 +254,7 @@ pid_t lock_read (char **file, int verbose)
     }
   while (fd == -1);
 
-#if defined(LOCK_FCNTL)
-  lock.l_type = F_WRLCK;
-  lock.l_start = 0;
-  lock.l_whence = SEEK_SET;
-  lock.l_len = 0;
-  if (fcntl(fd, F_GETLK, &lock) < 0) {
-    close(fd);
-    return -1;
-  }
-  close(fd);
-  if (F_UNLCK == lock.l_type)
-    return 0;
-  return lock.l_pid;
-#elif defined(LOCK_FLOCK)
-  if(flock(fd, LOCK_EX | LOCK_NB) == 0) {
-    if (flock(fd, LOCK_UN) == -1)
-      return -1;
-    return 0;
-  }
-#elif defined(LOCK_LOCKF)
-  if(lockf(fd, F_TLOCK, 0) == 0) {
-    if (lockf(fd, F_ULOCK, 0) == 0)
-      return -1;
-    return 0;
-  }
-#endif
-
-  fp = fdopen(fd, "r");
-  fscanf(fp, "%d", &pid);
-  fclose(fp);
+  pid = FLOCK_GET(fd);
   close(fd);
 
   /* Old version running?
