@@ -56,37 +56,48 @@ extern char *fallback_pid_files[];
 
 
 /*
- * autoconf_flock - Virtualize away flock differences detected by autoconf
- *
+ * Virtualize away flock differences detected by autoconf
  */
-static int autoconf_flock(int fd)
+
+#if defined(LOCK_FCNTL)
+static int FLOCK(int fd)
 {
-#if defined(LOCK_FCNTL) || defined(HAVE_FCNTL_F_FREESP)
+  struct flock lock;
+  lock.l_whence = SEEK_SET;
+  lock.l_start = 0;
+  lock.l_len = 0;
+  lock.l_type = F_WRLCK;
+
+  return fcntl (fd, F_SETLK, &lock);
+}
+#elif defined(LOCK_LOCKF)
+static int FLOCK(fd)
+{
+  lseek(fd, 0, SEEK_SET);
+  return lockf (fd, F_TLOCK, 0);
+}
+#elif defined(LOCK_FLOCK)
+#define FLOCK(fd) flock (fd, LOCK_EX | LOCK_NB)
+#else
+#define FLOCK(fd) (0)
+#endif
+
+
+#ifdef HAVE_FCNTL_F_FREESP
+static int FREESP(int fd)
+{
   struct flock lock;
 
   lock.l_whence = SEEK_SET;
   lock.l_start = 0;
   lock.l_len = 0;
-  lock.l_type = F_WRLCK;
-#endif
-
-  lseek (fd, 0, SEEK_SET);
-
-  return
-#if defined(LOCK_FCNTL)
-    fcntl (fd, F_SETLK, &lock)
-#elif defined(LOCK_FLOCK)
-    flock (fd,  LOCK_EX | LOCK_NB))
-#elif defined(LOCK_LOCKF)
-    lockf (fd, F_TLOCK, 0)
-#endif
-#ifdef HAVE_FCNTL_F_FREESP
-      || fcntl (fd, F_FREESP, &lock)
-#else
-      || ftruncate (fd, (off_t) 0)
-#endif
-      ;
+  
+  return fcntl (fd, F_FREESP, &lock);
 }
+#else
+#define FREESP(fd) ftruncate (fd, (off_t) 0)
+#endif
+
 
 int lock_create (char **file, pid_t pid)
 {
@@ -107,7 +118,7 @@ int lock_create (char **file, pid_t pid)
     }
   while (-1 == fd);
 
-  if (autoconf_flock (fd))
+  if (FLOCK(fd) || FREESP(fd))
     {
       close (fd);
       return -1;
