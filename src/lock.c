@@ -60,7 +60,7 @@ extern char *fallback_pid_files[];
  */
 
 #if defined(LOCK_FCNTL) || defined(HAVE_FCNTL_F_FREESP)
-static struct flock init_lock()
+static struct flock init_flock()
 {
   struct flock lock;
 
@@ -68,47 +68,53 @@ static struct flock init_lock()
   lock.l_start = 0;
   lock.l_len = 0;
   lock.l_type = F_WRLCK;
+
+  return lock;
 }
 #endif
 
-static pid_t FLOCK_GET_FALLBACK(int fd)
+static pid_t flock_get_fallback(int fd)
 {
   FILE *fp;
   pid_t pid;
 
   fp = fdopen(fd, "r");
   fscanf(fp, "%d", &pid);
-  fclose(fp); /* XXX is fd closed now too? can we remove this line and let lock_read() close instead? */
+  fclose(fp); /* XXX is fd closed now too? can we
+                 remove this line and let lock_read() close instead? */
 
   return pid;
 }
 
 #if defined(LOCK_FCNTL)
-static int _FLOCK(int fd)
+static int flock_create(int fd)
 {
-  struct flock lock = init_lock();
+  struct flock lock = init_flock();
 
   return fcntl (fd, F_SETLK, &lock);
 }
 
-static pid_t FLOCK_GET(int fd)
+static pid_t flock_get(int fd)
 {
-  struct flock lock = init_lock();
+  struct flock lock = init_flock();
 
   if (fcntl(fd, F_GETLK, &lock) < 0)
     return -1;
+
   if (F_UNLCK == lock.l_type)
     return 0;
+
   return lock.l_pid;
 }
+
 #elif defined(LOCK_LOCKF)
-static int _FLOCK(fd)
+static int flock_create(fd)
 {
   lseek(fd, 0, SEEK_SET);
   return lockf (fd, F_TLOCK, 0);
 }
 
-static pid_t FLOCK_GET(int fd)
+static pid_t flock_get(int fd)
 {
   if (!flock(fd, LOCK_EX | LOCK_NB))
     {
@@ -117,12 +123,15 @@ static pid_t FLOCK_GET(int fd)
       return 0;
     }
 
-  return FLOCK_GET_FALLBACK(fd);
+  return flock_get_fallback(fd);
 }
 #elif defined(LOCK_FLOCK)
-#define _FLOCK(fd) flock (fd, LOCK_EX | LOCK_NB)
+static int flock_create(fd)
+{	
+  return flock (fd, LOCK_EX | LOCK_NB);
+}
 
-static pid_t FLOCK_GET(int fd)
+static pid_t flock_get(int fd)
 {
   if (!lockf(fd, F_TLOCK, 0))
     {
@@ -131,17 +140,24 @@ static pid_t FLOCK_GET(int fd)
       return 0;
     }
 
-  return FLOCK_GET_FALLBACK(fd);
+  return flock_get_fallback(fd);
 }
 
 #else
-#define _FLOCK(fd) (0)
-#define FLOCK_GET(fd) FLOCK_GET_FALLBACK(fd)
+static pid_t flock_create(int fd)
+{
+  return 0;
+}
+
+static pid_t flock_get(int fd)
+{
+  return flock_get_fallback(fd);
+}
 #endif
 
 /* Truncate the lockfile length */
-#ifdef HAVE_FCNTL_F_FREESP
-static int FREESP(int fd)
+#if defined(HAVE_FCNTL_F_FREESP)
+static int fd_truncate(int fd)
 {
   struct flock lock;
 
@@ -152,13 +168,16 @@ static int FREESP(int fd)
   return fcntl (fd, F_FREESP, &lock);
 }
 #else
-#define FREESP(fd) ftruncate (fd, (off_t) 0)
+static pid_t fd_truncate(int fd)
+{
+  return ftruncate (fd, (off_t) 0);
+}
 #endif
 
 /* Lock the PID file and truncate to zero length. */
-static int FLOCK(int fd)
+static int create_flock(int fd)
 {
-  return _FLOCK(fd) || FREESP(fd);
+  return flock_create(fd) || fd_truncate(fd);
 }
 
 int lock_create (char **file, pid_t pid)
@@ -180,7 +199,7 @@ int lock_create (char **file, pid_t pid)
     }
   while (-1 == fd);
 
-  if (FLOCK(fd))
+  if (create_flock(fd))
     {
       close (fd);
       return -1;
@@ -194,7 +213,7 @@ int lock_create (char **file, pid_t pid)
       return -1;
     }
 
-  /* Make sure we to verify that the entry is written. */
+  /* Verify that the entry is written. */
   if (fprintf(fp, "%ld\n", (long) pid) < 0)
     {
       fclose(fp);
@@ -203,10 +222,7 @@ int lock_create (char **file, pid_t pid)
 
   /* Flush to backing store */
   fflush(fp);
-
-  /* XXX - Should we close it here, just for completeness?
-   * XXX - Seems odd to leave it open... /Jocke
-   */
+  fclose(fp);
 
   return 0;
 }
@@ -261,7 +277,7 @@ pid_t lock_read (char **file, int verbose)
     }
   while (fd == -1);
 
-  pid = FLOCK_GET(fd);
+  pid = flock_get(fd);
   close(fd);
 
   /* Old version running?
