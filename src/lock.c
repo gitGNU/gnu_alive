@@ -159,11 +159,7 @@ static pid_t flock_get(int fd)
 #if defined(HAVE_FCNTL_F_FREESP)
 static int fd_truncate(int fd)
 {
-  struct flock lock;
-
-  lock.l_whence = SEEK_SET;
-  lock.l_start = 0;
-  lock.l_len = 0;
+  struct flock lock = init_flock();
 
   return fcntl (fd, F_FREESP, &lock);
 }
