@@ -118,7 +118,7 @@ static int does_file_exist (char *file)
   int result = 0;
 
   fp = fopen (file, "r");
-  if (NULL != fp)
+  if (fp)
     {
       fclose (fp);
       result = 1;
@@ -146,8 +146,8 @@ static char *tilde_expand (char *file, int verbose)
   char  *new_file;
   char  *user_home = getenv("HOME");
 
-  assert (NULL != file);
-  assert (NULL != user_home);
+  assert (file);
+  assert (user_home);
 
   if ('~' != file[0])
     {
