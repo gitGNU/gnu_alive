@@ -189,7 +189,7 @@ static int __http_pre_login (config_data_t *config, int verbose)
 
   LOG (_("Waiting for reply from server..."));
   result = http_poll_read (config->sockfd, 5);
-  if (result == -1)
+  if (-1 == result)
     {
       ERROR (_("No reply from login server."));
       config->logged_in = 0;
@@ -359,7 +359,7 @@ static int __http_internet_login (config_data_t *config, int verbose)
    */
   LOG (_("Waiting for reply from server..."));
   result = http_poll_read (config->sockfd, 5);
-  if (result == -1)
+  if (-1 == result)
     {
       ERROR (_("No reply from login server."));
       config->logged_in = 0;
