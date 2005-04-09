@@ -70,22 +70,22 @@ static int autoconf_flock(int fd)
   lock.l_type = F_WRLCK;
 #endif
 
-  lseek(fd, 0, SEEK_SET);
+  lseek (fd, 0, SEEK_SET);
 
   return
 #if defined(LOCK_FCNTL)
-  fcntl (fd, F_SETLK, &lock) ||
+    fcntl (fd, F_SETLK, &lock)
 #elif defined(LOCK_FLOCK)
-  flock(fd,  LOCK_EX | LOCK_NB)) ||
+    flock (fd,  LOCK_EX | LOCK_NB))
 #elif defined(LOCK_LOCKF)
-  lockf(fd, F_TLOCK, 0) ||
+    lockf (fd, F_TLOCK, 0)
 #endif
 #ifdef HAVE_FCNTL_F_FREESP
-  fcntl(fd, F_FREESP, &lock)
+      || fcntl (fd, F_FREESP, &lock)
 #else
-  ftruncate(fd, (off_t) 0)
+      || ftruncate (fd, (off_t) 0)
 #endif
-  ;
+      ;
 }
 
 int lock_create (char **file, pid_t pid)
