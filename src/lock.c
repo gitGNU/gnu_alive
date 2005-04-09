@@ -288,9 +288,9 @@ lock_remove (char *file)
   int result;
 
   result = unlink (file);
-  if (result == -1)
+  if (-1 == result)
     {
-      if (errno == ENOENT)
+      if (ENOENT == errno)
         result = 0;
     }
 
