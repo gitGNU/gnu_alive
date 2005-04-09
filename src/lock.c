@@ -139,7 +139,7 @@ static pid_t FLOCK_GET(int fd)
 #define FLOCK_GET(fd) FLOCK_GET_FALLBACK(fd)
 #endif
 
-
+/* Truncate the lockfile length */
 #ifdef HAVE_FCNTL_F_FREESP
 static int FREESP(int fd)
 {
@@ -148,14 +148,14 @@ static int FREESP(int fd)
   lock.l_whence = SEEK_SET;
   lock.l_start = 0;
   lock.l_len = 0;
-  
+
   return fcntl (fd, F_FREESP, &lock);
 }
 #else
 #define FREESP(fd) ftruncate (fd, (off_t) 0)
 #endif
 
-
+/* Lock the PID file and truncate to zero length. */
 static int FLOCK(int fd)
 {
   return _FLOCK(fd) || FREESP(fd);
@@ -186,6 +186,7 @@ int lock_create (char **file, pid_t pid)
       return -1;
     }
 
+  /* fd=>FILE* */
   fp = fdopen(fd, "w");
   if (NULL == fp)
     {
@@ -193,12 +194,19 @@ int lock_create (char **file, pid_t pid)
       return -1;
     }
 
+  /* Make sure we to verify that the entry is written. */
   if (fprintf(fp, "%ld\n", (long) pid) < 0)
     {
       fclose(fp);
       return -1;
     }
+
+  /* Flush to backing store */
   fflush(fp);
+
+  /* XXX - Should we close it here, just for completeness?
+   * XXX - Seems odd to leave it open... /Jocke
+   */
 
   return 0;
 }
