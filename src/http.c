@@ -66,7 +66,7 @@ http_open_server (char *name, short port, int verbose)
 
   /* Try to find the login host */
   he = gethostbyname (name);
-  if (NULL == he)
+  if (!he)
     {
       ERROR (_("DNS lookup of login server %s failed to resolve to an IP#"), name);
       ERROR (_("Try the commands nslookup, host or dig for more details."));
