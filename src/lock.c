@@ -1,5 +1,6 @@
 /* lock.c - Lock file management for GNU Alive.
  *
+ * Copyright (C) 2005 Jakob Eriksson <jakob!eriksson()vmlinux!org>
  * Copyright (C) 2003, 2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  * Copyright (C) 2002, 2003 Torgny Lyon <torgny()enterprise!hb!se>
  *
@@ -52,17 +53,45 @@ extern char *fallback_pid_files[];
  *          -1 on error.
  */
 
+
+
+/*
+ * autoconf_flock - Virtualize away flock differences detected by autoconf
+ *
+ */
+static int autoconf_flock(int fd)
+{
+#if defined(LOCK_FCNTL) || defined(HAVE_FCNTL_F_FREESP)
+  struct flock lock;
+
+  lock.l_whence = SEEK_SET;
+  lock.l_start = 0;
+  lock.l_len = 0;
+  lock.l_type = F_WRLCK;
+#endif
+
+  lseek(fd, 0, SEEK_SET);
+
+  return
+#if defined(LOCK_FCNTL)
+  fcntl (fd, F_SETLK, &lock) ||
+#elif defined(LOCK_FLOCK)
+  flock(fd,  LOCK_EX | LOCK_NB)) ||
+#elif defined(LOCK_LOCKF)
+  lockf(fd, F_TLOCK, 0) ||
+#endif
+#ifdef HAVE_FCNTL_F_FREESP
+  fcntl(fd, F_FREESP, &lock)
+#else
+  ftruncate(fd, (off_t) 0)
+#endif
+  ;
+}
+
 int lock_create (char **file, pid_t pid)
 {
   int fd, fallback;
   FILE *fp;
-
-#if defined(LOCK_FCNTL)
-  struct flock lock;
-#endif
-#ifdef HAVE_FCNTL_F_FREESP
-  struct flock tlock;
-#endif
 
   fallback = 0;
   do
@@ -76,49 +105,14 @@ int lock_create (char **file, pid_t pid)
             return -1;
         }
     }
-  while (fd == -1);
+  while (-1 == fd);
 
-#if defined(LOCK_FCNTL)
-  lock.l_type = F_WRLCK;
-  lock.l_start = 0;
-  lock.l_whence = SEEK_SET;
-  lock.l_len = 0;
-  if (fcntl (fd, F_SETLK, &lock) == -1)
-    {
-      close(fd);
-      return -1;
-    }
-#elif defined(LOCK_FLOCK)
-  if (flock(fd,  LOCK_EX | LOCK_NB) == -1)
-    {
-      close(fd);
-      return -1;
-    }
-#elif defined(LOCK_LOCKF)
-  lseek(fd, 0, SEEK_SET);
-  if (lockf(fd, F_TLOCK, 0) == -1)
-    {
-      close(fd);
-      return -1;
-    }
-#endif
-
-#ifdef HAVE_FCNTL_F_FREESP
-  tlock.l_whence = SEEK_SET;
-  tlock.l_start = 0;
-  tlock.l_len = 0;
-  if (fcntl(fd, F_FREESP, &tlock) != 0)
+  if (autoconf_flock (fd))
     {
       close (fd);
       return -1;
     }
-#else
-  if (ftruncate(fd, (off_t) 0) == -1)
-    {
-      close(fd);
-      return -1;
-    }
-#endif
+
   fp = fdopen(fd, "w");
   if (NULL == fp)
     {
