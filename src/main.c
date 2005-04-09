@@ -163,7 +163,7 @@ main (int argc, char *argv[])
   while (EOF != c);
 
   /* Read /etc/qadsl.conf or similar */
-  if (operation == NOP)
+  if (NOP == operation)
     {
       usage (EXIT_FAILURE);
     }
