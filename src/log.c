@@ -68,8 +68,8 @@ void write_message (int level, char *fmt, ...)
       printf ("\n");
       break;
 
-    default:
     case LOG_ERR:
+    default:
       fprintf (stderr, _("%s ERR %s[%d]: "), time_string, PACKAGE_NAME, mypid);
       vfprintf (stderr, fmt, ap);
       fprintf (stderr, "\n");
