@@ -183,7 +183,7 @@ pid_t lock_read (char **file, int verbose)
                 * Question is: Do we want this?
                 * Answer:      No, do not allow daemon to start if no lockfile.
                 */
-/*                system ("ps --no-heading -C qadsl | head -1 | cut -f 1 -d ' ' >"); */
+/*                system ("ps --no-heading -C alive | head -1 | cut -f 1 -d ' ' >"); */
 
               DEBUG(_("Cannot find any PID file, daemon not running."));
               if (ENOENT == errno)
