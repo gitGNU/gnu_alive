@@ -39,7 +39,8 @@ fi
 
 # Start it or, at least, display "edit me".
 if [ -x $INIT_FILE ]; then
-    update-rc.d alive defaults >/dev/null
+    # update-rc.d alive defaults >/dev/null
+    update-rc.d alive start 42 S . stop 75 0 1 6 . >/dev/null
     if [ -x /usr/sbin/invoke-rc.d ]; then
 	invoke-rc.d alive start || exit 0
     else

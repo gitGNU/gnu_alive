@@ -1,3 +1,15 @@
+alive (1.4.0-3) unstable; urgency=low
+
+  * Adjust runlevel settings. Don't start in rc[235].d/S20alive, instead
+  start in rcS.d/S42alive right when networking and firewalls have started.
+  Keep rc[016].d/S75alive, only adjust to 75.
+  * It should be noted that 1.4.0-2 also changed the behaviour of stop a
+  bit.  Now we only exit the daemon, we do *not* log out.  This could in
+  a limited way be potentially harmful since the INET connection would be
+  up at reboot before firewalls have started ... see README.Debian for more.
+
+ --
+
 alive (1.4.0-2) unstable; urgency=low
 
   * This marks the first releasable debconf based setup. We now handle the

@@ -192,7 +192,7 @@ daemon_thread (config_data_t *config, int verbose)
       slept = sleep (timeout);
 
       /* The "ping" daemon only reads /sd/init */
-      http_pre_login (config, verbose);
+      http_pre_login (config);
 
       /* The login daemon also tries to login, but only if
        * the call to http_pre_login() did *not* bring up
@@ -201,7 +201,7 @@ daemon_thread (config_data_t *config, int verbose)
       if (config->daemon_type && !config->logged_in)
         {
           LOG (_("Daemon logging in again."));
-          http_do_login (config, verbose);
+          http_do_login (config);
         }
 
       /* This stuff added for verbosity */

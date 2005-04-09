@@ -115,7 +115,7 @@ AC_REPLACE_FUNCS(rindex strcasecmp getopt getopt_long)
 dnl Checks for typedefs, structures, and compiler characteristics.
 
 dnl Checks for library functions.
-dnl AC_CHECK_FUNCS()
+AC_CHECK_FUNCS(fcntl lockf flock ftruncate)
 
 dnl Check for various --with-??? directives
 

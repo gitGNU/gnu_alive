@@ -5,7 +5,7 @@
 
 
 int  daemonize (void);
-void daemon_thread (config_data_t *config, int verbose);
+void daemon_thread (config_data_t *config);
 int  daemon_kill (pid_t pid);
 
 

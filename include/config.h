@@ -96,6 +96,6 @@ struct config_data
 
 typedef struct config_data config_data_t;
 
-config_data_t *config_load (char *file, int verbose);
+config_data_t *config_load (char *file);
 
 #endif  /* __CONFIG_H__ */

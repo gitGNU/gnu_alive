@@ -30,6 +30,8 @@
 #include <unistd.h>
 #include <time.h>
 
+int verbose = 0;
+
 /* Just an empty string that is not on the stack */
 static char *empty_string = "";
 

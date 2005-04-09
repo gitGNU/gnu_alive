@@ -35,11 +35,10 @@
 #include "log.h"
 
 
-int
-process (config_data_t *config, op_t operation, int verbose)
+int process (config_data_t *config, op_t operation)
 {
   int   result  = 0;
-  pid_t running = lock_read (&config->pid_file, verbose);
+  pid_t running = lock_read (&config->pid_file);
 
   switch (operation)
     {
@@ -74,12 +73,12 @@ process (config_data_t *config, op_t operation, int verbose)
         }
 
       /* Bring up init page - could be we're already logged in. */
-      http_pre_login (config, verbose);
+      http_pre_login (config);
       if (!config->logged_in)
         {
           /* Nope, login first. */
           LOG (_("First check, not logged in yet."));
-          result = http_internet_login (config, verbose);
+          result = http_internet_login (config);
           if (result)
             {
               ERROR (_("To diagnose, try the options --debug --verbose"));
@@ -118,14 +117,16 @@ process (config_data_t *config, op_t operation, int verbose)
           /* Always try to fork off the daemon. */
           if (daemonize () == 0)
             {
-              daemon_thread (config, verbose | MSG_FILE);
+              /* Log to file hereinafter */
+              verbose |= LOG_FILE;
+              daemon_thread (config);
             }
         }
       break;
 
       /* Release connection, call logout page. Then fall through to QUIT. */
     case LOGOUT:
-      result = http_internet_logout (config, verbose);
+      result = http_internet_logout (config);
 
       /* Quit daemon */
     case QUIT:
@@ -141,7 +142,7 @@ process (config_data_t *config, op_t operation, int verbose)
       LOG (_("No operation selected, reverting to query status."));
     default:
     case STATUS:
-      http_pre_login (config, verbose);
+      http_pre_login (config);
       LOG (_("Current status: %s"),
            config->logged_in
            ? _("CONNECTED")

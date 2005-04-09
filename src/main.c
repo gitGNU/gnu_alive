@@ -62,7 +62,6 @@ main (int argc, char *argv[])
   char *pid_file = NULL;
   int port = -1;
   char *conf_file = NULL;
-  int verbose = MSG_NONE;
   op_t operation = NOP;
   int c;
 
@@ -123,10 +122,10 @@ main (int argc, char *argv[])
 
           /* XXX - Maybe debug should imply regular verbosity? */
         case 'd':               /* Debug log level */
-          verbose |= MSG_DEBUG;
+          verbose |= LOG_DEBUG;
 
         case 'v':               /* Verbose log level */
-          verbose |= MSG_LOG;
+          verbose |= LOG_INFO;
           break;
 
         case 'V':               /* Print version. */
@@ -168,7 +167,7 @@ main (int argc, char *argv[])
       usage (EXIT_FAILURE);
     }
 
-  config = config_load (conf_file, verbose);
+  config = config_load (conf_file);
   if (!config)
     {
       exit (EXIT_FAILURE);
@@ -178,7 +177,7 @@ main (int argc, char *argv[])
   if (port != -1) config->server_port = port;
 
   /* Handle request */
-  return process (config, operation, verbose);
+  return process (config, operation);
 }
 
 

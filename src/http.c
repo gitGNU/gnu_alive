@@ -47,7 +47,6 @@
  * http_open_server - Open and connect to a server on a specified port.
  * @name:    Connect to this named server.
  * @port:    Connect to this port.
- * @verbose: Diagnostic output.
  *
  * This is a local helper function for the rest of the handlers in this
  * class. It opens a connection to a specified server, @name, which can
@@ -58,7 +57,7 @@
  */
 
 static int
-http_open_server (char *name, short port, int verbose)
+http_open_server (char *name, short port)
 {
   int result, sockfd;
   struct hostent *he;
@@ -140,7 +139,6 @@ static int http_poll_write (int fd, int seconds)
  * http_pre_login - Bring up Orbyte login screen.
  * @config:  Pointer to configuration data.
  * @sockfd: Socket we are connected to.
- * @verbose: Diagnostic output.
  *
  * This function serves as a sort of "ping" to ensure that
  * the login server is alive and accepting connections.
@@ -151,7 +149,7 @@ static int http_poll_write (int fd, int seconds)
  * Returns: 0 if login server alive, otherwise a negative value.
  */
 
-static int __http_pre_login (config_data_t *config, int verbose)
+static int __http_pre_login (config_data_t *config)
 {
   int result;
 
@@ -160,7 +158,7 @@ static int __http_pre_login (config_data_t *config, int verbose)
 
   /* Open a connection to the login server */
   LOG (_("Connecting to login server, %s:%d."), config->login_server, config->server_port);
-  config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
+  config->sockfd = http_open_server (config->login_server, config->server_port);
   if (config->sockfd < 0)
     {
       ERROR (_("Failed to connect to login server (%s): %s"), config->login_server, strerror (errno));
@@ -217,16 +215,16 @@ static int __http_pre_login (config_data_t *config, int verbose)
   return result;
 }
 
-int http_pre_login (config_data_t *config, int verbose)
+int http_pre_login (config_data_t *config)
 {
   int result;
 
-  result = __http_pre_login (config, verbose);
-  http_test_if_logged_in (config, verbose);
+  result = __http_pre_login (config);
+  http_test_if_logged_in (config);
   if ((result && verbose) || (config->logged_in == 0))
     {
       LOG (_("%s(): Login server \"pinged\": not logged in..."), __FUNCTION__);
-      if (IS_DEBUG (verbose))
+      if (IS_DEBUG())
         {
           DEBUG (_("%s(): Here is the reply:\n%s"), __FUNCTION__, config->get_msg);
         }
@@ -244,7 +242,6 @@ int http_pre_login (config_data_t *config, int verbose)
  * http_internet_login - Handles the login phase.
  * @config:  Pointer to configuration data.
  * @sockfd:  Socket we are connected to.
- * @verbose: Diagnostic output.
  *
  * This is the function that handles the logging in to the
  * Internet gateway of the ISP.
@@ -252,7 +249,7 @@ int http_pre_login (config_data_t *config, int verbose)
  * Returns: 0 if login was successful, otherwise -1.
  */
 
-static int __http_internet_login (config_data_t *config, int verbose)
+static int __http_internet_login (config_data_t *config)
 {
   int result = 0, length;
   char *login_string, *temp;
@@ -263,7 +260,7 @@ static int __http_internet_login (config_data_t *config, int verbose)
 
   /* Open a connection to the login server */
   LOG (_("Connecting to login server, %s:%d."), config->login_server, config->server_port);
-  config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
+  config->sockfd = http_open_server (config->login_server, config->server_port);
   if (config->sockfd < 0)
     {
       ERROR(_("Failed to connect to login server (%s): %s"),
@@ -390,17 +387,17 @@ static int __http_internet_login (config_data_t *config, int verbose)
   return result;
 }
 
-int http_internet_login (config_data_t *config, int verbose)
+int http_internet_login (config_data_t *config)
 {
   int result;
 
-  result = __http_internet_login (config, verbose);
-  http_test_if_logged_in (config, verbose);
+  result = __http_internet_login (config);
+  http_test_if_logged_in (config);
 
   if ((result && verbose) || (config->logged_in == 0))
     {
       LOG (_("%s(): login failed."), __FUNCTION__);
-      if (IS_DEBUG (verbose))
+      if (IS_DEBUG())
         {
           DEBUG (_("%s(): Here is the reply:\n%s"), __FUNCTION__, config->get_msg);
         }
@@ -417,7 +414,6 @@ int http_internet_login (config_data_t *config, int verbose)
 /**
  * http_internet_logout - Handles the graceful logout for the client.
  * @config:  Pointer to configuration data.
- * @verbose: Diagnostic output.
  *
  * This function is called by the client to gracefully logout from
  * the login server.
@@ -425,7 +421,7 @@ int http_internet_login (config_data_t *config, int verbose)
  * Returns: 0 when logged out OK, otherwise -1.
  */
 
-int __http_internet_logout (config_data_t *config, int verbose)
+int __http_internet_logout (config_data_t *config)
 {
   int result;
 
@@ -434,7 +430,7 @@ int __http_internet_logout (config_data_t *config, int verbose)
 
   /* Open a connection to the login server */
   LOG (_("Connecting to login server, %s:%d."), config->login_server, config->server_port);
-  config->sockfd = http_open_server (config->login_server, config->server_port, verbose);
+  config->sockfd = http_open_server (config->login_server, config->server_port);
   if (config->sockfd < 0)
     {
       ERROR(_("Failed to connect to login server (%s): %s"), config->login_server, strerror (errno));
@@ -504,16 +500,16 @@ int __http_internet_logout (config_data_t *config, int verbose)
 }
 
 int
-http_internet_logout (config_data_t *config, int verbose)
+http_internet_logout (config_data_t *config)
 {
   int result;
 
-  result = __http_internet_logout (config, verbose);
+  result = __http_internet_logout (config);
   http_test_if_logged_out (config);
   if ((result && verbose) || (config->logged_in == 1))
     {
       LOG (_("%s(): logout failed."), __FUNCTION__);
-      if (IS_DEBUG (verbose))
+      if (IS_DEBUG())
         {
           DEBUG (_("%s(): Here is the reply:\n%s"), __FUNCTION__, config->get_msg);
         }
@@ -530,7 +526,6 @@ http_internet_logout (config_data_t *config, int verbose)
 /**
  * http_do_login - Handles periodic logins for the daemon only
  * @config:  Pointer to configuration data.
- * @verbose: Diagnostic output.
  *
  * Ths function is exclusively called by the daemon but placed here to keep
  * all similar functionality in one place. It takes care to
@@ -541,7 +536,7 @@ http_internet_logout (config_data_t *config, int verbose)
  */
 
 int
-http_do_login (config_data_t *config, int verbose)
+http_do_login (config_data_t *config)
 {
   int try, result;
 
@@ -552,7 +547,7 @@ http_do_login (config_data_t *config, int verbose)
    * first before we try the actual login otherwise the server will be
    * very crossed with us.
    */
-  result = http_internet_login (config, verbose);
+  result = http_internet_login (config);
   /* If we fail to do the hokey pokey */
   if (result)
     {
@@ -571,7 +566,7 @@ http_do_login (config_data_t *config, int verbose)
           sleep (5 * try);
 
           /* If we cannot get the login or csw pages we sleep some more */
-          result = http_pre_login (config, verbose);
+          result = http_pre_login (config);
           if (result)
             {
               DEBUG (_("%s(): failed to bring up login page."), __FUNCTION__);
@@ -585,11 +580,11 @@ http_do_login (config_data_t *config, int verbose)
                * post login page - if so there is no need to actually
                * do the login tango with the server.
                */
-              result = http_test_if_logged_in (config, verbose);
+              result = http_test_if_logged_in (config);
               if (result)
                 {
                   /* Actual login page - do the login */
-                  result = http_internet_login (config, verbose);
+                  result = http_internet_login (config);
 
                   /* For the logfile -- tell status. */
                   if (result)

@@ -5,46 +5,31 @@
 
 #include <syslog.h>
 
-#define MSG_NONE     0
-#define MSG_LOG      1
-#define MSG_FILE     2
-#define MSG_DEBUG    4
+#define LOG_NONE     0
+#define LOG_FILE     8
 
-#define IS_DEBUG(v) (MSG_DEBUG & (v))
+#define IS_DEBUG() (LOG_DEBUG & verbose)
+
+extern int verbose;
 
 void write_message (int level, char *fmt, ...);
 void write_logfile (int level, char *fmt, ...);
-
-#define DEBUG(args...)                             \
-  if (MSG_DEBUG & verbose)                         \
-    {                                              \
-      if (MSG_FILE & verbose)                      \
-        write_logfile (LOG_DEBUG, args);           \
-      else                                         \
-        write_message (LOG_DEBUG, args);           \
-    }                                              \
-  else                                             \
-    {}
-
-#define LOG(args...)                               \
-  if (MSG_LOG & verbose)                           \
-    {                                              \
-      if (MSG_FILE & verbose)                      \
-        write_logfile (LOG_INFO, args);            \
-      else                                         \
-        write_message (LOG_INFO, args);            \
-    }                                              \
-  else                                             \
-    {}
 
 /* We always want the errors to creep up, regardless
  * of the verbosity level. Only figure out if it
  * goes to the logfile or stderr.
  */
-#define ERROR(args...)                             \
-  if (MSG_FILE == verbose)                         \
-    write_logfile (LOG_ERR, args);                 \
-  else                                             \
-    write_message (LOG_ERR, args);
+#define DO_LOG(lvl, args...)                    \
+  if ((LOG_DEBUG & verbose) || (LOG_ERR & lvl)) \
+    {                                           \
+      if (LOG_FILE & verbose)                   \
+        write_logfile (lvl, args);              \
+      else                                      \
+        write_message (lvl, args);              \
+    }
+
+#define LOG(args...)    DO_LOG(LOG_INFO, args)
+#define DEBUG(args...)  DO_LOG(LOG_DEBUG, args)
+#define ERROR(args...)  DO_LOG(LOG_ERR, args)
 
 #endif /* __MSG_H__ */

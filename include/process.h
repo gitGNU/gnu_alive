@@ -8,6 +8,6 @@ enum op {LOGIN, LOGOUT, QUIT, STATUS, NOP};
 typedef enum op op_t;
 
 
-int process (config_data_t *config, op_t operation, int verbose);
+int process (config_data_t *config, op_t operation);
 
 #endif  /* __PROCESS_H__ */

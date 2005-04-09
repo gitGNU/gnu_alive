@@ -4,6 +4,14 @@
 #include "config.h"
 #include "log.h"
 
+/* There is a reason to why we use HTTP/0.9 and not 1.0.
+ * See the specs. for details:
+ *   HTTP/1.0 :: http://www.w3.org/Protocols/rfc1945/rfc1945
+ *   HTTP/1.1 :: http://www.w3.org/Protocols/rfc2616/rfc2616.html
+ *
+ * Proxying of alive messages should fit within HTTP/0.9.
+ */
+
 #define PRELOGIN_MSG                                        \
   "GET %s HTTP/0.9\n"                                       \
   "Referer: http://%s\n"                                    \
@@ -30,14 +38,13 @@
 /* XXX - Should perhaps be configurable from configure... */
 #define MAX_RETRIES 3
 
-int http_pre_login       (config_data_t *config, int verbose);
-int http_internet_login  (config_data_t *config, int verbose);
-int http_internet_logout (config_data_t *config, int verbose);
-int http_do_login        (config_data_t *config, int verbose);
+int http_pre_login       (config_data_t *config);
+int http_internet_login  (config_data_t *config);
+int http_internet_logout (config_data_t *config);
+int http_do_login        (config_data_t *config);
 
 
-static inline int
-http_test_if_logged_out (config_data_t *config)
+static inline int http_test_if_logged_out (config_data_t *config)
 {
   int result = -1;
 
@@ -55,8 +62,7 @@ http_test_if_logged_out (config_data_t *config)
   return result;
 }
 
-static inline int
-http_test_if_logged_in (config_data_t *config, int verbose)
+static inline int http_test_if_logged_in (config_data_t *config)
 {
   int result = -1;
 

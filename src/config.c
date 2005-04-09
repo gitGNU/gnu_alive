@@ -140,7 +140,7 @@ static int does_file_exist (char *file)
  *          returns a malloc'ed tilde expanded file name.
  */
 
-static char *tilde_expand (char *file, int verbose)
+static char *tilde_expand (char *file)
 {
   size_t len;
   char  *new_file;
@@ -180,7 +180,7 @@ static char *tilde_expand (char *file, int verbose)
  * Returns: The name of the config file to use.
  */
 
-static char *config_locate (char *file, int verbose)
+static char *config_locate (char *file)
 {
   if (file)
     {
@@ -202,7 +202,7 @@ static char *config_locate (char *file, int verbose)
 
       for (i = 0; possible_conf_files [i]; i++)
         {
-          file = tilde_expand (possible_conf_files[i], verbose);
+          file = tilde_expand (possible_conf_files[i]);
           DEBUG("Looking for CONF file: %s", file)
           if (does_file_exist (file))
             {
@@ -236,21 +236,20 @@ static char *config_locate (char *file, int verbose)
   return __config_area.conf_file;
 }
 
-void print_parm (param_t *p, int verbose)
+void print_parm (param_t *p)
 {
   if (!p) return;
 
   DEBUG ("%s = %s", p->names[0], p->value);
 }
 
-config_data_t *
-config_load (char *file, int verbose)
+config_data_t * config_load (char *file)
 {
   int result;
   char *temp;
 
   /* Setup default configuration */
-  file = config_locate (file, verbose);
+  file = config_locate (file);
   if (!file)
     {
       ERROR("Cannot find any config file, please create one.\n");
@@ -266,14 +265,14 @@ config_load (char *file, int verbose)
       return NULL;
     }
 
-  if (IS_DEBUG(verbose))
+  if (IS_DEBUG())
   {
     int i;
 
     DEBUG (_("Read configuration:"));
     for (i = 0; i < (sizeof (parms) / sizeof (parms[0])); i++)
       {
-        print_parm (&parms[i], verbose);
+        print_parm (&parms[i]);
       }
   }
 

@@ -26,10 +26,14 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <sys/types.h>
+#ifdef HAVE_FCNTL
+#include <sys/fcntl.h>
+#endif
+#include <unistd.h>
 
 #include "log.h"
 
@@ -37,30 +41,16 @@ extern int errno;
 extern char *fallback_pid_files[];
 
 
-/**
- * write_pid - Write the pid of the daemon process to file.
- * @file:      PID file.
- * @pid:       Process ID to write.
- *
- * This function is responsible for writing the @pid of the
- * auto-login daemon to the specified PID @file.
- *
- * If the specified @file does not exist a set of backup
- * alternatives should be used. If neither of these is
- * available (read-only file system?) it is OK to return error.
- *
- * Returns: A positive integer representing the PID, or
- *          -1 on error.
- */
-
-
-
 /*
- * Virtualize away flock differences detected by autoconf
+ * Virtualize away flock differences detected by autoconf.
+ *
+ * Truncating: http://www.unixguide.net/unix/faq/3.3.shtml
+ * Locking: http://www.erlenstar.demon.co.uk/unix/faq_3.html#SEC35
  */
 
-#if defined(LOCK_FCNTL) || defined(HAVE_FCNTL_F_FREESP)
-static struct flock init_flock()
+/* Functions for setting and getting a file lock ***********************/
+#if defined(HAVE_FCNTL)
+static struct flock __init_flock()
 {
   struct flock lock;
 
@@ -71,34 +61,19 @@ static struct flock init_flock()
 
   return lock;
 }
-#endif
 
-static pid_t flock_get_fallback(int fd)
+static int __flock_set(int fd)
 {
-  FILE *fp;
-  pid_t pid;
-
-  fp = fdopen(fd, "r");
-  fscanf(fp, "%d", &pid);
-  fclose(fp); /* XXX is fd closed now too? can we
-                 remove this line and let lock_read() close instead? */
-
-  return pid;
-}
-
-#if defined(LOCK_FCNTL)
-static int flock_create(int fd)
-{
-  struct flock lock = init_flock();
+  struct flock lock = __init_flock();
 
   return fcntl (fd, F_SETLK, &lock);
 }
 
-static pid_t flock_get(int fd)
+static pid_t __flock_get(int fd)
 {
-  struct flock lock = init_flock();
+  struct flock lock = __init_flock();
 
-  if (fcntl(fd, F_GETLK, &lock) < 0)
+  if (fcntl (fd, F_GETLK, &lock) < 0)
     return -1;
 
   if (F_UNLCK == lock.l_type)
@@ -107,14 +82,31 @@ static pid_t flock_get(int fd)
   return lock.l_pid;
 }
 
-#elif defined(LOCK_LOCKF)
-static int flock_create(fd)
+#elif defined(HAVE_LOCKF)
+static int __flock_set(fd)
 {
   lseek(fd, 0, SEEK_SET);
+
   return lockf (fd, F_TLOCK, 0);
 }
 
-static pid_t flock_get(int fd)
+static pid_t __flock_get(int fd)
+{
+  if (!lockf (fd, F_TLOCK, 0))
+    {
+      if (!lockf (fd, F_ULOCK, 0))
+        return -1;
+      return 0;
+    }
+
+  return flock_get_fallback(fd);
+}
+
+#elif defined(HAVE_FLOCK)
+#define __flock_set(fd) \
+  flock (fd, LOCK_EX | LOCK_NB)
+
+static pid_t __flock_get(int fd)
 {
   if (!flock(fd, LOCK_EX | LOCK_NB))
     {
@@ -125,56 +117,72 @@ static pid_t flock_get(int fd)
 
   return flock_get_fallback(fd);
 }
-#elif defined(LOCK_FLOCK)
-static int flock_create(fd)
-{	
-  return flock (fd, LOCK_EX | LOCK_NB);
-}
+#else  /* Neither fcntl(), lockf() or flock() */
+#define __flock_set(fd) (0)
+#define __flock_get(fd) flock_get_fallback(fd)
+#endif  /* HAVE_FCNTL */
 
-static pid_t flock_get(int fd)
-{
-  if (!lockf(fd, F_TLOCK, 0))
-    {
-      if (!lockf(fd, F_ULOCK, 0))
-        return -1;
-      return 0;
-    }
-
-  return flock_get_fallback(fd);
-}
-
-#else
-static pid_t flock_create(int fd)
-{
-  return 0;
-}
-
-static pid_t flock_get(int fd)
-{
-  return flock_get_fallback(fd);
-}
-#endif
-
-/* Truncate the lockfile length */
-#if defined(HAVE_FCNTL_F_FREESP)
-static int fd_truncate(int fd)
+/* Truncate the lockfile length ***************************************/
+#if defined(F_FREESP)
+static int __ftruncate(int fd)
 {
   struct flock lock = init_flock();
 
   return fcntl (fd, F_FREESP, &lock);
 }
-#else
-static pid_t fd_truncate(int fd)
-{
-  return ftruncate (fd, (off_t) 0);
-}
+#elif defined (HAVE_FTRUNCATE)
+#define __ftruncate(fd) ftruncate (fd, (off_t) 0)
+#else  /* !F_FREESP */
+#define __ftruncate(fd) (0)
 #endif
 
-/* Lock the PID file and truncate to zero length. */
+/*
+ * flock_set
+ * Lock the PID file and truncate to zero length.
+ * XXX - Funny, it's not really the end of the world if we
+ *       cannot truncate it.  Since we open with O_TRUNC and O_CREAT
+ *       chances are good we've actually already truncated it...
+ *       So why does it get such a detrimental role, what's really
+ *       interesting is that we
+ *             1) Write at START of file and
+ *             2) Get an exclusive lock.
+ */
 static int flock_set(int fd)
 {
-  return flock_create(fd) || fd_truncate(fd);
+  return (__flock_set(fd) || __ftruncate(fd));
 }
+
+/*
+ * flock_get
+ * Acquire lock and return the corresponding FILE ptr.
+ */
+static FILE *flock_get (int fd)
+{
+  FILE *fp;
+  int result = __flock_get(fd);
+
+  if (result)
+    {
+      ERROR("Failed to get lock: %s", strerror (errno));
+    }
+
+  fp = fdopen(fd, "r");
+
+  return fp;
+}
+
+
+/**
+ * lock_create - Create a lockfile and store a PID
+ * @file: List of files.
+ * @pid:  PID to store in lockfile.
+ *
+ * This function tries to open a lockfile from a @file list.
+ * When one is opened it is locked and the given @pid is
+ * stored therein.
+ *
+ * Returns: -1 on error 0 when PID written OK.
+ */
 
 int lock_create (char **file, pid_t pid)
 {
@@ -240,8 +248,9 @@ int lock_create (char **file, pid_t pid)
  * Returns: 0 if not locked and -1 on error, otherwise the PID.
  */
 
-pid_t lock_read (char **file, int verbose)
+pid_t lock_read (char **file)
 {
+  FILE *fp;
   int fd, fallback;
   pid_t pid;
 
@@ -250,7 +259,7 @@ pid_t lock_read (char **file, int verbose)
     {
       DEBUG(_("Looking for PID file: %s."), *file);
 
-      fd = open(*file, O_RDONLY);
+      fd = open (*file, O_RDONLY);
       if (-1 == fd)
         {
           *file = fallback_pid_files [fallback++];
@@ -273,8 +282,29 @@ pid_t lock_read (char **file, int verbose)
     }
   while (fd == -1);
 
-  pid = flock_get(fd);
-  close(fd);
+  fp = flock_get (fd);
+  if (!fp)
+    {
+      /* XXX - Ugly code to replace fscanf() in case we fail at
+       * XXX - fdopen() ... why use fdopen? Can we fix this as well?
+       */
+      int i;
+      char str[10];
+
+      ERROR(_("Failed badly in flock_get(): %s"), strerror (errno));
+      i = read (fd, str, 10);
+      if (i > 0 && i < 10)
+        {
+          str[i] = 0;
+          pid = atol (str);
+        }
+      close (fd);
+    }
+  else
+    {
+      fscanf(fp, "%ld", &pid);
+      fclose(fp);               /* Closes fd as well... */
+    }
 
   /* Old version running?
    * XXX - Maybe prompt user to upgrade/restart/reload daemon?
@@ -315,6 +345,7 @@ lock_remove (char *file)
 
   return result;
 }
+
 
 /* Local Variables:
  * mode: C;
