@@ -171,7 +171,7 @@ static pid_t fd_truncate(int fd)
 #endif
 
 /* Lock the PID file and truncate to zero length. */
-static int create_flock(int fd)
+static int flock_set(int fd)
 {
   return flock_create(fd) || fd_truncate(fd);
 }
@@ -195,7 +195,7 @@ int lock_create (char **file, pid_t pid)
     }
   while (-1 == fd);
 
-  if (create_flock(fd))
+  if (flock_set(fd))
     {
       close (fd);
       return -1;
