@@ -189,7 +189,7 @@ int lock_create (char **file, pid_t pid)
       if (-1 == fd)
         {
           *file = fallback_pid_files [fallback++];
-          if (NULL == *file)
+          if (!*file)
             return -1;
         }
     }
@@ -203,7 +203,7 @@ int lock_create (char **file, pid_t pid)
 
   /* fd=>FILE* */
   fp = fdopen(fd, "w");
-  if (NULL == fp)
+  if (!fp)
     {
       close(fd);
       return -1;
@@ -254,7 +254,7 @@ pid_t lock_read (char **file, int verbose)
       if (-1 == fd)
         {
           *file = fallback_pid_files [fallback++];
-          if (NULL == *file)
+          if (!*file)
             {
                /* This makes us depend on procps and coreutils in GNU/Linux
                 * but only coreutils in GNU/Hurd.
