@@ -199,32 +199,6 @@ strlndup (char *src, size_t len)
 }
 
 
-/**
- * strlncpy - Rip-off from OpenBSD's strlcpy()
- * @dst: Destination string.
- * @src: Source string.
- * @len: maximum number of char's to copy.
- *
- * XXX - Relies on dst being valid
- * Makes sure to NUL terminate dst when done.
- */
-
-static size_t
-strlncpy (char *dst, char *src, size_t len)
-{
-  size_t src_len = strlen (src);
-
-  if (src_len > len)
-    src_len = len;
-
-  strncpy (dst, src, src_len);
-
-  dst[src_len] = '\0';
-
-  return src_len;
-}
-
-
 /* TODO: Implement strlncat() or setup proper aliases for
  * OpenBSD's strlcpy() strlcat() if configure does not find
  * support for them or libsafe <--- Lucent contribution.
