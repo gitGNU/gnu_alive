@@ -117,7 +117,7 @@ static pid_t __flock_get(int fd)
 
   return flock_get_fallback(fd);
 }
-#else  /* Neither fcntl(), lockf() or flock() */
+#else  /* Neither fcntl(), lockf() nor flock() */
 #define __flock_set(fd) (0)
 #define __flock_get(fd) flock_get_fallback(fd)
 #endif  /* HAVE_FCNTL */
