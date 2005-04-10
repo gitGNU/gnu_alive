@@ -158,7 +158,6 @@ static int flock_set(int fd)
  */
 static FILE *flock_get (int fd)
 {
-  FILE *fp;
   int result = __flock_get(fd);
 
   if (result)
@@ -166,9 +165,7 @@ static FILE *flock_get (int fd)
       ERROR("Failed to get lock: %s", strerror (errno));
     }
 
-  fp = fdopen(fd, "r");
-
-  return fp;
+  return fdopen(fd, "r");
 }
 
 
