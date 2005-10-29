@@ -98,21 +98,12 @@ void write_message (int level, char *fmt, ...)
 void
 write_logfile (int level, char *fmt, ...)
 {
-  int     len;
-  char   *str;
   va_list ap;
 
-  str = alloca (MAXDATASIZE);  /* XXX - What is this, a hardcoded value?! */
-  va_start (ap, fmt);
-  len = vsnprintf (str, MAXDATASIZE, fmt, ap);
-  if (len >= 0)
-    str [len] = 0;
-  else
-    *str = 0;
-  va_end (ap);
-
   openlog (PACKAGE_NAME, LOG_PID | LOG_CONS, LOG_DAEMON);
-  syslog (level, str);
+  va_start (ap, fmt);
+  syslog (level, fmt, ap);
+  va_end (ap);
   closelog ();
 }
 
