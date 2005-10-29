@@ -2,6 +2,11 @@
 
 * TODO List - Items listed in falling priority order - first most important
 
+** Gah!  Replace strncpy(), strncat() et al with strl*() from OpenBSD!
+
+Too many malloc problems with the former means we need string safe
+operations for Alive!
+
 ** Tool shakedown
 
 Run stuff like flawfinder on the source, there's a lot of stuff that
