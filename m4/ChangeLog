@@ -29,4 +29,3 @@
 	* wint_t.m4: New file, from gettext-0.14.1.
 	* xsize.m4: New file, from gettext-0.14.1.
 	* Makefile.am: New file.
-
