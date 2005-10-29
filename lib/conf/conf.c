@@ -344,6 +344,7 @@ conf_get_bool (param_t *parameter_list, char *key)
  */
 
 #ifdef OLD_CONFIG_PARSER
+#define MAXLEN 256
 void
 conf_read (conf_data_t *config)
 {
