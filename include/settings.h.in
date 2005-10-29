@@ -262,9 +262,6 @@
 /* I am a hack, please send patch to remove me. */
 #undef MAXDATASIZE
 
-/* I am a hack, please send patch to remove me. */
-#undef MAXLEN
-
 /* Name of package */
 #undef PACKAGE
 
