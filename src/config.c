@@ -27,6 +27,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "conf.h"
 #include "log.h"
@@ -106,24 +109,50 @@ char *possible_conf_files[] =
   };
 
 /**
- * does_file_exist - Answers the question if the file exists.
+ * is_file_available - Answers the question if the file exists.
  * @file: File to look for.
  *
  * Returns: Numerical one (1) if @file exists, otherwise zero (0).
  */
 
-static int does_file_exist (char *file)
+static int is_file_available (char *file)
 {
-  FILE *fp;
   int result = 0;
+#if 1
+  struct stat f;
 
+  if (file)
+    {
+      result = stat (file, &f);
+      if (result)
+        {
+          result = 0;
+        }
+      else
+        {
+          /* If @file is a regular file with either owner, group or others
+             readability */
+          if (S_ISREG(f.st_mode)
+              &&
+              ((f.st_uid == getuid() && (f.st_mode & S_IRUSR))
+               ||
+               (f.st_gid == getgid() && (f.st_mode & S_IRGRP))
+               ||
+               (f.st_mode & S_IROTH)))
+            {
+              result = 1;
+            }
+        }
+    }
+#else  /* This code segfaults at fclose() on Debian unstable, glibc-2.3.5-7 */
+  FILE *fp;
   fp = fopen (file, "r");
   if (fp)
     {
-      fclose (fp);
       result = 1;
+      fclose (fp);
     }
-
+#endif
   return result;
 }
 
@@ -149,6 +178,7 @@ static char *tilde_expand (char *file)
   assert (file);
   assert (user_home);
 
+  DEBUG("file=%s\n", file);
   if ('~' != file[0])
     {
       /* Not a tilde directory... pretend it was. */
@@ -163,8 +193,8 @@ static char *tilde_expand (char *file)
       return NULL;
     }
 
-  strncpy (new_file, user_home, strlen (user_home));
-  strncat (new_file, &file[1], strlen (file) - 1);
+  strncpy (new_file, user_home, strlen (user_home) + 1);
+  strncat (new_file, &file[1], strlen (file));
 
   return new_file;
 }
@@ -184,7 +214,7 @@ static char *config_locate (char *file)
 {
   if (file)
     {
-      if (does_file_exist(file))
+      if (is_file_available(file))
         {
           __config_area.conf_file = strdup (file);
         }
@@ -202,14 +232,22 @@ static char *config_locate (char *file)
 
       for (i = 0; possible_conf_files [i]; i++)
         {
+          DEBUG("%d=%s\n", i, possible_conf_files[i]);
           file = tilde_expand (possible_conf_files[i]);
-          DEBUG("Looking for CONF file: %s", file)
-          if (does_file_exist (file))
+          if (!file)
             {
-              __config_area.conf_file = file;
-              break;
+              ERROR("Failed expanding conf file %d\n", i);
             }
-          free (file);
+          else
+            {
+              DEBUG("Looking for CONF file: %s", file);
+              if (is_file_available (file))
+                {
+                  __config_area.conf_file = file;
+                  break;
+                }
+              free (file);
+            }
         }
     }
 
