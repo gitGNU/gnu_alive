@@ -1,3 +1,27 @@
+2005-10-29  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
+
+	* src/log.c (write_logfile): Remove MAXDATASIZE dependency AND
+	local alloca():d buffer.  The syslog() call can take varargs.
+
+	* configure.ac: Fix --enable-debug to actually set -O0 and to
+	remove -g from regular builds.  Also added a neat printout of
+	detected and configured settings last.
+
+	* src/lock.c: Merge last fixes from coding session with Jakob.
+
+	* src/config.c: Rename does_file_exist() to is_file_available().
+
+	* src/config.c (is_file_available): Add less resource inefficient
+	stat() code as alternative to fopen/fclose implementation.  (This
+	latter piece of code used to segfault due to a string copy bug,
+	see below.)
+
+	* src/config.c (tilde_expand): Gah, strncpy() and strncat() bug
+	that resulted in failure to NUL terminate the resulting string!
+	We should really revert to using strlcpy() & c:o from OpenBSD!
+
+	* src/config.c (config_locate): Better error detection.
+
 2005-02-21  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* (-: Oupsla, a new release.  How unexpectedly.
