@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 dnl Every other copy of the package version number gets its value from here
-AC_INIT(GNU Alive, 1.4.0,
+AC_INIT(GNU Alive, 1.4.1,
         [http://savannah.gnu.org/bugs/?group=alive])
 
 dnl create a config.h file (Automake will add -DHAVE_CONFIG_H)
@@ -60,12 +60,12 @@ if test "$GCC" = "yes" ; then
 		AC_MSG_RESULT([yes]) ; CFLAGS="$save_CFLAGS -std=gnu99",
 		AC_MSG_RESULT([no]) ; CFLAGS="$save_CFLAGS"))
 
-    # Override autoconf default addition of -O2 and let the
-    # --enable-optimizer-flags decide whether to set it or not
+    # Override autoconf default addition of -O2 and -g and let the
+    # --enable-debug flag decide whether to set it or not
     OPTIMIZER_CFLAGS="-O2"
     OPTIMIZER_CXXFLAGS="-O2"
-    CFLAGS=`echo ${CFLAGS} | sed 's/-O2//'`
-    CXXFLAGS=`echo ${CXXFLAGS} | sed 's/-O2//'`
+    CFLAGS=`echo ${CFLAGS} | sed 's/-O2//' | sed 's/-g//'`
+    CXXFLAGS=`echo ${CXXFLAGS} | sed 's/-O2//' | sed 's/-g//'`
 fi
 
 dnl Checks for libraries.
@@ -74,10 +74,10 @@ AC_PROG_RANLIB
 dnl Enable/disable stuff
 AC_ARG_ENABLE(debug,
               AC_HELP_STRING([--enable-debug], [Enable debugging with GDB [default=no]]),[
-CFLAGS="$CFLAGS -g -DYYDEBUG=1 -DYYERROR_VERBOSE"],[
-CFLAGS="$CFLAGS $OPTIMIZER_CFLAGS"
-LDFLAGS="-s"
-LDLIBS="-lefence"])
+CFLAGS="-g -O0 $CFLAGS -DYYDEBUG=1 -DYYERROR_VERBOSE"
+LDLIBS="-lefence"],[
+CFLAGS="$OPTIMIZER_CFLAGS $CFLAGS"
+LDFLAGS="-s"])
 
 AC_ARG_ENABLE(pedantic-compiler,
               AC_HELP_STRING([--enable-pedantic-compiler], [Enable pedantic checks in GCC [default=no]]),
@@ -175,8 +175,19 @@ AM_GNU_GETTEXT_VERSION
 
 dnl XXX - These should be removed ASAP! /Joachim
 AC_DEFINE(MAXDATASIZE, 4091, [I am a hack, please send patch to remove me.])
-AC_DEFINE(MAXLEN, 256, [I am a hack, please send patch to remove me.])
 
+echo "     Building GNU Alive $VERSION with
+
+              CC = $CC
+          CFLAGS = $CFLAGS
+         LDFLAGS = $LDFLAGS
+          LDLIBS = $LDLIBS
+       LOADLIBES = $LOADLIBES
+
+     GLOBAL_CONF = $globalconf
+       USER_CONF = $userconf
+        PID_FILE = $pidfile
+            PORT = $port"
 
 dnl Create all the makefiles and stuff
 AC_OUTPUT([
