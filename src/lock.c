@@ -1,7 +1,7 @@
 /* lock.c - Lock file management for GNU Alive.
  *
  * Copyright (C) 2005 Jakob Eriksson <jakob!eriksson()vmlinux!org>
- * Copyright (C) 2003, 2004 Joachim Nilsson <joachim!nilsson()member!fsf!org>
+ * Copyright (C) 2003-2005 Joachim Nilsson <joachim!nilsson()member!fsf!org>
  * Copyright (C) 2002, 2003 Torgny Lyon <torgny()enterprise!hb!se>
  *
  * GNU Alive is free software; you can redistribute it and/or modify it
@@ -94,12 +94,10 @@ static pid_t __flock_get(int fd)
 {
   if (!lockf (fd, F_TLOCK, 0))
     {
-      if (!lockf (fd, F_ULOCK, 0))
-        return -1;
-      return 0;
+      return lockf (fd, F_ULOCK, 0);
     }
 
-  return flock_get_fallback(fd);
+  return 0;
 }
 
 #elif defined(HAVE_FLOCK)
@@ -110,16 +108,14 @@ static pid_t __flock_get(int fd)
 {
   if (!flock(fd, LOCK_EX | LOCK_NB))
     {
-      if (flock(fd, LOCK_UN) == -1)
-        return -1;
-      return 0;
+      return flock(fd, LOCK_UN);
     }
 
-  return flock_get_fallback(fd);
+  return 0;
 }
-#else  /* Neither fcntl(), lockf() nor flock() */
+#else  /* Neither fcntl(), lockf() or flock() */
 #define __flock_set(fd) (0)
-#define __flock_get(fd) flock_get_fallback(fd)
+#define __flock_get(fd) (0)
 #endif  /* HAVE_FCNTL */
 
 /* Truncate the lockfile length ***************************************/
@@ -215,7 +211,7 @@ int lock_create (char **file, pid_t pid)
     }
 
   /* Verify that the entry is written. */
-  if (fprintf(fp, "%ld\n", (long) pid) < 0)
+  if (fprintf(fp, "%ld\n", (long)pid) < 0)
     {
       fclose(fp);
       return -1;
@@ -299,7 +295,7 @@ pid_t lock_read (char **file)
     }
   else
     {
-      fscanf(fp, "%ld", &pid);
+      fscanf(fp, "%ld", (long *)&pid);
       fclose(fp);               /* Closes fd as well... */
     }
 
