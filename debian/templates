@@ -54,7 +54,7 @@ Description: An alive.conf template installed!
 
 Template: alive/login_server
 Type: string
-Default: 10.0.0.1
+Default: 10.0.0.6
 Description: Enter login server name or IP number
  Please input here the login server name or IP number.
  .
