@@ -30,7 +30,7 @@
 #include <unistd.h>
 #include <time.h>
 
-int verbose = 0;
+int verbose = LOG_ERR;          /* Default log level is errors only. */
 
 /* Just an empty string that is not on the stack */
 static char *empty_string = "";

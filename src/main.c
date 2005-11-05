@@ -120,12 +120,11 @@ main (int argc, char *argv[])
           operation = STATUS;
           break;
 
-          /* XXX - Maybe debug should imply regular verbosity? */
-        case 'd':               /* Debug log level */
-          verbose |= LOG_DEBUG;
+        case 'd':               /* Debug log level: ALL */
+          verbose = LOG_DEBUG;
 
         case 'v':               /* Verbose log level */
-          verbose |= LOG_INFO;
+          verbose = LOG_INFO;
           break;
 
         case 'V':               /* Print version. */
@@ -155,7 +154,7 @@ main (int argc, char *argv[])
           break;
 
         default:
-          ERROR (_("Unrecognised option, %s"), argv[0]);
+          ERR(_("Unrecognised option, %s"), argv[0]);
           usage (EXIT_FAILURE);
         }
     }

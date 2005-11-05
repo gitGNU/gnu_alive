@@ -178,7 +178,7 @@ static char *tilde_expand (char *file)
   assert (file);
   assert (user_home);
 
-  DEBUG("file=%s\n", file);
+  DBG("file=%s\n", file);
   if ('~' != file[0])
     {
       /* Not a tilde directory... pretend it was. */
@@ -189,7 +189,7 @@ static char *tilde_expand (char *file)
   new_file = (char *)malloc (len);
   if (!new_file)
     {
-      ERROR ("Failed allocating space for file name");
+      ERR("Failed allocating space for file name");
       return NULL;
     }
 
@@ -220,7 +220,7 @@ static char *config_locate (char *file)
         }
       else
         {
-          ERROR("Requested CONF file: \"%s\" does not exist.", file);
+          ERR("Requested CONF file: \"%s\" does not exist.", file);
           file = NULL;
         }
     }
@@ -232,15 +232,15 @@ static char *config_locate (char *file)
 
       for (i = 0; possible_conf_files [i]; i++)
         {
-          DEBUG("%d=%s\n", i, possible_conf_files[i]);
+          DBG("%d=%s\n", i, possible_conf_files[i]);
           file = tilde_expand (possible_conf_files[i]);
           if (!file)
             {
-              ERROR("Failed expanding conf file %d\n", i);
+              ERR("Failed expanding conf file %d\n", i);
             }
           else
             {
-              DEBUG("Looking for CONF file: %s", file);
+              DBG("Looking for CONF file: %s", file);
               if (is_file_available (file))
                 {
                   __config_area.conf_file = file;
@@ -263,12 +263,12 @@ static char *config_locate (char *file)
       pos = strstr (temp, "qadsl");
       memcpy (pos, "alive", 5);
 
-      ERROR("Old conf file: %s, rename it to %s.", file, temp);
+      ERR("Old conf file: %s, rename it to %s.", file, temp);
       free (temp);
     }
   else
     {
-      DEBUG("Using %s for configuration data.", file);
+      DBG("Using %s for configuration data.", file);
     }
 
   return __config_area.conf_file;
@@ -278,7 +278,7 @@ void print_parm (param_t *p)
 {
   if (!p) return;
 
-  DEBUG ("%s = %s", p->names[0], p->value);
+  DBG("%s = %s", p->names[0], p->value);
 }
 
 config_data_t * config_load (char *file)
@@ -290,7 +290,7 @@ config_data_t * config_load (char *file)
   file = config_locate (file);
   if (!file)
     {
-      ERROR("Cannot find any config file, please create one.\n");
+      ERR("Cannot find any config file, please create one.\n");
       return NULL;
     }
 
@@ -298,16 +298,16 @@ config_data_t * config_load (char *file)
   result = conf_read_file (parms, file);
   if (result < 0)
     {
-      ERROR (_("Cannot find configuration file %s: %s\n"),
+      ERR(_("Cannot find configuration file %s: %s\n"),
              file, strerror (errno));
       return NULL;
     }
 
-  if (IS_DEBUG())
+  if (IS_DBG())
   {
     int i;
 
-    DEBUG (_("Read configuration:"));
+    DBG(_("Read configuration:"));
     for (i = 0; i < (sizeof (parms) / sizeof (parms[0])); i++)
       {
         print_parm (&parms[i]);
@@ -369,14 +369,14 @@ config_data_t * config_load (char *file)
     {
       if (!__config_area.username)
         {
-          ERROR (_("Failed to read username from configuration file %s.\n"), file);
+          ERR(_("Failed to read username from configuration file %s.\n"), file);
         }
       else
         {
-          ERROR (_("Failed to read password from configuration file %s.\n"), file);
+          ERR(_("Failed to read password from configuration file %s.\n"), file);
         }
 
-      ERROR (_("You must supply at least a username and password.\n"));
+      ERR(_("You must supply at least a username and password.\n"));
       return NULL;
     }
 

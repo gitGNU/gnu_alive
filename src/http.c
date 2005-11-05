@@ -68,9 +68,9 @@ http_open_server (char *name, short port)
   he = gethostbyname (name);
   if (!he)
     {
-      ERROR (_("DNS lookup of login server %s failed to resolve to an IP#"), name);
-      ERROR (_("Try the commands nslookup, host or dig for more details."));
-      ERROR (_("gethostbyname() returns: %s"), strerror (errno));
+      ERR(_("DNS lookup of login server %s failed to resolve to an IP#"), name);
+      ERR(_("Try the commands nslookup, host or dig for more details."));
+      ERR(_("gethostbyname() returns: %s"), strerror (errno));
       result = -1;
     }
   else
@@ -79,7 +79,7 @@ http_open_server (char *name, short port)
       sockfd = socket (PF_INET, SOCK_STREAM, 0);
       if (-1 == sockfd)
         {
-          ERROR (_("Failed to create a socket: %s"), strerror (errno));
+          ERR(_("Failed to create a socket: %s"), strerror (errno));
           result = -1;
         }
       else
@@ -95,7 +95,7 @@ http_open_server (char *name, short port)
           if (-1 == result)
             {
               close (sockfd);
-              ERROR (_("Failed to connect to login server (%s): %s"),
+              ERR(_("Failed to connect to login server (%s): %s"),
                      name, strerror (errno));
             }
           else
@@ -162,7 +162,7 @@ static int __http_pre_login (config_data_t *config)
   config->sockfd = http_open_server (config->login_server, config->server_port);
   if (config->sockfd < 0)
     {
-      ERROR (_("Failed to connect to login server (%s): %s"), config->login_server, strerror (errno));
+      ERR(_("Failed to connect to login server (%s): %s"), config->login_server, strerror (errno));
       config->logged_in = 0;
       return -1;
     }
@@ -173,13 +173,13 @@ static int __http_pre_login (config_data_t *config)
            config->login_server,
            config->login_server);
 
-  DEBUG (config->send_msg);
+  DBG(config->send_msg);
 
   result = send (config->sockfd, config->send_msg, strlen (config->send_msg), 0);
   if (-1 == result)
     {
-      ERROR (_("Failed sending request for %s."), config->init_page);
-      ERROR (_("Closing connection to login server."));
+      ERR(_("Failed sending request for %s."), config->init_page);
+      ERR(_("Closing connection to login server."));
       close (config->sockfd);
       config->logged_in = 0;
 
@@ -190,7 +190,7 @@ static int __http_pre_login (config_data_t *config)
   result = http_poll_read (config->sockfd, 5);
   if (-1 == result)
     {
-      ERROR (_("No reply from login server."));
+      ERR(_("No reply from login server."));
       config->logged_in = 0;
     }
   else
@@ -199,7 +199,7 @@ static int __http_pre_login (config_data_t *config)
 
       if (-1 == result)
         {
-          ERROR(_("Failed to \"ping\" login server: %s"), strerror (errno));
+          ERR(_("Failed to \"ping\" login server: %s"), strerror (errno));
           config->logged_in = 0;
         }
       else
@@ -225,13 +225,13 @@ int http_pre_login (config_data_t *config)
   if ((result && verbose) || (config->logged_in == 0))
     {
       LOG (_("%s(): Login server \"pinged\": not logged in..."), __FUNCTION__);
-      if (IS_DEBUG())
+      if (IS_DBG())
         {
-          DEBUG (_("%s(): Here is the reply:\n%s"), __FUNCTION__, config->get_msg);
+          DBG(_("%s(): Here is the reply:\n%s"), __FUNCTION__, config->get_msg);
         }
       else
         {
-          LOG (_("%s(): Start %s with --verbose --debug to see whole reply."), __FUNCTION__, PACKAGE_NAME);
+          LOG(_("%s(): Start %s with --verbose --debug to see whole reply."), __FUNCTION__, PACKAGE_NAME);
         }
     }
 
@@ -264,13 +264,13 @@ static int __http_internet_login (config_data_t *config)
   config->sockfd = http_open_server (config->login_server, config->server_port);
   if (config->sockfd < 0)
     {
-      ERROR(_("Failed to connect to login server (%s): %s"),
+      ERR(_("Failed to connect to login server (%s): %s"),
             config->login_server, strerror (errno));
       return -1;
     }
 
   /* Compose the login string. */
-  DEBUG (_("Composing non-url-encoded login string."));
+  DBG(_("Composing non-url-encoded login string."));
   length = (config->login_string_header ? strlen (config->login_string_header) : 0)
     + strlen (config->username_key) + strlen (config->username)
     + strlen (config->password_key) + strlen (config->password)
@@ -280,7 +280,7 @@ static int __http_internet_login (config_data_t *config)
   if (!temp)
     {
       close (config->sockfd);
-      ERROR (_("Failed to allocate memory (%d bytes): %s"),
+      ERR(_("Failed to allocate memory (%d bytes): %s"),
              length, strerror (errno));
       return -1;
     }
@@ -298,13 +298,13 @@ static int __http_internet_login (config_data_t *config)
 
   if (config->login_string_footer) result += sprintf (&temp[result], "&%s", config->login_string_footer);
 
-  DEBUG (_("Login string: %s"), temp);
+  DBG(_("Login string: %s"), temp);
 
   login_string = alloca (length);
   if (!login_string)
     {
       close (config->sockfd);
-      ERROR (_("Failed to allocate memory (%d bytes): %s"), length, strerror (errno));
+      ERR(_("Failed to allocate memory (%d bytes): %s"), length, strerror (errno));
       return -1;
     }
 
@@ -330,13 +330,13 @@ static int __http_internet_login (config_data_t *config)
            login_string);
 
   /* Send login string to server */
-  DEBUG (config->send_msg);
+  DBG(config->send_msg);
 
   result = http_poll_write (config->sockfd, 5);
   if (-1 == result)
     {
       close (config->sockfd);
-      ERROR (_("Cannot send login request to server (%s): %s"),
+      ERR(_("Cannot send login request to server (%s): %s"),
              config->login_server, strerror (errno));
       config->logged_in = 0;
 
@@ -347,7 +347,7 @@ static int __http_internet_login (config_data_t *config)
   if (-1 == result)
     {
       close (config->sockfd);
-      ERROR(_("Failed to send login request to server (%s): %s"),
+      ERR(_("Failed to send login request to server (%s): %s"),
             config->login_server, strerror(errno));
       return -1;
     }
@@ -359,7 +359,7 @@ static int __http_internet_login (config_data_t *config)
   result = http_poll_read (config->sockfd, 5);
   if (-1 == result)
     {
-      ERROR (_("No reply from login server."));
+      ERR(_("No reply from login server."));
       config->logged_in = 0;
     }
   else
@@ -367,7 +367,7 @@ static int __http_internet_login (config_data_t *config)
       result = read (config->sockfd, config->get_msg, MAXDATASIZE);
       if (-1 == result)
         {
-          ERROR(_("%s(): Error reading login reply: %s"), __FUNCTION__, strerror (errno));
+          ERR(_("%s(): Error reading login reply: %s"), __FUNCTION__, strerror (errno));
 
           /* Clear the read string to avoid confusion. */
           config->get_msg [0] = 0;
@@ -398,13 +398,13 @@ int http_internet_login (config_data_t *config)
   if ((result && verbose) || (config->logged_in == 0))
     {
       LOG (_("%s(): login failed."), __FUNCTION__);
-      if (IS_DEBUG())
+      if (IS_DBG())
         {
-          DEBUG (_("%s(): Here is the reply:\n%s"), __FUNCTION__, config->get_msg);
+          DBG(_("%s(): Here is the reply:\n%s"), __FUNCTION__, config->get_msg);
         }
       else
         {
-          LOG (_("%s(): Start %s with --verbose --debug to see whole reply."), __FUNCTION__, PACKAGE_NAME);
+          LOG(_("%s(): Start %s with --verbose --debug to see whole reply."), __FUNCTION__, PACKAGE_NAME);
         }
     }
 
@@ -430,11 +430,11 @@ int __http_internet_logout (config_data_t *config)
   config->get_msg [0] = 0;
 
   /* Open a connection to the login server */
-  LOG (_("Connecting to login server, %s:%d."), config->login_server, config->server_port);
+  LOG(_("Connecting to login server, %s:%d."), config->login_server, config->server_port);
   config->sockfd = http_open_server (config->login_server, config->server_port);
   if (config->sockfd < 0)
     {
-      ERROR(_("Failed to connect to login server (%s): %s"), config->login_server, strerror (errno));
+      ERR(_("Failed to connect to login server (%s): %s"), config->login_server, strerror (errno));
       config->logged_in = 0;
 
       return -1;
@@ -446,53 +446,53 @@ int __http_internet_logout (config_data_t *config)
            config->logout_page, config->login_server,
            config->init_page, config->login_server);
 
-  DEBUG (config->send_msg);
+  DBG(config->send_msg);
 
   result = send (config->sockfd, config->send_msg, strlen (config->send_msg), 0);
   if (-1 == result)
     {
       close (config->sockfd);
-      ERROR(_("Logout request failed: %s"), strerror(errno));
+      ERR(_("Logout request failed: %s"), strerror(errno));
       config->logged_in = 0;
 
       return -1;
     }
 
-  LOG (_("Waiting for logout reply, 5 second timeout ..."));
+  LOG(_("Waiting for logout reply, 5 second timeout ..."));
   result = http_poll_read (config->sockfd, 5);
   if (-1 == result)
     {
       close (config->sockfd);
-      ERROR (_("%s does not respond, cannot log out!"), config->logout_page);
+      ERR(_("%s does not respond, cannot log out!"), config->logout_page);
       config->logged_in = 0;
 
       return -1;
     }
 
-  DEBUG (_("Poll says a reply has arrived, reading reply..."));
+  DBG(_("Poll says a reply has arrived, reading reply..."));
   result = read (config->sockfd, config->get_msg, MAXDATASIZE);
   if (-1 == result)
     {
       close (config->sockfd);
-      ERROR (_("Read logout reply: %s"), strerror (errno));
+      ERR(_("Read logout reply: %s"), strerror (errno));
       config->logged_in = 0;
 
       return -1;
     }
 
-  DEBUG (_("Received:\n%s"), config->get_msg);
+  DBG(_("Received:\n%s"), config->get_msg);
 
   /* Interpret answer from server. */
   if (http_test_if_logged_out (config))
     {
       close (config->sockfd);
-      ERROR(_("LOGOUT FAILED"));
+      ERR(_("LOGOUT FAILED"));
       config->logged_in = 0;
 
       return -1;
     }
 
-  LOG (_("SUCCESSFUL LOGOUT"));
+  LOG(_("SUCCESSFUL LOGOUT"));
 
   /* Make sure to close the connection before leaving. */
   close (config->sockfd);
@@ -509,14 +509,14 @@ http_internet_logout (config_data_t *config)
   http_test_if_logged_out (config);
   if ((result && verbose) || (config->logged_in == 1))
     {
-      LOG (_("%s(): logout failed."), __FUNCTION__);
-      if (IS_DEBUG())
+      LOG(_("%s(): logout failed."), __FUNCTION__);
+      if (IS_DBG())
         {
-          DEBUG (_("%s(): Here is the reply:\n%s"), __FUNCTION__, config->get_msg);
+          DBG(_("%s(): Here is the reply:\n%s"), __FUNCTION__, config->get_msg);
         }
       else
         {
-          LOG (_("%s(): Start %s with --verbose --debug to see whole reply."), __FUNCTION__, PACKAGE_NAME);
+          LOG(_("%s(): Start %s with --verbose --debug to see whole reply."), __FUNCTION__, PACKAGE_NAME);
         }
     }
 
@@ -552,7 +552,7 @@ http_do_login (config_data_t *config)
   /* If we fail to do the hokey pokey */
   if (result)
     {
-      DEBUG (_("%s(): failed first login attempt."), __FUNCTION__);
+      DBG(_("%s(): failed first login attempt."), __FUNCTION__);
 
       /* Login failed, or status unknown. */
       config->logged_in = 0;
@@ -563,14 +563,14 @@ http_do_login (config_data_t *config)
       for (try = 1; try < MAX_RETRIES && result; try++)
         {
           /* Sleep for a while if it is not the first try... */
-          LOG (_("%s(): waiting a while before retrying..."), __FUNCTION__);
+          LOG(_("%s(): waiting a while before retrying..."), __FUNCTION__);
           sleep (5 * try);
 
           /* If we cannot get the login or csw pages we sleep some more */
           result = http_pre_login (config);
           if (result)
             {
-              DEBUG (_("%s(): failed to bring up login page."), __FUNCTION__);
+              DBG (_("%s(): failed to bring up login page."), __FUNCTION__);
             }
           else
             {
@@ -590,12 +590,11 @@ http_do_login (config_data_t *config)
                   /* For the logfile -- tell status. */
                   if (result)
                     {
-                      LOG (_("%s(): failed to send login (attempt #%d)."),
-                           __FUNCTION__, try + 1);
+                      LOG(_("%s(): failed to send login (attempt #%d)."), __FUNCTION__, try + 1);
                     }
                   else
                     {
-                      DEBUG (_("%s(): Success."), __FUNCTION__);
+                      DBG(_("%s(): Success."), __FUNCTION__);
                       break;
                     }
                 }
@@ -608,12 +607,12 @@ http_do_login (config_data_t *config)
    */
   if (result)
     {
-      ERROR (_("%s(): failed %d retries - backing off for a while."),
+      ERR(_("%s(): failed %d retries - backing off for a while."),
              __FUNCTION__, MAX_RETRIES);
     }
   else
     {
-      DEBUG (_("%s(): Success."), __FUNCTION__);
+      DBG(_("%s(): Success."), __FUNCTION__);
     }
 
   return config->logged_in;

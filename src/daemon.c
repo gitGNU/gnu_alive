@@ -168,9 +168,9 @@ daemon_thread (config_data_t *config, int verbose)
        * daemon to start since there is no way (other than ps)
        * to communicate the PID to the outside world.
        */
-      ERROR (_("Cannot write PID(%d) to file, %s: %s"),
+      ERR(_("Cannot write PID(%d) to file, %s: %s"),
              (int)mypid, config->pid_file, strerror (errno));
-      ERROR (_("Aborting daemon - cannot communicate PID to outside world."));
+      ERR(_("Aborting daemon - cannot communicate PID to outside world."));
 
       /* Bye bye */
       return;

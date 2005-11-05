@@ -47,20 +47,20 @@ int process (config_data_t *config, op_t operation)
       if (running)
         {
          /* Force the daemon to wake up earlier and relogin. */
-          LOG (_("Already running on pid %d, forcing relogin."), running);
+          LOG(_("Already running on pid %d, forcing relogin."), running);
          result = kill (running, SIGHUP);
          if (result)
            {
-             ERROR (_("kill(%d, SIGHUP) failed: %s\n"), running, strerror(errno));
-             ERROR (_("Maybe a stale lockfile (%s)?"), config->pid_file);
+             ERR(_("kill(%d, SIGHUP) failed: %s\n"), running, strerror(errno));
+             ERR(_("Maybe a stale lockfile (%s)?"), config->pid_file);
 
-             LOG (_("Trying to remove possibly stale lockfile (%s)..."), config->pid_file);
+             LOG(_("Trying to remove possibly stale lockfile (%s)..."), config->pid_file);
              result = lock_remove (config->pid_file);
              if (result)
                {
-                 ERROR (_("Couldn't remove possible stale lockfile (%s).\n"),
+                 ERR(_("Couldn't remove possible stale lockfile (%s).\n"),
                         config->pid_file);
-                 ERROR (_("Maybe the process (%d) is running as root, but you are not?"),
+                 ERR(_("Maybe the process (%d) is running as root, but you are not?"),
                         running);
 
                  return EXIT_FAILURE;
@@ -81,17 +81,17 @@ int process (config_data_t *config, op_t operation)
           result = http_internet_login (config);
           if (result)
             {
-              ERROR (_("To diagnose, try the options --debug --verbose"));
+              ERR(_("To diagnose, try the options --debug --verbose"));
             }
           else
             {
               if (config->logged_in)
                 {
-                  LOG (_("SUCCESSFUL LOGIN"));
+                  LOG(_("SUCCESSFUL LOGIN"));
                 }
               else
                 {
-                  LOG (_("LOGIN FAILED - To diagnose, try the options --debug --verbose"));
+                  LOG(_("LOGIN FAILED - To diagnose, try the options --debug --verbose"));
                 }
             }
         }
@@ -109,7 +109,7 @@ int process (config_data_t *config, op_t operation)
               /* Non-fatal error, it's OK if we run the first time. */
               if (EACCES == errno)
                 {
-                  ERROR (_("Failed to delete old PID file, %s - %s"),
+                  ERR(_("Failed to delete old PID file, %s - %s"),
                          config->pid_file, strerror (errno));
                 }
             }
@@ -139,23 +139,23 @@ int process (config_data_t *config, op_t operation)
       break;
 
     case NOP:
-      LOG (_("No operation selected, reverting to query status."));
+      LOG(_("No operation selected, reverting to query status."));
     default:
     case STATUS:
       http_pre_login (config);
-      LOG (_("Current status: %s"),
+      LOG(_("Current status: %s"),
            config->logged_in
            ? _("CONNECTED")
            : _("DISCONNECTED"));
 
       if (running > 0)
         {
-          LOG (_("Login daemon running with PID = %d"), running);
+          LOG(_("Login daemon running with PID = %d"), running);
           result = running;
         }
       else
         {
-          LOG (_("Login daemon not running."));
+          LOG(_("Login daemon not running."));
           result = -1;
         }
       break;

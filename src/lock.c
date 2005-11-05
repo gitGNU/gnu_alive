@@ -50,28 +50,22 @@ extern char *fallback_pid_files[];
 
 /* Functions for setting and getting a file lock ***********************/
 #if defined(HAVE_FCNTL)
-static struct flock __init_flock()
-{
-  struct flock lock;
-
-  lock.l_whence = SEEK_SET;
-  lock.l_start = 0;
-  lock.l_len = 0;
-  lock.l_type = F_WRLCK;
-
-  return lock;
-}
+#define DECLARE_FLOCK(l)                        \
+  struct flock (l) = { .l_whence = SEEK_SET,    \
+                       .l_start  = 0,           \
+                       .l_len    = 0,           \
+                       .l_type   = F_WRLCK, }
 
 static int __flock_set(int fd)
 {
-  struct flock lock = __init_flock();
+  DECLARE_FLOCK(lock);
 
   return fcntl (fd, F_SETLK, &lock);
 }
 
 static pid_t __flock_get(int fd)
 {
-  struct flock lock = __init_flock();
+  DECLARE_FLOCK(lock);
 
   if (fcntl (fd, F_GETLK, &lock) < 0)
     return -1;
@@ -158,7 +152,7 @@ static FILE *flock_get (int fd)
 
   if (result)
     {
-      ERROR("Failed to get lock: %s", strerror (errno));
+      ERR("Failed to get lock: %s", strerror (errno));
     }
 
   return fdopen(fd, "r");
@@ -250,7 +244,7 @@ pid_t lock_read (char **file)
   fallback = 0;
   do
     {
-      DEBUG(_("Looking for PID file: %s."), *file);
+      DBG(_("Looking for PID file: %s."), *file);
 
       fd = open (*file, O_RDONLY);
       if (-1 == fd)
@@ -265,7 +259,7 @@ pid_t lock_read (char **file)
                 */
 /*                system ("ps --no-heading -C alive | head -1 | cut -f 1 -d ' ' >"); */
 
-              DEBUG(_("Cannot find any PID file, daemon not running."));
+              DBG(_("Cannot find any PID file, daemon not running."));
               if (ENOENT == errno)
                 return 0;
               else
@@ -284,7 +278,7 @@ pid_t lock_read (char **file)
       int i;
       char str[10];
 
-      ERROR(_("Failed badly in flock_get(): %s"), strerror (errno));
+      ERR(_("Failed badly in flock_get(): %s"), strerror (errno));
       i = read (fd, str, 10);
       if (i > 0 && i < 10)
         {
@@ -295,8 +289,8 @@ pid_t lock_read (char **file)
     }
   else
     {
-      fscanf(fp, "%ld", (long *)&pid);
-      fclose(fp);               /* Closes fd as well... */
+      fscanf (fp, "%d", (int *)&pid);
+      fclose (fp);              /* Closes fd as well... */
     }
 
   /* Old version running?
@@ -304,11 +298,11 @@ pid_t lock_read (char **file)
    */
   if (strstr (*file, "qadsl"))
     {
-      ERROR(_("Old qadsl version running: %s, with PID = %d"), *file, pid);
+      ERR(_("Old qadsl version running: %s, with PID = %d"), *file, pid);
     }
   else
     {
-      DEBUG(_("Found PID file %s with PID = %d"), *file, pid);
+      DBG(_("Found PID file %s with PID = %d"), *file, pid);
     }
 
   return pid;
