@@ -127,13 +127,13 @@ daemon_sighandler (int signal)
   /* We quit on everything but HUP */
   if (SIGHUP != signal)
     {
-      write_logfile (LOG_INFO, _("Got signal(%d), quitting."), signal);
+      LOG(_("Got signal(%d), quitting."), signal);
 
       exit (0);
     }
   else
     {
-      write_logfile (LOG_INFO, _("Got signal(%d), forcing relogin."), signal);
+      LOG(_("Got signal(%d), forcing relogin."), signal);
     }
 }
 
@@ -177,14 +177,14 @@ daemon_thread (config_data_t *config, int verbose)
     }
   else
     {
-      write_logfile (LOG_INFO, _("Keep-alive daemon started, pid: %d"), mypid);
+      LOG(_("Keep-alive daemon started, pid: %d"), mypid);
     }
 
   while (1)
     {
       if (latched_logged_in != config->logged_in)
         {
-          write_logfile (LOG_INFO, _("Login %s"), config->logged_in ? _("successful.") : _("FAILED!"));
+          LOG(_("Login %s"), config->logged_in ? _("successful.") : _("FAILED!"));
         }
       latched_logged_in = config->logged_in;
 
@@ -200,7 +200,7 @@ daemon_thread (config_data_t *config, int verbose)
        */
       if (config->daemon_type && !config->logged_in)
         {
-          LOG (_("Daemon logging in again."));
+          LOG(_("Daemon logging in again."));
           http_do_login (config);
         }
 
@@ -209,11 +209,11 @@ daemon_thread (config_data_t *config, int verbose)
         {
           if (config->logged_in)
             {
-              write_logfile (LOG_INFO, _("Forced relogin successful."));
+              LOG(_("Forced relogin successful."));
             }
           else
             {
-              write_logfile (LOG_INFO, _("Forced relogin FAILED!"));
+              LOG(_("Forced relogin FAILED!"));
             }
         }
       else
