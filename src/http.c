@@ -562,15 +562,15 @@ http_do_login (config_data_t *config)
        */
       for (try = 1; try < MAX_RETRIES && result; try++)
         {
-          /* Sleep for a while if it is not the first try... */
-          LOG(_("%s(): waiting a while before retrying..."), __FUNCTION__);
-          sleep (5 * try);
-
           /* If we cannot get the login or csw pages we sleep some more */
           result = http_pre_login (config);
           if (result)
             {
               DBG (_("%s(): failed to bring up login page."), __FUNCTION__);
+
+              /* Sleep for a while if it is not the first try... */
+              LOG(_("%s(): waiting a while before retrying..."), __FUNCTION__);
+              sleep (try);
             }
           else
             {
