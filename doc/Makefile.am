@@ -17,8 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with GNU Alive.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBDIRS = src doc
-
-ACLOCAL_AMFLAGS = -I build-aux
+info_TEXINFOS = alive.texi
+alive_TEXINFOS = fdl.texi
 
 # Makefile.am ends here

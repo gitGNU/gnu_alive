@@ -1,3 +1,12 @@
+2012-08-11  Thien-Thi Nguyen  <ttn@gnuvola.org>
+
+	Rewrite from scratch.
+
+	We retain only AUTHORS and the name of the project.
+	Every other file was either deleted or rewritten.
+	Notable losses: "auto-login" feature, internationalization,
+	Debian packaging support, infrastructure for C programs.
+
 2005-10-29  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* src/log.c (write_logfile): Remove MAXDATASIZE dependency AND
@@ -474,3 +483,9 @@
 2003-07-06  Joachim Nilsson  <joachim.nilsson@member.fsf.org>
 
 	* qadsl: initial version.
+
+
+Copyright (C) 2012 Thien-Thi Nguyen
+
+Copying and distribution of this file, with or without modification,
+are permitted provided the copyright notice and this notice are preserved.

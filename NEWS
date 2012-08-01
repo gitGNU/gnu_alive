@@ -1,175 +1,208 @@
-                                                            -*-outline-*-
-
-* v1.3.3 to v1.4.0
-
-** GNU Alive 
-
-The qadsl to GNU Alive transition was made.  New location of homepage
-and downloads are on the gnu.org server, or any of its mirrors.
-
-    http://www.gnu.org/software/alive/
-    http://savannah.gnu.org/projects/alive/
-
-** New command line switch -q,--quit
-
-A new command -q,--quit has been added.  This only quits the
-keep-alive daemon without logging out. 
-
-** FreeBSD build fixes
-
-The sneak introduction of alloca() broke the build on several
-non-GNU-LibC systems.  This has been fixed properly and tested on
-FreeBSD Alpha.
-
-** Initial translation effort
-
-The groundwork for I18n using GNU Gettext has been laid out.
-Thus far only Swedish and C/English is supported. Other translations
-are welcome.
-
-Add your language to po/LINGUAS and run "msginit --locale=???" from
-the po directory to generate ???.po, then translate it and run it by
-your translation team, usually <???@li.org>.
-
-** Old config files and PID files reused
-
-Even though the project has been renamed to GNU Alive and the
-configuraion and PID (lock) files also have been renamed the
-program is still backwards compatible.  The qadsl.conf and
-.qadslrc are detected first, then alive.conf et. al.  The same
-goes for the lock files.
-
-** Bugfixes and minor additions
-
-The usual minor bugfixes and minor additions in verbosity and debug
-messages, as expected.
+NEWS for GNU Alive
 
 
-* v1.3.2 to v1.3.3
 
-** Bugfix: config.c
+- 1.4.0 | 2005-02-22
 
-The actual login part of the daemon was never run even if it was
-activated in the configuration file.  Bad use of strcasecmp() led
-to that part of the config file to be interpreted in the straight
-opposite of the setting.
+  - GNU Alive
 
-** Documentation updated
+	The qadsl to GNU Alive transition was made.  New location of
+	homepage and downloads are on the gnu.org server, or any of its
+	mirrors.
 
-At least the TeXinfo documentation has been updated.
+	http://www.gnu.org/software/alive/
+	http://savannah.gnu.org/projects/alive/
 
-** --long-options implemented
-To support long options getopt_long() and getopt() has been made
-a part of the qadsl source tree.  This because long options are
-not available on all platforms, at least not NetBSD.
+  - new command-line switch ‘-q’, ‘--quit’
 
-** -v now is verbose, and -V is version
-To more adhere to the style of GNU command line options the
-short options for verbose and version, -V and -v respectively,
-have been switched.  We apologise for the confusion this might
-create.
+	A new command ‘-q’, ‘--quit’ has been added.  This only quits
+	the keep-alive daemon without logging out.
 
-** Vastly improved logging (/var/log/daemon.log in Debian)
-All calls to syslog() have been made more informative and clear.  Now
-they actually denote "SUCCESSFUL" and "FAILED" to mark the login
-status.  Also, when given -V (--verbose) that switch now propagates
-properly to the daemon.
+  - FreeBSD build fixes
 
-To swamp the logfiles even further another switch has been added, 
---debug, that replaces the need to rebuild from source using
---enable-debug to configure.  This switch adds a ridiculous amount of
-data to the logfiles and will improve the way people can debug their
-connection setups.
+	The sneak introduction of ‘alloca’ broke the build on several
+	non-GNU-LibC systems.  This has been fixed properly and tested
+	on FreeBSD Alpha.
 
-Also, all state changes are now noticed by the daemon in the logfile.
+  - initial translation effort
 
-** Forced relogin on already running daemon
-As suggested by Oden Eriksson <oden!eriksson()kvikkjokk!net> qadsl
-now sends SIGHUP to an already started deamon when the client is
-started with --login. This forces the daemon to cancel its current
-delay and relogin. 
+	The groundwork for I18n using GNU Gettext has been laid out.
+	Thus far only Swedish and C/English is supported.  Other
+	translations are welcome.
 
-Forced relogins are noted explicitly in the logfile.
+	Add your language to po/LINGUAS and run "msginit --locale=???"
+	from the po directory to generate ???.po, then translate it and
+	run it by your translation team, usually <???@li.org>.
 
-** Cleaned up http.c
-The name-space in http.c has been updated even further from the old
-code.  It has been changed to http_server_init(), http_server_login()
-etc.
+  - old config files and PID files reused
 
-Alot of the code has also seen face lifts and general simplificaions
-and some long overdue documentation.
+	Even though the project has been renamed to GNU Alive and the
+	configuraion and PID (lock) files also have been renamed the
+	program is still backwards compatible.  The qadsl.conf and
+	.qadslrc are detected first, then alive.conf et. al.  The same
+	goes for the lock files.
 
-** Socket leak fix
-Mandrake RPM maintainer, Oden Eriksson <oden!eriksson()kvikkjokk!net>,
-reported too many open sockets from a long running qadsl process.
-Turned out to be a socket leak that occurred when bailing out early
-on error detection.
+  - bugfixes and minor additions
+
+	The usual minor bugfixes and minor additions in verbosity and
+	debug messages, as expected.
 
 
-* v1.3.1 to v1.3.2
+- 1.3.3 | 2004-06-29
 
-** Ugly bug in .conf file parser
-A really ugly bug in the .conf file parser made it impossible
-to parse the new style .conf file format.
+  - bugfix: config.c
 
-** Supported architectures
-The list of supported arhitectures and dsitributions has grown.
-qadsl-1.3.2 has been tested on:
+	The actual login part of the daemon was never run even if it was
+	activated in the configuration file.  Bad use of ‘strcasecmp’
+	led to that part of the config file to be interpreted in the
+	straight opposite of the setting.
 
-	    Slackware 9.1 (intel)
-	    Mandrake 9.2 (intel)
-	    Debian GNU/Linux (intel/Sarge)
-	    Debian GNU/Hurd (intel/Sid)
-	    NetBSD 1.6 (intel)
-	    FreeBSD 5.1 (alpha)
+  - documentation updated
 
-* v1.3.0 to v1.3.1
+	At least the TeXinfo documentation has been updated.
 
-** "make dist" actually builds a proper distribution.
-The last source release 1.3.0 did not build, due to various files
-being missing from the distribution. 
+  - long options implemented
 
-** NetBSD fixes
-All qadsl releases from 1.3.1 onwards should now build properly on
-NetBSD.  Courtesy of jakov.
+	To support long options ‘getopt_long’ and ‘getopt’ has been made
+	a part of the qadsl source tree.  This because long options are
+	not available on all platforms, at least not NetBSD.
 
-** GNU/Hurd fixes
-All qadsl releases from 1.3.1 onwards should now build properly on
-GNU/Hurd.  Thanks to G�rkan Seng�n <gurkan()linuks!mine!nu> for
-providing a testing machine, http://hurd.she.kicks-ass.org:8084/
+  - ‘-v’ now is verbose, and ‘-V’ is version
 
-* v1.2.1 to v1.3.0
+	To more adhere to the style of GNU command line options the
+	short options for verbose and version, ‘-V’ and ‘-v’
+	respectively, have been switched.  We apologise for the
+	confusion this might create.
 
-** Major rewrite of most of the code 
-Most of the code has been restructured and rewritten to simplify the
-next big step - extension - qadsl is going places.
+  - vastly improved logging (/var/log/daemon.log in Debian)
 
-** .conf file parser in CFG
-Bison and Flex has been called upon to do their magic on the .conf 
-file format.  This has enabled a much more free and extensible file
-format.
+	All calls to ‘syslog’ have been made more informative and clear.
+	Now they actually denote "SUCCESSFUL" and "FAILED" to mark the
+	login status.  Also, when given ‘-V’ (i.e., ‘--verbose’) that
+	switch now propagates properly to the daemon.
 
-** http handling improved
-State management has been improved to be more fault tolerant.  As well
-as also being cleaned up immensely.
+	To swamp the logfiles even further another switch has been
+	added, ‘--debug’, that replaces the need to rebuild from source
+	using ‘--enable-debug’ to configure.  This switch adds a
+	ridiculous amount of data to the logfiles and will improve the
+	way people can debug their connection setups.
 
-This means more stability, no more sudden logouts just because your
-ISP temporarily disabled logins.  We now patiently wait for the login
-server (or your network card or whatever) to be reactivated.
+	Also, all state changes are now noticed by the daemon in the
+	logfile.
 
-** Debian patches included
-Just like we have a qadsl.spec file (for .rpm's) we also include the
-Debian scripts to build .deb files.
+  - forced relogin on already running daemon
 
-Mostly done, needs testing by others.  /Joachim 2004-01-20
+	As suggested by Oden Eriksson, qadsl now sends SIGHUP to an
+	already started deamon when the client is started with
+	‘--login’.  This forces the daemon to cancel its current delay
+	and relogin.
 
-** Failover lock file support
-If PID_FILE does not exist or cannot be opened for reading/writing
-we need to find out other ways to play.  
+	Forced relogins are noted explicitly in the logfile.
 
-Mostly done, needs testing.  /Joachim 2004-01-20
+  - cleaned up http.c
 
-** More stubborn when login fails ... 
-qadsl does not exit(1) at every possible juncture anymore.
+	The name-space in http.c has been updated even further from the
+	old code.  It has been changed to ‘http_server_init’,
+	‘http_server_login’, etc.
 
-Mostly done.  /Joachim 2004-01-20
+	A lot of the code has also seen face lifts and general
+	simplificaions and some long overdue documentation.
+
+  - socket leak fix
+
+	Mandrake RPM maintainer, Oden Eriksson, reported too many open
+	sockets from a long running qadsl process.  Turned out to be a
+	socket leak that occurred when bailing out early on error
+	detection.
+
+
+- 1.3.2 | 2004-02-17
+
+  - ugly bug in .conf file parser fixed
+
+	A really ugly bug in the .conf file parser made it impossible to
+	parse the new style .conf file format.
+
+  - supported architectures
+
+	The list of supported arhitectures and dsitributions has grown.
+	qadsl-1.3.2 has been tested on:
+
+	Slackware 9.1 (intel)
+	Mandrake 9.2 (intel)
+	Debian GNU/Linux (intel/Sarge)
+	Debian GNU/Hurd (intel/Sid)
+	NetBSD 1.6 (intel)
+	FreeBSD 5.1 (alpha)
+
+
+- 1.3.1 | 2004-01-31
+
+  - "make dist" actually builds a proper distribution
+
+	The last source release 1.3.0 did not build, due to various
+	files being missing from the distribution.
+
+  - NetBSD fixes
+
+	All qadsl releases from 1.3.1 onwards should now build properly
+	on NetBSD.  Courtesy of jakov.
+
+  - GNU/Hurd fixes
+
+	All qadsl releases from 1.3.1 onwards should now build properly
+	on GNU/Hurd.  Thanks to Gürkan Sengün for providing a testing
+	machine, http://hurd.she.kicks-ass.org:8084/
+
+
+- 1.3.0 | 2004-01-21
+
+  -  Major rewrite of most of the code
+
+	Most of the code has been restructured and rewritten to simplify
+	the next big step - extension - qadsl is going places.
+
+  - .conf file parser in CFG
+
+	Bison and Flex has been called upon to do their magic on the
+	.conf file format.  This has enabled a much more free and
+	extensible file format.
+
+  - HTTP handling improved
+
+	State management has been improved to be more fault tolerant.
+	As well as also being cleaned up immensely.
+
+	This means more stability, no more sudden logouts just because
+	your ISP temporarily disabled logins.  We now patiently wait for
+	the login server (or your network card or whatever) to be
+	reactivated.
+
+  - Debian patches included
+
+	Just like we have a qadsl.spec file (for .rpm's) we also include
+	the Debian scripts to build .deb files.
+
+  - failover lock file support
+
+	If PID_FILE does not exist or cannot be opened for reading /
+	writing we need to find out other ways to play.
+
+  - more stubborn when login fails
+
+	qadsl does not exit(1) at every possible juncture anymore.
+
+- etc
+
+	Local Variables:
+	mode: outline
+	outline-regexp: "\\([ ][ ]\\)*- "
+	fill-column: 72
+	fill-prefix: "\t"
+	End:
+
+
+Copyright (C) 2012 Thien-Thi Nguyen
+
+Copying and distribution of this file, with or without modification,
+are permitted provided the copyright notice and this notice are preserved.

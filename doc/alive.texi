@@ -1,0 +1,500 @@
+\input texinfo @c -*-texinfo-*-
+@c %**start of header
+@setfilename alive.info
+@documentencoding UTF-8
+@include version.texi
+@settitle GNU Alive @value{VERSION}
+@c %**end of header
+
+@copying
+This manual is for GNU Alive (version @value{VERSION}, @value{UPDATED}).
+
+Copyright @copyright{} 2012 Thien-Thi Nguyen
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+Texts.  A copy of the license is included in the appendix entitled
+``GNU Free Documentation License''.
+@end quotation
+@end copying
+
+@dircategory Utilities
+@direntry
+* Alive: (alive).                   Periodically ping some hosts.
+@end direntry
+
+@titlepage
+@title GNU Alive
+@subtitle for version @value{VERSION}, @value{UPDATED}
+@author Thien-Thi Nguyen
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@contents
+
+
+@ifnottex
+@node Top
+@top GNU Alive
+
+@insertcopying
+@end ifnottex
+
+@menu
+* Introduction::            General purpose and information.
+* Invoking alive::          How to use GNU Alive.
+* Configuration::           Changes to make while @samp{alive} sleeps.
+
+* Phase 1 Peers::           Old competition, still remembered.
+* GNU FDL::                 Copying and sharing this documentation.
+* Index::
+@end menu
+
+
+@c ---------------------------------------------------------------------------
+@node    Introduction
+@chapter Introduction
+
+Sometimes it's not enough to simply ``get on the net''; what's important
+is to @strong{stay on} the net.  If the network is depressed, it might
+start ignoring you.  You can use GNU Alive to cheer it up.
+@cindex non-recommendation
+But, first things first.  Do you know what this command:
+
+@example
+ping -i 149 @var{ipaddr}
+@end example
+
+@noindent
+does?  If you answered ``yes'' and don't mind typing that command into a
+shell, then you @strong{do not} need GNU Alive, as its functionality is
+roughly equivalent to that command.  In this case, go ahead and save
+yourself some time and disk space and remove this package from your
+computer!
+
+If you answered ``no'' instead, perhaps that's because you know what
+@code{ping @var{ipaddr}} does, but are not so sure about @code{-i 149}.
+Well, it turns out that @code{-i @var{n}} means repeat the ping every
+@var{n} seconds, instead of every second, the default.  So now you know,
+and can blithely proceed to remove GNU Alive from your computer.  Go
+ahead, what are you waiting for?
+
+Still here?  Fine.  You must be curious, then, about the ``roughly
+equivalent'' functionality mentioned above.  Surely there must be
+@strong{something} to recommend GNU Alive.  Was such profligate
+duplication always so?
+
+@menu
+* Features::   Some (very slight, indeed) things.
+* History::    How GNU Alive came to be, and what it might become.
+@end menu
+
+
+@c ---------------------------------------------------------------------------
+@node    Features
+@section Features
+
+As previously established (@pxref{Introduction}), GNU Alive is a package
+that provides a command-line program to periodically make network
+contact with (aka ``ping'') a specified host.  This section describes
+some differences between @samp{ping} and @samp{alive} (the program).
+
+@heading superficial
+
+@table @asis
+@item takes @samp{--help}, @samp{--version}
+Like all proper GNU programs, @samp{alive} supports these options,
+displaying the requested information to stdout and exiting successfully.
+@xref{Invoking alive}.
+
+Note that Inetutils@footnote{@url{http://www.gnu.org/software/inetutils/}}
+ping also supports these options, as it is also a proper GNU program.
+Other ping programs may or may not.
+
+@item no arguments
+To keep things simple and consistent, @samp{alive} takes no arguments,
+and instead reads configuration information from files in the directory
+@file{~/.alive.d}, where @file{~} is expanded using the value of the
+@code{HOME} environment variable.  If those files don't exist,
+@samp{alive} uses reasonable defaults.
+
+@item reconfiguration without restart
+Each configuration file is rescanned at the top of every loop iteration
+if its modification time differs from the last check.  This means it's
+enough to edit a file (and wait); no need to restart the program.
+@xref{Configuration}.
+
+@item multiple hosts / no hosts
+If you specify more than one host, @samp{alive} contacts them in a
+round-robin fashion.  This reduces the annoyance level of some network
+administrators---always a good idea.
+
+On the other hand, if you don't specify any hosts, @samp{alive} contacts
+localhost (typically, @code{127.0.0.1}).
+
+@item randomized period
+The default @dfn{period}, i.e., time between successive contacts,
+is a random number of seconds in the range 149 to 420, inclusive.
+@end table
+
+@heading profound
+
+@table @asis
+@item source code available at runtime
+All GNU programs are distributed as source code, of course, but GNU
+Alive goes further; the source code is also available when you run the
+program.
+
+This is because @samp{alive} is implemented as a @dfn{script}, a
+sequence of textual instructions for an ``interpreter'' program to read
+and evaluate, rather than a binary file.
+
+Most users don't care about runtime access to source code, but perhaps
+you are not like most users.
+
+@item implementation language: Guile Scheme
+@itemx configuration language: sexps
+GNU Alive uses Guile
+Scheme@footnote{@url{http://www.gnu.org/software/guile/}}
+as the implementation language.
+
+Each configuration file is a series of @dfn{sexps}, or
+structured expressions, amenable to the Scheme @code{read} procedure.
+(Actually, the syntax is designed to be a subset of what Scheme
+@code{read} can handle, to be friendly also to Emacs Lisp @code{read}.)
+
+Most programmers don't care about sexps, but perhaps you are not like
+most programmers.
+
+@c (TODO) @item extensible
+@c (TODO) [Describe hooks here.]
+@end table
+
+@c ---------------------------------------------------------------------------
+@node    History
+@section History
+
+This section describes the evolution of GNU Alive purpose and design.
+There are two major development phases, both completely independent of
+the other.
+
+@menu
+* Phase 1::              Through 2005.
+* Phase 2::              2012 and later.
+@end menu
+
+@c ---------------------------------------------------------------------------
+@node       Phase 1
+@subsection Phase 1
+
+[TODO: Describe evolution, as advertized---the following is only a
+description of the state immediately prior to beginning of phase 2
+(@pxref{Phase 2}).
+The appendix can be inlined, then (@pxref{Phase 1 Peers}).]
+
+Originally, GNU Alive was called @samp{qadsl}, and had two purposes:
+to auto-login to certain Swedish dial-up ISPs; and
+to maintain the connection via periodic network traffic.
+Its authors and maintainers were: Jakob "Kuba" Stasilowicz,
+Peter Strömberg, Kenth Garlöv, Joachim Nilsson, and Jakob Eriksson.
+
+It was implemented in C and ported to GNU/Hurd, several GNU/Linux
+variants, NetBSD, and FreeBSD.  It used a text-based configuration file
+format for server name and port, user name, login, password, keepalive
+daemon type and policy, and so forth.  Configuration could be done at
+system (in @file{/etc}) level, user (under @file{~}) level, and with
+corresponding command-line options.
+
+There were two @dfn{keepalive types}, i.e., methods for generating
+network traffic: HTTP and ``ping'' (in spirit, not really ICMP).  There
+was debug, pidfile, syslog support.  Once running, the daemon could be
+queried and commanded by another invocation.
+
+The distribution included an example configuration file, installed in
+@code{$(sysconfdir)}; an info-format manual, for @code{$(infodir)}; and
+two manpages: @file{alive.8} and @file{alive.conf.5}, installed under
+(in the appropriate subdirectory of) @code{$(mandir)}.
+
+The last release of phase 1 GNU Alive was 1.4.0 (2005-02-22), released
+under GNU GPL v2+ (like all previous releases).  There was a small
+change afterwards that was never released:
+
+@example
+Author: Joachim Nilsson <joachim.nilsson@@member.fsf.org>
+Date:   2005-11-19 12:23:22 +0000
+
+Attempt to lower the impact of non-responding login servers.
+Don't sleep too long before retrying, it's OK to fail.
+
+ src/http.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+@end example
+
+@noindent
+The source code comprised a handful of C files for low-level internals
+(cross-platform support, e.g., @code{strcasecmp}); a pair of Yacc/Lex
+input files with glue C code, to implement the configuration file parser
+module; and 19 @file{.h} and @file{.c} files, to implement the program
+itself.
+
+Curiously, the usual mass of Autotools flotsam (i.e., @file{configure}
+script et al)@footnote{@url{http://www.gnu.org/software/autoconf/}@*
+@url{http://www.gnu.org/software/automake/}} was checked into the
+repository.  Release 1.4.0 was prepared using GNU Autoconf 2.59 and GNU
+Automake 1.8.5.
+
+
+@c ---------------------------------------------------------------------------
+@node       Phase 2
+@subsection Phase 2
+
+After several years without activity or release (@pxref{Phase 1}), in
+2012 Thien-Thi Nguyen volunteered to adopt GNU Alive with the intent to
+drop the auto-login functionality, leaving only the periodic ping, and
+furthermore, to do a rewrite from scratch.
+(This is why his name appears on the copyright notices, solely.)
+
+Phase 2 GNU Alive is released under GNU GPL v3+, with a new feature set
+(@pxref{Features}).
+
+
+@c ---------------------------------------------------------------------------
+@node    Invoking alive
+@chapter Invoking alive
+
+Running @samp{alive} is easy.  Simply type @samp{alive} at the shell
+prompt followed by @key{RET}.  You can use the shell's i/o redirection
+facilities to filter/suppress the output, and its job control facilities
+to have @samp{alive} execute in the background.  For example, with GNU
+Bash@footnote{@url{http://www.gnu.org/software/bash/}}:
+
+@example
+$ alive >/dev/null &
+@end example
+
+@noindent
+Two other modes of operation are available:
+
+@example
+$ alive --version
+$ alive --help
+@end example
+
+@noindent
+That's it!  Quite boring, no?  The real fun lies in playing with the
+configuration, either before starting @samp{alive}, or while it runs.
+@xref{Configuration}.
+
+Additionally, @samp{alive} responds to certain signals in a more or less
+well-defined manner.  To send it a signal, first note its @dfn{pid}
+(process id), displayed on the first line output:
+
+@example
+$ alive
+alive: 2012-08-11 16:24:26 restart (pid 9731)
+[...]
+@end example
+
+@noindent
+The pid in this example is @code{9731}.  Next, use the command-line
+utility @samp{kill}:
+
+@example
+$ kill -INT 9731
+@end example
+
+@noindent
+or Emacs command @code{signal-process}:
+
+@example
+M-x signal-process RET 9731 RET 2 RET
+@end example
+
+@noindent
+specifying this pid and the signal to send.
+All unhandled signals (not described in the following table) will cause
+@samp{alive} to die unceremoniously.  To see a list, try @samp{kill -l}.
+Handled signals, on the other hand, elicit an acknowledgement on stdout,
+e.g., @samp{recevied signal 2 (SIGINT)}.
+
+@table @code
+@item SIGALRM
+Interrupt the current @code{sleep(2)}.  This is useful if you change the
+configuration and don't want to wait for the next iteration.
+
+@item SIGHUP
+@itemx SIGUSR1
+Restart.  This is useful if you forget the pid.
+
+@item SIGINT
+@itemx SIGQUIT
+@itemx SIGTERM
+Shut down, i.e., display @samp{exiting} and exit successfully.
+@end table
+
+
+@c ---------------------------------------------------------------------------
+@node    Configuration
+@chapter Configuration
+
+You can modify @samp{alive} behavior (even while it runs), by writing
+simple sexps into text files under directory @file{~/.alive.d}
+(@pxref{Features}).
+Information for a @dfn{configuration item} @var{foo} is written in file
+@file{foo}.
+
+@menu
+* Generally Sexp-ing::          A few minutes here, first.
+* hosts::                       Who to ping.
+* period::                      How long to wait between pings.
+@end menu
+
+
+@c ---------------------------------------------------------------------------
+@node    Generally Sexp-ing
+@section Generally Sexp-ing
+
+The file format for the configuration items (@pxref{Configuration}) is
+composed of comments, structured expressions, and whitespace.
+
+@table @asis
+@item comments
+A comment begins with @samp{;} (semicolon) and goes to the end of the
+line.  If you use Emacs, you can add the comment:
+
+@example
+;; -*- scheme -*-
+@end example
+
+@noindent
+on the first line to make comments appear differently, presuming syntax
+highlighting support is enabled.
+
+@item structured expressions
+A structured expression, for the purposes of GNU Alive, is one of:
+
+@table @asis
+@item integer
+A decimal@footnote{(usually).  GNU Alive will also accept
+@code{#b101010} (binary), @code{#o52} (octal) and @code{#x2A}
+(hexadecimal) without complaint.} number.  For instance, @code{42}.
+
+@item symbol
+A contiguous sequence of non-whitespace characters that do not include
+@samp{()} (parentheses), @samp{,} (comma), @samp{'} (apopostrophe, also
+known as single-quote), or @samp{"} (double-quote).  For instance,
+@code{www.gnu.org}.
+@end table
+
+@noindent
+That's it!
+
+@item whitespace
+Everything else, that is, all the stuff between comments and structured
+expressions, is whitespace.
+@end table
+
+
+@c ---------------------------------------------------------------------------
+@node    hosts
+@section hosts
+
+The @code{hosts} configuration item specifies who to ping.
+Each symbol is either a host name or IP address.
+
+@example
+;;; ~/.alive.d/hosts (-*- scheme -*-)
+
+;; gateway
+10.0.0.1
+
+;; various hosts, increasingly further out
+foo.local-lan
+bar.site-lan
+baz.example.com
+
+;;; ~/.alive.d/hosts ends here
+@end example
+
+@c ---------------------------------------------------------------------------
+@node    period
+@section period
+
+The @code{period} configuration item specifies how long to wait between
+pings.  The units are (integer) seconds.  If there is one integer,
+@samp{alive} uses it as a fixed period.  If there are two, the first
+must be less than or equal than the second, and @samp{alive} chooses a
+random number between (inclusively) the two.
+
+@example
+;;; ~/.alive.d/period (-*- scheme -*-)
+
+;; quickly
+;       3
+
+;; languidly
+;       391
+
+;; randomly, but not too quickly
+        149 420
+
+;;; ~/.alive.d/period ends here
+@end example
+
+@c ---------------------------------------------------------------------------
+@node     Phase 1 Peers
+@appendix Phase 1 Peers
+
+Here are some projects related to the original (@pxref{Phase 1}) GNU
+Alive, salvaged from the 1.4.0 tarball.  Most of the links are now dead.
+Updates and corrections welcome.
+
+@table @asis
+@item TeliaTalker
+@url{http://www.blaxe.com/main.html}@*
+@url{ftp://blixth.com/pub/linux/teliatalker-0.4.3.tar.gz}@*
+
+@item CiC Login
+@url{http://enterprise.hb.se/~torgny/code.html}@*
+@url{http://enterprise.hb.se/~torgny/ciclogin-0.4.2.tar.gz}@*
+
+@item ARAW
+@url{http://shtrom.ssji.net/araw/download/araw-0.5a.tar.bz2}
+
+@item qADSL 1.2.x (from a previous maintainer)
+@url{http://kuba.unix.se/code/}@*
+@url{http://kuba.unix.se/code/qadsl/}@*
+
+@item TeliaADSLCon
+@url{http://teliaadslcon.axnet.nu/}@*
+
+@item Telia ADSL Connection Keeper
+@url{http://magnus.dyndns.org/TeliaADSL.php}@*
+
+@item Clever use of netcat
+@url{http://k76.ryd.student.liu.se/telia-adsl-linux.html}@*
+
+@item LF Connection Keeper (Windows & UNIX), binary-only
+@url{http://www.lfdomain.com/prgConnectionKeeper.php}@*
+@end table
+
+
+@c ---------------------------------------------------------------------------
+@node     GNU FDL
+@appendix GNU Free Documentation License
+
+@include fdl.texi
+
+
+@c ---------------------------------------------------------------------------
+@node       Index
+@unnumbered Index
+
+@printindex cp
+
+@bye
