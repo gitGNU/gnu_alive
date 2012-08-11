@@ -192,8 +192,7 @@ NEWS for GNU Alive
 
 	qadsl does not exit(1) at every possible juncture anymore.
 
-- etc
-
+- etc 
 	Local Variables:
 	mode: outline
 	outline-regexp: "\\([ ][ ]\\)*- "
@@ -201,7 +200,6 @@ NEWS for GNU Alive
 	fill-prefix: "\t"
 	End:
 
-
 Copyright (C) 2012 Thien-Thi Nguyen
 
 Copying and distribution of this file, with or without modification,
