@@ -50,7 +50,6 @@ Texts.  A copy of the license is included in the appendix entitled
 * Invoking alive::          How to use GNU Alive.
 * Configuration::           Changes to make while @samp{alive} sleeps.
 
-* Phase 1 Peers::           Old competition, still remembered.
 * GNU FDL::                 Copying and sharing this documentation.
 * Index::
 @end menu
@@ -194,11 +193,15 @@ the other.
 
 [TODO: Describe evolution, as advertized---the following is only a
 description of the state immediately prior to beginning of phase 2
-(@pxref{Phase 2}).
-The appendix can be inlined, then (@pxref{Phase 1 Peers}).]
+(@pxref{Phase 2}).]
 
 Originally, GNU Alive was called @samp{qadsl}, and had two purposes:
-to auto-login to certain Swedish dial-up ISPs; and
+to auto-login to certain Swedish dial-up ISPs@footnote{Some contemporary
+projects in the same functionality space: TeliaTalker, CiC Login,
+ARAW, qADSL 1.2.x (from a previous maintainer), TeliaADSLCon,
+Telia ADSL Connection Keeper, ``Clever use of netcat'',
+LF Connection Keeper.
+Most of these are defunct or obsolete nowadays.}; and
 to maintain the connection via periodic network traffic.
 Its authors and maintainers were: Jakob "Kuba" Stasilowicz,
 Peter Strömberg, Kenth Garlöv, Joachim Nilsson, and Jakob Eriksson.
@@ -445,44 +448,6 @@ random number between (inclusively) the two.
 
 ;;; ~/.alive.d/period ends here
 @end example
-
-@c ---------------------------------------------------------------------------
-@node     Phase 1 Peers
-@appendix Phase 1 Peers
-
-Here are some projects related to the original (@pxref{Phase 1}) GNU
-Alive, salvaged from the 1.4.0 tarball.  Most of the links are now dead.
-Updates and corrections welcome.
-
-@table @asis
-@item TeliaTalker
-@url{http://www.blaxe.com/main.html}@*
-@url{ftp://blixth.com/pub/linux/teliatalker-0.4.3.tar.gz}@*
-
-@item CiC Login
-@url{http://enterprise.hb.se/~torgny/code.html}@*
-@url{http://enterprise.hb.se/~torgny/ciclogin-0.4.2.tar.gz}@*
-
-@item ARAW
-@url{http://shtrom.ssji.net/araw/download/araw-0.5a.tar.bz2}
-
-@item qADSL 1.2.x (from a previous maintainer)
-@url{http://kuba.unix.se/code/}@*
-@url{http://kuba.unix.se/code/qadsl/}@*
-
-@item TeliaADSLCon
-@url{http://teliaadslcon.axnet.nu/}@*
-
-@item Telia ADSL Connection Keeper
-@url{http://magnus.dyndns.org/TeliaADSL.php}@*
-
-@item Clever use of netcat
-@url{http://k76.ryd.student.liu.se/telia-adsl-linux.html}@*
-
-@item LF Connection Keeper (Windows & UNIX), binary-only
-@url{http://www.lfdomain.com/prgConnectionKeeper.php}@*
-@end table
-
 
 @c ---------------------------------------------------------------------------
 @node     GNU FDL
