@@ -1,5 +1,65 @@
 NEWS for GNU Alive
+See the end for copying conditions.
 
+
+
+- 2.0.0 | 2012-08-12
+
+  - licenses upgrade: GPL 3+ / FDL 1.3
+
+	GNU Alive is now released under GPLv3+.  You can redistribute it
+	and/or modify it under the terms of the GNU General Public
+	License as published by the Free Software Foundation, either
+	version 3 of the License, or (at your option) any later version.
+
+	The manual is released under GNU FDL 1.3.
+
+  - complete redesign / rewrite
+
+	GNU Alive 2 is a radical simplification; it is now a "periodic
+	ping program" only, w/o support for the "auto-login" feature of
+	previous releases (nowadays that job is handled best by pppd).
+	If you are comfortable typing:
+
+		ping -i 149 HOST
+
+	at a shell prompt, then you do NOT need GNU Alive 2.  Move on!
+
+  - new dependencies
+
+    - Guile
+
+    - ping(1) that accepts ‘-n -c COUNT’
+
+  - configuration changes
+
+	Configuration for the periodic ping is now done by frobbing
+	‘hosts’ and ‘period’ files under ~/.alive.d, written in a format
+	comprising a (very limited) set of sexps.  See manual.
+
+	You can now specify multiple hosts; they are pinged round-robin.
+	You can now specify a range for the sleep period; in that case,
+	alive sleeps a random number of seconds in the (inclusive) range
+	each iteration.
+
+	Configuration changes are now detected at each iteration, so
+	that you need not restart the program for changes to take
+	effect.  Send SIGALRM to force immediate detection.
+
+  - maintenance changes
+
+    - new maintainer
+
+	GNU Alive is now maintained by Thien-Thi Nguyen, who hopes to
+	continue the good work of the previous maintainers.
+
+    - tools upgrade
+
+	GNU gnulib 2012-07-24 21:35:41 (0.0.7541-dbd91)
+	GNU Autoconf 2.69
+	GNU Automake 1.12.2
+	Guile 1.8.7
+	SNUGGLE 0.1
 
 
 - 1.4.0 | 2005-02-22
