@@ -98,6 +98,7 @@ duplication always so?
 @node    Features
 @section Features
 
+@cindex features
 As previously established (@pxref{Introduction}), GNU Alive is a package
 that provides a command-line program to periodically make network
 contact with (aka ``ping'') a specified host.  This section describes
@@ -195,6 +196,7 @@ the other.
 description of the state immediately prior to beginning of phase 2
 (@pxref{Phase 2}).]
 
+@cindex @samp{qadsl}
 Originally, GNU Alive was called @samp{qadsl}, and had two purposes:
 to auto-login to certain Swedish dial-up ISPs@footnote{Some contemporary
 projects in the same functionality space: TeliaTalker, CiC Login,
@@ -270,6 +272,7 @@ Phase 2 GNU Alive is released under GNU GPL v3+, with a new feature set
 @node    Invoking alive
 @chapter Invoking alive
 
+@cindex invocation
 Running @samp{alive} is easy.  Simply type @samp{alive} at the shell
 prompt followed by @key{RET}.  You can use the shell's i/o redirection
 facilities to filter/suppress the output, and its job control facilities
@@ -345,6 +348,8 @@ Shut down, i.e., display @samp{exiting} and exit successfully.
 @node    Configuration
 @chapter Configuration
 
+@cindex fun
+@cindex configuration
 You can modify @samp{alive} behavior (even while it runs), by writing
 simple sexps into text files under directory @file{~/.alive.d}
 (@pxref{Features}).
@@ -362,6 +367,7 @@ Information for a @dfn{configuration item} @var{foo} is written in file
 @node    Generally Sexp-ing
 @section Generally Sexp-ing
 
+@cindex structured expression
 The file format for the configuration items (@pxref{Configuration}) is
 composed of comments, structured expressions, and whitespace.
 
@@ -407,6 +413,7 @@ expressions, is whitespace.
 @node    hosts
 @section hosts
 
+@cindex @code{hosts} configuration item
 The @code{hosts} configuration item specifies who to ping.
 Each symbol is either a host name or IP address.
 
@@ -428,6 +435,7 @@ baz.example.com
 @node    period
 @section period
 
+@cindex @code{period} configuration item
 The @code{period} configuration item specifies how long to wait between
 pings.  The units are (integer) seconds.  If there is one integer,
 @samp{alive} uses it as a fixed period.  If there are two, the first

@@ -1,5 +1,13 @@
 2012-08-24  Thien-Thi Nguyen  <ttn@gnuvola.org>
 
+	[doc] Add some @cindex entries.
+
+	* doc/alive.texi (Features, Phase 1, Invoking alive)
+	(Configuration, Generally Sexp-ing, hosts, period):
+	Add @cindex entries.
+
+2012-08-24  Thien-Thi Nguyen  <ttn@gnuvola.org>
+
 	[doc] Fix typo: Spell "received" correctly.
 
 	* doc/alive.texi (Invoking alive): Spell "received" correctly.
