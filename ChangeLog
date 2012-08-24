@@ -1,3 +1,9 @@
+2012-08-24  Thien-Thi Nguyen  <ttn@gnuvola.org>
+
+	[doc] Fix typo: Spell "received" correctly.
+
+	* doc/alive.texi (Invoking alive): Spell "received" correctly.
+
 2012-08-17  Thien-Thi Nguyen  <ttn@gnuvola.org>
 
 	Use email address for bug reports.

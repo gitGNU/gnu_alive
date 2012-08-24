@@ -323,7 +323,7 @@ specifying this pid and the signal to send.
 All unhandled signals (not described in the following table) will cause
 @samp{alive} to die unceremoniously.  To see a list, try @samp{kill -l}.
 Handled signals, on the other hand, elicit an acknowledgement on stdout,
-e.g., @samp{recevied signal 2 (SIGINT)}.
+e.g., @samp{received signal 2 (SIGINT)}.
 
 @table @code
 @item SIGALRM
