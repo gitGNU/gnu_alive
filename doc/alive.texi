@@ -175,6 +175,7 @@ most programmers.
 @c (TODO) [Describe hooks here.]
 @end table
 
+
 @c ---------------------------------------------------------------------------
 @node    History
 @section History
@@ -187,6 +188,7 @@ the other.
 * Phase 1::              Through 2005.
 * Phase 2::              2012 and later.
 @end menu
+
 
 @c ---------------------------------------------------------------------------
 @node       Phase 1
@@ -431,6 +433,7 @@ baz.example.com
 ;;; ~/.alive.d/hosts ends here
 @end example
 
+
 @c ---------------------------------------------------------------------------
 @node    period
 @section period
@@ -456,6 +459,7 @@ random number between (inclusively) the two.
 
 ;;; ~/.alive.d/period ends here
 @end example
+
 
 @c ---------------------------------------------------------------------------
 @node     GNU FDL
