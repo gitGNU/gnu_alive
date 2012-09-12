@@ -1,5 +1,11 @@
 2012-09-12  Thien-Thi Nguyen  <ttn@gnuvola.org>
 
+	Release: 2.0.1
+
+	* configure.ac (AC_INIT): Bump version to "2.0.1" for release.
+
+2012-09-12  Thien-Thi Nguyen  <ttn@gnuvola.org>
+
 	[boot] Use texinfo.tex from gnulib.
 
 	* autogen.sh: Also copy gnulib's build-aux/texinfo.tex.

@@ -3,6 +3,17 @@ See the end for copying conditions.
 
 
 
+- 2.0.1 | 2012-09-12
+  - bug report address updated: bug-alive (at gnu dot org)
+  - documentation improved
+    - new appendix: GNU Software
+    - index expanded
+  - maintainer tools upgrade
+    - gnulib-tool (GNU gnulib 2012-09-10 20:37:18) 0.0.7617-6418d
+    - automake (GNU automake) 1.12.3
+    - texinfo.tex now from Gnulib instead of Automake
+
+
 - 2.0.0 | 2012-08-12
 
   - licenses upgrade: GPL 3+ / FDL 1.3
