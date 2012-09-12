@@ -50,6 +50,7 @@ Texts.  A copy of the license is included in the appendix entitled
 * Invoking alive::          How to use GNU Alive.
 * Configuration::           Changes to make while @samp{alive} sleeps.
 
+* GNU Software::            Alive is a part of GNU.
 * GNU FDL::                 Copying and sharing this documentation.
 * Index::
 @end menu
@@ -112,7 +113,7 @@ Like all proper GNU programs, @samp{alive} supports these options,
 displaying the requested information to stdout and exiting successfully.
 @xref{Invoking alive}.
 
-Note that Inetutils@footnote{@url{http://www.gnu.org/software/inetutils/}}
+Note that Inetutils (@pxref{GNU Software})
 ping also supports these options, as it is also a proper GNU program.
 Other ping programs may or may not.
 
@@ -160,7 +161,7 @@ you are not like most users.
 @item implementation language: Guile Scheme
 @itemx configuration language: sexps
 GNU Alive uses Guile
-Scheme@footnote{@url{http://www.gnu.org/software/guile/}}
+Scheme (@pxref{GNU Software})
 as the implementation language.
 
 Each configuration file is a series of @dfn{sexps}, or
@@ -250,8 +251,7 @@ module; and 19 @file{.h} and @file{.c} files, to implement the program
 itself.
 
 Curiously, the usual mass of Autotools flotsam (i.e., @file{configure}
-script et al)@footnote{@url{http://www.gnu.org/software/autoconf/}@*
-@url{http://www.gnu.org/software/automake/}} was checked into the
+script et al, @pxref{GNU Software}) was checked into the
 repository.  Release 1.4.0 was prepared using GNU Autoconf 2.59 and GNU
 Automake 1.8.5.
 
@@ -279,7 +279,7 @@ Running @samp{alive} is easy.  Simply type @samp{alive} at the shell
 prompt followed by @key{RET}.  You can use the shell's i/o redirection
 facilities to filter/suppress the output, and its job control facilities
 to have @samp{alive} execute in the background.  For example, with GNU
-Bash@footnote{@url{http://www.gnu.org/software/bash/}}:
+Bash (@pxref{GNU Software}):
 
 @example
 $ alive >/dev/null &
@@ -459,6 +459,66 @@ random number between (inclusively) the two.
 
 ;;; ~/.alive.d/period ends here
 @end example
+
+
+@c ---------------------------------------------------------------------------
+@node     GNU Software
+@appendix GNU Software
+
+@cindex software, GNU
+This appendix describes some other GNU software used in the maintenance,
+design and implementation of GNU Alive.  For more information about the GNU
+project, please visit @url{http://www.gnu.org/}.
+
+@table @asis
+@item Inetutils --- @url{http://www.gnu.org/software/inetutils/}
+@cindex Inetutils
+
+Inetutils provides several command-line utilities for working with
+a network capable of speaking @dfn{IP} (Internet Protocol).
+Most relevant to GNU Alive is @samp{ping}, which @samp{alive} invokes
+directly, to compose, send, receive and interpret the actual network
+(on the wire) packets;
+and ``emulates'' indirectly (i.e., sleeping and looping, as for
+@samp{ping -i @var{period}}).
+
+@item Guile --- @url{http://www.gnu.org/software/guile/}
+@cindex Guile
+
+Guile provides the Scheme interpreter that actually executes the
+@samp{alive} script, a crucial role certainly.
+The design choice to use sexps for configuration items is also informed
+by Guile.
+Less known perhaps is that Guile plays a part also in the GNU Alive
+maintenance; e.g., several Scheme programs and modules are used to
+prepare its home page.
+
+@item Autoconf --- @url{http://www.gnu.org/software/autoconf/}
+@cindex Autoconf
+@itemx Automake --- @url{http://www.gnu.org/software/automake/}
+@cindex Automake
+
+These are indispensable for maintenance.
+Autoconf is reponsible for the @file{configure} script, and Automake is
+responsible for generating the various @file{Makefile.in} files that
+uphold the rest of the standard GNU build/installation system.
+
+@item Bash --- @url{http://www.gnu.org/software/bash/}
+@cindex Bash
+
+GNU Alive writes to standard output, and thus is amenable to the parent
+shell's i/o redirection facilities.  We use Bash to document an example
+of this (@pxref{Invoking alive}).
+
+@item Emacs --- @url{http://www.gnu.org/software/emacs/}
+@cindex Emacs
+
+Although Alive does not use Emacs directly, the configuration items can
+be easily manipulated by Emacs (@pxref{Configuration}), and Emacs has
+good support for managing child processes, like Bash.
+
+Why not consider writing a user interface to Alive for Emacs?
+@end table
 
 
 @c ---------------------------------------------------------------------------
