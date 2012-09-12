@@ -19,13 +19,11 @@
 
 ##
 # Usage: sh autogen.sh
-#
-# Tools:
-# - snuggle (SNUGGLE) 0.1
-# - gnulib-tool (GNU gnulib 2012-07-24 21:35:41) 0.0.7541-dbd91
-# - autoreconf (GNU Autoconf) 2.69
-# - automake (Automake 1.12.2
 ##
+
+for p in guile snuggle gnulib-tool autoconf automake ; do
+    $p --version | sed 's/^/using: /;1q'
+done
 
 snuggle m4 build-aux/
 

@@ -1,5 +1,13 @@
 2012-09-12  Thien-Thi Nguyen  <ttn@gnuvola.org>
 
+	[boot] Display "using: TOOL-VERSION-INFO" first.
+
+	* autogen.sh: Don't maintain tool versions in comments.
+	Instead, display "using: TOOL-VERSION-INFO" first,
+	for guile, snuggle, gnulib-tool, autoconf and automake.
+
+2012-09-12  Thien-Thi Nguyen  <ttn@gnuvola.org>
+
 	[doc] Add appendix "GNU Software".
 
 	* doc/alive.texi (GNU Software): New node/appendix.
