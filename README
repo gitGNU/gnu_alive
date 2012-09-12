@@ -21,9 +21,12 @@ Requirements
 Installation
 ============
 
-	Before starting, make sure GNU Guile (any version) is installed.
-
 	See file INSTALL for generic installation instructions.
+	In short:
+
+	$ ./configure
+	$ make
+	$ make install
 
 	Successful installation includes:
 	  $(bindir)/alive           -- the program
@@ -33,8 +36,7 @@ Installation
 Troubleshooting
 ===============
 
-	To file a bug report, please visit:
-	<http://savannah.gnu.org/bugs/?group=alive>.
+	Please send bug reports to <bug-alive@gnu.org>.
 
 
 
