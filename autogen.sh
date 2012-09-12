@@ -35,6 +35,7 @@ actually ()
 {
     gnulib-tool --copy-file $1 $2
 }
+actually build-aux/texinfo.tex
 actually doc/INSTALL.UTF-8 INSTALL
 actually doc/fdl.texi
 
