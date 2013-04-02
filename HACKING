@@ -1,0 +1,57 @@
+HACKING Alive                                                -*- org -*-
+
+This file is both a guide for newcomers and a todo list for oldstayers.
+It lives in the repo but is not included in the distribution.
+
+* next
+
+* ongoing (some of which may go into the next release)
+  (grep "git grep -n -H -E -e '(FIXME|TODO):'")
+  see also [[bug-alive:][bug-alive (mailing list archive)]]
+
+* portability
+  |-----------+------+-------+-----|
+  |     guile | boot | build | run |
+  |-----------+------+-------+-----|
+  | 1.4.1.127 | yes  | yes   | yes |
+  |     1.8.7 | yes  | yes   | yes |
+  |     2.0.7 | ?    | ?     | ?   |
+  |-----------+------+-------+-----|
+
+* bootstrap tools
+*** usual GNU stuff: Autoconf, Automake
+*** GNU Guile (see [[portability]] above)
+*** [[http://www.gnuvola.org/software/guile-baux/][Guile-BAUX]]
+*** [[http://www.gnuvola.org/software/snuggle/][SNUGGLE]]
+
+* coding standards: generally [[info:standards][GNU]]
+*** indent with emacs (don't like the result? fix emacs!)
+*** (setq indent-tabs-mode nil)
+*** (add-hook 'before-save-hook 'delete-trailing-whitespace)
+*** everything UTF-8, [[http://www.utf8everywhere.org/][please]]
+*** ChangeLog
+***** ttn-style: TITLE LF LF {BLURB LF LF}* BODY
+***** exclude titles suffixed "; nfc." (no functional change)
+
+* copyright update policy
+*** individual files only on change
+*** individual years
+
+* repo branch discipline
+*** no ‘master’ -- do not panic!
+*** archive
+    This branch is for what was already released.  It will never be rebased.
+    Its tip will always have a commit title starting with "Release".
+*** p -- "perhaps", "probably"
+    This branch is where largely-stable changes intended for the next release
+    live.  It's very unlikely to undergo rebase, but not entirely impossible.
+    (Since GNU Alive is not so popular, we don't bother announcing it.)
+
+* etc
+#+LINK: bug-alive   https://lists.gnu.org/archive/html/bug-alive/
+
+
+Copyright (C) 2013 Thien-Thi Nguyen
+
+Copying and distribution of this file, with or without modification,
+are permitted provided the copyright notice and this notice are preserved.
