@@ -2,7 +2,6 @@ NEWS for GNU Alive
 See the end for copying conditions.
 
 
-
 - 2.0.1 | 2012-09-12
   - bug report address updated: bug-alive (at gnu dot org)
   - documentation improved
@@ -262,6 +261,7 @@ See the end for copying conditions.
   - more stubborn when login fails
 
 	qadsl does not exit(1) at every possible juncture anymore.
+
 
 - etc 
 	Local Variables:
