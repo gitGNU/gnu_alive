@@ -17,23 +17,23 @@ See the end for copying conditions.
 
   - licenses upgrade: GPL 3+ / FDL 1.3
 
-	GNU Alive is now released under GPLv3+.  You can redistribute it
-	and/or modify it under the terms of the GNU General Public
-	License as published by the Free Software Foundation, either
-	version 3 of the License, or (at your option) any later version.
+    GNU Alive is now released under GPLv3+.  You can redistribute it
+    and/or modify it under the terms of the GNU General Public
+    License as published by the Free Software Foundation, either
+    version 3 of the License, or (at your option) any later version.
 
-	The manual is released under GNU FDL 1.3.
+    The manual is released under GNU FDL 1.3.
 
   - complete redesign / rewrite
 
-	GNU Alive 2 is a radical simplification; it is now a "periodic
-	ping program" only, w/o support for the "auto-login" feature of
-	previous releases (nowadays that job is handled best by pppd).
-	If you are comfortable typing:
+    GNU Alive 2 is a radical simplification; it is now a "periodic
+    ping program" only, w/o support for the "auto-login" feature of
+    previous releases (nowadays that job is handled best by pppd).
+    If you are comfortable typing:
 
-		ping -i 149 HOST
+    	ping -i 149 HOST
 
-	at a shell prompt, then you do NOT need GNU Alive 2.  Move on!
+    at a shell prompt, then you do NOT need GNU Alive 2.  Move on!
 
   - new dependencies
 
@@ -43,232 +43,230 @@ See the end for copying conditions.
 
   - configuration changes
 
-	Configuration for the periodic ping is now done by frobbing
-	‘hosts’ and ‘period’ files under ~/.alive.d, written in a format
-	comprising a (very limited) set of sexps.  See manual.
+    Configuration for the periodic ping is now done by frobbing
+    ‘hosts’ and ‘period’ files under ~/.alive.d, written in a format
+    comprising a (very limited) set of sexps.  See manual.
 
-	You can now specify multiple hosts; they are pinged round-robin.
-	You can now specify a range for the sleep period; in that case,
-	alive sleeps a random number of seconds in the (inclusive) range
-	each iteration.
+    You can now specify multiple hosts; they are pinged round-robin.
+    You can now specify a range for the sleep period; in that case,
+    alive sleeps a random number of seconds in the (inclusive) range
+    each iteration.
 
-	Configuration changes are now detected at each iteration, so
-	that you need not restart the program for changes to take
-	effect.  Send SIGALRM to force immediate detection.
+    Configuration changes are now detected at each iteration, so
+    that you need not restart the program for changes to take
+    effect.  Send SIGALRM to force immediate detection.
 
   - maintenance changes
 
     - new maintainer
 
-	GNU Alive is now maintained by Thien-Thi Nguyen, who hopes to
-	continue the good work of the previous maintainers.
+      GNU Alive is now maintained by Thien-Thi Nguyen, who hopes to
+      continue the good work of the previous maintainers.
 
     - tools upgrade
 
-	GNU gnulib 2012-07-24 21:35:41 (0.0.7541-dbd91)
-	GNU Autoconf 2.69
-	GNU Automake 1.12.2
-	Guile 1.8.7
-	SNUGGLE 0.1
+      GNU gnulib 2012-07-24 21:35:41 (0.0.7541-dbd91)
+      GNU Autoconf 2.69
+      GNU Automake 1.12.2
+      Guile 1.8.7
+      SNUGGLE 0.1
 
 
 - 1.4.0 | 2005-02-22
 
   - GNU Alive
 
-	The qadsl to GNU Alive transition was made.  New location of
-	homepage and downloads are on the gnu.org server, or any of its
-	mirrors.
+    The qadsl to GNU Alive transition was made.  New location of
+    homepage and downloads are on the gnu.org server, or any of its
+    mirrors.
 
-	http://www.gnu.org/software/alive/
-	http://savannah.gnu.org/projects/alive/
+    http://www.gnu.org/software/alive/
+    http://savannah.gnu.org/projects/alive/
 
   - new command-line switch ‘-q’, ‘--quit’
 
-	A new command ‘-q’, ‘--quit’ has been added.  This only quits
-	the keep-alive daemon without logging out.
+    A new command ‘-q’, ‘--quit’ has been added.  This only quits
+    the keep-alive daemon without logging out.
 
   - FreeBSD build fixes
 
-	The sneak introduction of ‘alloca’ broke the build on several
-	non-GNU-LibC systems.  This has been fixed properly and tested
-	on FreeBSD Alpha.
+    The sneak introduction of ‘alloca’ broke the build on several
+    non-GNU-LibC systems.  This has been fixed properly and tested
+    on FreeBSD Alpha.
 
   - initial translation effort
 
-	The groundwork for I18n using GNU Gettext has been laid out.
-	Thus far only Swedish and C/English is supported.  Other
-	translations are welcome.
+    The groundwork for I18n using GNU Gettext has been laid out.
+    Thus far only Swedish and C/English is supported.  Other
+    translations are welcome.
 
-	Add your language to po/LINGUAS and run "msginit --locale=???"
-	from the po directory to generate ???.po, then translate it and
-	run it by your translation team, usually <???@li.org>.
+    Add your language to po/LINGUAS and run "msginit --locale=???"
+    from the po directory to generate ???.po, then translate it and
+    run it by your translation team, usually <???@li.org>.
 
   - old config files and PID files reused
 
-	Even though the project has been renamed to GNU Alive and the
-	configuraion and PID (lock) files also have been renamed the
-	program is still backwards compatible.  The qadsl.conf and
-	.qadslrc are detected first, then alive.conf et. al.  The same
-	goes for the lock files.
+    Even though the project has been renamed to GNU Alive and the
+    configuraion and PID (lock) files also have been renamed the
+    program is still backwards compatible.  The qadsl.conf and
+    .qadslrc are detected first, then alive.conf et. al.  The same
+    goes for the lock files.
 
   - bugfixes and minor additions
 
-	The usual minor bugfixes and minor additions in verbosity and
-	debug messages, as expected.
+    The usual minor bugfixes and minor additions in verbosity and
+    debug messages, as expected.
 
 
 - 1.3.3 | 2004-06-29
 
   - bugfix: config.c
 
-	The actual login part of the daemon was never run even if it was
-	activated in the configuration file.  Bad use of ‘strcasecmp’
-	led to that part of the config file to be interpreted in the
-	straight opposite of the setting.
+    The actual login part of the daemon was never run even if it was
+    activated in the configuration file.  Bad use of ‘strcasecmp’
+    led to that part of the config file to be interpreted in the
+    straight opposite of the setting.
 
   - documentation updated
 
-	At least the TeXinfo documentation has been updated.
+    At least the TeXinfo documentation has been updated.
 
   - long options implemented
 
-	To support long options ‘getopt_long’ and ‘getopt’ has been made
-	a part of the qadsl source tree.  This because long options are
-	not available on all platforms, at least not NetBSD.
+    To support long options ‘getopt_long’ and ‘getopt’ has been made
+    a part of the qadsl source tree.  This because long options are
+    not available on all platforms, at least not NetBSD.
 
   - ‘-v’ now is verbose, and ‘-V’ is version
 
-	To more adhere to the style of GNU command line options the
-	short options for verbose and version, ‘-V’ and ‘-v’
-	respectively, have been switched.  We apologise for the
-	confusion this might create.
+    To more adhere to the style of GNU command line options the
+    short options for verbose and version, ‘-V’ and ‘-v’
+    respectively, have been switched.  We apologise for the
+    confusion this might create.
 
   - vastly improved logging (/var/log/daemon.log in Debian)
 
-	All calls to ‘syslog’ have been made more informative and clear.
-	Now they actually denote "SUCCESSFUL" and "FAILED" to mark the
-	login status.  Also, when given ‘-V’ (i.e., ‘--verbose’) that
-	switch now propagates properly to the daemon.
+    All calls to ‘syslog’ have been made more informative and clear.
+    Now they actually denote "SUCCESSFUL" and "FAILED" to mark the
+    login status.  Also, when given ‘-V’ (i.e., ‘--verbose’) that
+    switch now propagates properly to the daemon.
 
-	To swamp the logfiles even further another switch has been
-	added, ‘--debug’, that replaces the need to rebuild from source
-	using ‘--enable-debug’ to configure.  This switch adds a
-	ridiculous amount of data to the logfiles and will improve the
-	way people can debug their connection setups.
+    To swamp the logfiles even further another switch has been
+    added, ‘--debug’, that replaces the need to rebuild from source
+    using ‘--enable-debug’ to configure.  This switch adds a
+    ridiculous amount of data to the logfiles and will improve the
+    way people can debug their connection setups.
 
-	Also, all state changes are now noticed by the daemon in the
-	logfile.
+    Also, all state changes are now noticed by the daemon in the
+    logfile.
 
   - forced relogin on already running daemon
 
-	As suggested by Oden Eriksson, qadsl now sends SIGHUP to an
-	already started deamon when the client is started with
-	‘--login’.  This forces the daemon to cancel its current delay
-	and relogin.
+    As suggested by Oden Eriksson, qadsl now sends SIGHUP to an
+    already started deamon when the client is started with
+    ‘--login’.  This forces the daemon to cancel its current delay
+    and relogin.
 
-	Forced relogins are noted explicitly in the logfile.
+    Forced relogins are noted explicitly in the logfile.
 
   - cleaned up http.c
 
-	The name-space in http.c has been updated even further from the
-	old code.  It has been changed to ‘http_server_init’,
-	‘http_server_login’, etc.
+    The name-space in http.c has been updated even further from the
+    old code.  It has been changed to ‘http_server_init’,
+    ‘http_server_login’, etc.
 
-	A lot of the code has also seen face lifts and general
-	simplificaions and some long overdue documentation.
+    A lot of the code has also seen face lifts and general
+    simplificaions and some long overdue documentation.
 
   - socket leak fix
 
-	Mandrake RPM maintainer, Oden Eriksson, reported too many open
-	sockets from a long running qadsl process.  Turned out to be a
-	socket leak that occurred when bailing out early on error
-	detection.
+    Mandrake RPM maintainer, Oden Eriksson, reported too many open
+    sockets from a long running qadsl process.  Turned out to be a
+    socket leak that occurred when bailing out early on error
+    detection.
 
 
 - 1.3.2 | 2004-02-17
 
   - ugly bug in .conf file parser fixed
 
-	A really ugly bug in the .conf file parser made it impossible to
-	parse the new style .conf file format.
+    A really ugly bug in the .conf file parser made it impossible to
+    parse the new style .conf file format.
 
   - supported architectures
 
-	The list of supported arhitectures and dsitributions has grown.
-	qadsl-1.3.2 has been tested on:
+    The list of supported arhitectures and dsitributions has grown.
+    qadsl-1.3.2 has been tested on:
 
-	Slackware 9.1 (intel)
-	Mandrake 9.2 (intel)
-	Debian GNU/Linux (intel/Sarge)
-	Debian GNU/Hurd (intel/Sid)
-	NetBSD 1.6 (intel)
-	FreeBSD 5.1 (alpha)
+    Slackware 9.1 (intel)
+    Mandrake 9.2 (intel)
+    Debian GNU/Linux (intel/Sarge)
+    Debian GNU/Hurd (intel/Sid)
+    NetBSD 1.6 (intel)
+    FreeBSD 5.1 (alpha)
 
 
 - 1.3.1 | 2004-01-31
 
   - "make dist" actually builds a proper distribution
 
-	The last source release 1.3.0 did not build, due to various
-	files being missing from the distribution.
+    The last source release 1.3.0 did not build, due to various
+    files being missing from the distribution.
 
   - NetBSD fixes
 
-	All qadsl releases from 1.3.1 onwards should now build properly
-	on NetBSD.  Courtesy of jakov.
+    All qadsl releases from 1.3.1 onwards should now build properly
+    on NetBSD.  Courtesy of jakov.
 
   - GNU/Hurd fixes
 
-	All qadsl releases from 1.3.1 onwards should now build properly
-	on GNU/Hurd.  Thanks to Gürkan Sengün for providing a testing
-	machine, http://hurd.she.kicks-ass.org:8084/
+    All qadsl releases from 1.3.1 onwards should now build properly
+    on GNU/Hurd.  Thanks to Gürkan Sengün for providing a testing
+    machine, http://hurd.she.kicks-ass.org:8084/
 
 
 - 1.3.0 | 2004-01-21
 
   -  Major rewrite of most of the code
 
-	Most of the code has been restructured and rewritten to simplify
-	the next big step - extension - qadsl is going places.
+    Most of the code has been restructured and rewritten to simplify
+    the next big step - extension - qadsl is going places.
 
   - .conf file parser in CFG
 
-	Bison and Flex has been called upon to do their magic on the
-	.conf file format.  This has enabled a much more free and
-	extensible file format.
+    Bison and Flex has been called upon to do their magic on the
+    .conf file format.  This has enabled a much more free and
+    extensible file format.
 
   - HTTP handling improved
 
-	State management has been improved to be more fault tolerant.
-	As well as also being cleaned up immensely.
+    State management has been improved to be more fault tolerant.
+    As well as also being cleaned up immensely.
 
-	This means more stability, no more sudden logouts just because
-	your ISP temporarily disabled logins.  We now patiently wait for
-	the login server (or your network card or whatever) to be
-	reactivated.
+    This means more stability, no more sudden logouts just because
+    your ISP temporarily disabled logins.  We now patiently wait for
+    the login server (or your network card or whatever) to be
+    reactivated.
 
   - Debian patches included
 
-	Just like we have a qadsl.spec file (for .rpm's) we also include
-	the Debian scripts to build .deb files.
+    Just like we have a qadsl.spec file (for .rpm's) we also include
+    the Debian scripts to build .deb files.
 
   - failover lock file support
 
-	If PID_FILE does not exist or cannot be opened for reading /
-	writing we need to find out other ways to play.
+    If PID_FILE does not exist or cannot be opened for reading /
+    writing we need to find out other ways to play.
 
   - more stubborn when login fails
 
-	qadsl does not exit(1) at every possible juncture anymore.
+    qadsl does not exit(1) at every possible juncture anymore.
 
 
 - etc 
 	Local Variables:
 	mode: outline
 	outline-regexp: "\\([ ][ ]\\)*- "
-	fill-column: 72
-	fill-prefix: "\t"
 	End:
 
 Copyright (C) 2012 Thien-Thi Nguyen
