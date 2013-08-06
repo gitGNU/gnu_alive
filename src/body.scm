@@ -64,7 +64,9 @@ Options:
      --help             Display this message.
      --version          Display version and license info.
 
-Report bugs to <@PACKAGE_BUGREPORT@>.")))))
+Report bugs to: <@PACKAGE_BUGREPORT@>
+Home page: <http://www.gnu.org/software/alive/>
+General help using GNU software: <http://www.gnu.org/gethelp/>")))))
 
 (or (= 1 ARGC)
     (let ((me (whoami)))

@@ -1,3 +1,9 @@
+2013-08-06  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	Add homepage / "gethelp" to ‘--help’ output.
+
+	* src/body.scm <--help>: ...here.
+
 2012-09-12  Thien-Thi Nguyen  <ttn@gnuvola.org>
 
 	Release: 2.0.1
