@@ -20,7 +20,7 @@ dnl along with GNU Alive.  If not, see <http://www.gnu.org/licenses/>.
 AC_INIT([GNU Alive],[2.0.1],[bug-alive@gnu.org])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux])
-AM_INIT_AUTOMAKE([1.12.2 gnu no-dist-gzip dist-xz])
+AM_INIT_AUTOMAKE([1.12.2 gnu no-dist-gzip dist-lzip dist-xz])
 
 SNUGGLE_PROGS
 
