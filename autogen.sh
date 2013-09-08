@@ -21,11 +21,11 @@
 # Usage: sh autogen.sh
 ##
 
-for p in guile snuggle gnulib-tool autoconf automake ; do
+for p in guile guile-baux-tool gnulib-tool autoconf automake ; do
     $p --version | sed 's/^/using: /;1q'
 done
 
-snuggle m4 build-aux/
+guile-baux-tool snuggle m4 build-aux/
 
 autoreconf --verbose --install --symlink --force -Wall
 

@@ -1,5 +1,11 @@
 2013-09-08  Thien-Thi Nguyen  <ttn@gnu.org>
 
+	[boot] Use Guile-BAUX for m4 macros.
+
+	* autogen.sh: ...here, via "guile-baux-tool snuggle".
+
+2013-09-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
 	Mention PKG name in ‘--help’ output; use ‘@PACKAGE_URL@’.
 
 	* src/body.scm <--help>: ...here.
