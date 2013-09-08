@@ -1,5 +1,15 @@
 2013-09-08  Thien-Thi Nguyen  <ttn@gnu.org>
 
+	Honor env var ‘XDG_CONFIG_HOME’ if xdgdirs(1) is available.
+
+	* src/body.scm (ok-dir, config-dir-a-la-XDG): New procs.
+	(config-item): If ‘$HOME/alive.d/’ is not available, try next
+	‘config-dir-a-la-XDG’, and use as last resort ‘*null-device*’.
+	* doc/alive.texi (Features): Update "no arguments" accordingly.
+	(Configuration): Say "config directory", not "~/.alive.d".
+
+2013-09-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
 	[doc] Drop "~/.alive.d/" in config item examples.
 
 	* doc/alive.texi (hosts, period): ...here.

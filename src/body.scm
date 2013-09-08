@@ -103,8 +103,20 @@ General help using GNU software: <http://www.gnu.org/gethelp/>")))))
   ;; TODO: Make format string a configuration item.
   (strftime "%Y-%m-%d %T" (localtime (or moment (current-time)))))
 
+(define (ok-dir dir)
+  (and dir
+       (file-exists? dir)
+       dir))
+
+(define (config-dir-a-la-XDG)
+  (false-if-exception
+   (assq-ref (read (open-input-pipe "xdgdirs alive"))
+             'config-home)))
+
 (define config-item
-  (let ((dir (in-vicinity (getenv "HOME") ".alive.d")))
+  (let ((dir (or (ok-dir (in-vicinity (getenv "HOME") ".alive.d"))
+                 (ok-dir (config-dir-a-la-XDG))
+                 *null-device*)))
     ;; config-item
     (lambda (nick)
       (let ((filename (in-vicinity dir nick))

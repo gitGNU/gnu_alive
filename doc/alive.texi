@@ -119,9 +119,16 @@ Other ping programs may or may not.
 
 @item no arguments
 To keep things simple and consistent, @samp{alive} takes no arguments,
-and instead reads configuration information from files in the directory
-@file{~/.alive.d}, where @file{~} is expanded using the value of the
-@code{HOME} environment variable.  If those files don't exist,
+and instead reads configuration information from files in the
+@dfn{config directory}, by default @file{$HOME/.alive.d/}.
+
+If that dir does not exist and your system has @samp{xdgdirs}@footnote{home
+page: @url{http://www.gnuvola.org/software/xdgdirs/}}, then the
+the config directory is taken to be what @samp{xdgdirs alive}
+returns for @code{config-home} (you can influence this by
+setting env var @code{XDG_CONFIG_HOME}).
+
+In any case, if the config dir or those files don't exist,
 @samp{alive} uses reasonable defaults.
 
 @item reconfiguration without restart
@@ -353,7 +360,7 @@ Shut down, i.e., display @samp{exiting} and exit successfully.
 @cindex fun
 @cindex configuration
 You can modify @samp{alive} behavior (even while it runs), by writing
-simple sexps into text files under directory @file{~/.alive.d}
+simple sexps into text files under the config directory
 (@pxref{Features}).
 Information for a @dfn{configuration item} @var{foo} is written in file
 @file{foo}.
