@@ -1,6 +1,6 @@
 dnl configure.ac
 dnl
-dnl Copyright (C) 2012 Thien-Thi Nguyen
+dnl Copyright (C) 2012, 2013 Thien-Thi Nguyen
 dnl
 dnl This file is part of GNU Alive.
 dnl
