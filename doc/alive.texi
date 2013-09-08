@@ -420,7 +420,7 @@ The @code{hosts} configuration item specifies who to ping.
 Each symbol is either a host name or IP address.
 
 @example
-;;; ~/.alive.d/hosts (-*- scheme -*-)
+;;; hosts (-*- scheme -*-)
 
 ;; gateway
 10.0.0.1
@@ -430,7 +430,7 @@ foo.local-lan
 bar.site-lan
 baz.example.com
 
-;;; ~/.alive.d/hosts ends here
+;;; hosts ends here
 @end example
 
 
@@ -446,7 +446,7 @@ must be less than or equal than the second, and @samp{alive} chooses a
 random number between (inclusively) the two.
 
 @example
-;;; ~/.alive.d/period (-*- scheme -*-)
+;;; period (-*- scheme -*-)
 
 ;; quickly
 ;       3
@@ -457,7 +457,7 @@ random number between (inclusively) the two.
 ;; randomly, but not too quickly
         149 420
 
-;;; ~/.alive.d/period ends here
+;;; period ends here
 @end example
 
 

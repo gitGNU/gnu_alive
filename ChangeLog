@@ -1,3 +1,9 @@
+2013-09-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
+	[doc] Drop "~/.alive.d/" in config item examples.
+
+	* doc/alive.texi (hosts, period): ...here.
+
 2013-08-06  Thien-Thi Nguyen  <ttn@gnu.org>
 
 	Add homepage / "gethelp" to ‘--help’ output.
