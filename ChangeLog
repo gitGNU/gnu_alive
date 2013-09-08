@@ -1,5 +1,11 @@
 2013-09-08  Thien-Thi Nguyen  <ttn@gnu.org>
 
+	Release: 2.0.2
+
+	* configure.ac (AC_INIT): Bump version to "2.0.2" for release.
+
+2013-09-08  Thien-Thi Nguyen  <ttn@gnu.org>
+
 	[dist] Create .lz tarball as well on "make dist".
 
 	* configure.ac (AM_INIT_AUTOMAKE): Add option ‘dist-lzip’.
