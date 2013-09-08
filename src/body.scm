@@ -65,7 +65,7 @@ Options:
      --version          Display version and license info.
 
 Report bugs to: <@PACKAGE_BUGREPORT@>
-Home page: <http://www.gnu.org/software/alive/>
+GNU Alive home page: <@PACKAGE_URL@>
 General help using GNU software: <http://www.gnu.org/gethelp/>")))))
 
 (or (= 1 ARGC)
